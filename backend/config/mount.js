@@ -28,8 +28,8 @@ module.exports = {
      * @desc Starting express application
      */
   async run(app) {
-    app.listen(process.env.PORT || 3000, '0.0.0.0', () => {
-      logger.info({message: `Running express application at ${process.env.PORT || 3000}`});
+    app.listen(process.env.PORT || 5000, '0.0.0.0', () => {
+      logger.info({message: `Running express application at ${process.env.PORT || 5000}`});
     });
   },
 };
