@@ -1,0 +1,21 @@
+{
+    "name": "Recommender System",
+    "version": "1.0",
+    "description": "Personalized recommender system to learn SQL",
+    "background": {
+      "scripts": [
+          "js/background.js"
+        ],
+      "persistent": false
+    },
+    "content_scripts":[{
+        "js": ["js/content.js"],
+        "matches": ["*://stackoverflow.com/*","*://*.stackoverflow.com/*","https://www.w3schools.com/sql/*"]
+    }],
+    "manifest_version": 2,
+    "permissions":[
+        "history",
+        "tabs",
+        "*://stackoverflow.com/*"
+    ]
+  }
