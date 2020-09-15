@@ -1,4 +1,4 @@
 [submodule "frontend/shards-dashboard-react"]
 	path = frontend/shards-dashboard-react
-	url = git@github.com:DesignRevision/shards-dashboard.git
+	url = git@Abit25:learning_recommendation/frontend/shards-dashboard-react.git
 	branch = master
