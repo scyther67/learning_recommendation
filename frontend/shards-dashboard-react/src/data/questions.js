@@ -1,13 +1,13 @@
 export default [
   {
-    question: "What does CSS stand for?",
+    question: "What does SQL stand for?",
     answers: [
-      "Computer Style Sheets",
-      "Creative Style Sheets",
-      "Cascading Style Sheets",
-      "Colorful Style Sheets"
+      "Structured Query Language",
+      "Simple Query Language",
+      "Structured Question Language",
+      "Simple Question Language"
     ],
-    correct: 3
+    correct: 1
   },
 
   {
