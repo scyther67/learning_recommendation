@@ -19,7 +19,7 @@ export default function() {
     {
       title: "Quiz",
       htmlBefore: '<i class="material-icons">view_module</i>',
-      to: "/quiz-start"
+      to: "/quiz"
     },
     // {
     //   title: "Tables",

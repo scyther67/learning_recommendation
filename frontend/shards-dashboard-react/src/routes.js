@@ -12,6 +12,7 @@ import Errors from "./views/Errors";
 import Tables from "./views/Tables";
 import BlogPosts from "./views/BlogPosts";
 import QuizStart from "./views/QuizStart";
+import ViewQuestion from "./views/ViewQuestion";
 
 export default [
   {
@@ -49,7 +50,7 @@ export default [
     noFooter: false
   },
   {
-    path: "/quiz-start",
+    path: "/quiz",
     layout: DefaultLayout,
     component: QuizStart,
     noNavbar: false,
@@ -68,5 +69,12 @@ export default [
     component: BlogPosts,
     noNavbar: false,
     noFooter: false
+  },
+  {
+    path: "/start-test",
+    layout: DefaultLayout,
+    component: ViewQuestion,
+    noNavbar: false,
+    noFooter: true
   }
 ];
