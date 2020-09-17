@@ -1,10 +1,7 @@
 /backend/node_modules/
 /backend/package-lock.json
-<<<<<<< HEAD
 /backend/combined.log
 /backend/error.log
-=======
 /frontend/shards-dashboard-react/node_modules
 /frontend/shards-dashboard-react/.pnp
 /frontend/shards-dashboard-react/.pnp.js
->>>>>>> features/frontend
