@@ -1,36 +1,32 @@
-console.log("On stackoverflow");
-let startTime = new Date();
-console.log("Start time = "+startTime);
-// fetch('http://localhost:3000/api/test/resourceAccess',
-//     {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json'
-//         },
-//         body: JSON.stringify({ data: location.href })
-//     }
-// );
+let resourceStartTimeStamp = new Date();
+let segmentStartTimeStamp = resourceStartTimeStamp;
+let totalTime = 0;
+// console.log("Start time = "+resourceStartTimeStamp);
 
-window.addEventListener("unload", async function sendUrlTime(event) {
-    let totalTime = new Date() - startTime;
-    console.log("Total time = " + totalTime);
-    chrome.runtime.sendMessage({data:location.href, totalTime});
-    // alert("Exiting");
-    fetch('http://localhost:3000/api/test/resourceAccess',
-        {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ data: location.href, totalTime })
-        }
-    );
-});  
+window.addEventListener("blur", function () {
+    totalTime += new Date() - segmentStartTimeStamp;
+})
 
+window.addEventListener("focus", function () {
+    segmentStartTimeStamp = new Date();
+})
 
-// function fn() {
-//     let message = {
-//         txt: "hello"
-//     };
-//     chrome.runtime.sendMessage()
-// }
+window.addEventListener("unload",sendUrlTime);
+
+async function sendUrlTime(event) {   //send data to background.js
+    let resourceEndTimeStamp = new Date();
+    if (document.hasFocus()) {
+        totalTime += resourceEndTimeStamp - segmentStartTimeStamp;
+    }
+    chrome.runtime.sendMessage({
+        url: location.href,
+        resourceStartTimeStamp,
+        resourceEndTimeStamp,
+        totalTime
+    });
+} 
+
+setTimeout(function () {
+    sendUrlTime();    //if 1 hour is up then send the data to the background script
+    window.removeEventListener("unload", sendUrlTime);// and remove listener so that event does not fire again
+}, 3600000);

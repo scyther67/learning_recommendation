@@ -1,9 +1,3 @@
-// chrome.runtime.onInstalled.addListener(function (object) {
-//     // chrome.tabs.create({ url: "https://www.google.com" });
-//     console.log('Installed');
-
-// })
-  
 // chrome.history.onVisited.addListener(function (object) {
 //     console.log("Before callback");
 //     chrome.tabs.query({active: true, lastFocusedWindow: true}, tabs => {
@@ -26,18 +20,20 @@
 // })
 chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {
-        //   console.log(sender.tab ?
-        //               "from a content script:" + sender.tab.url :
-        //               "from the extension");
         //   if (request.greeting == "hello")
         //     sendResponse({farewell: "goodbye"});
-        fetch('http://localhost:3000/api/test/resourceAccess',
+        fetch('http://localhost:5000/api/test/resourceAccess',
             {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ data: request.data, totalTime: request.totalTime })
+                body: JSON.stringify({
+                    url: request.url,
+                    totalTime: request.totalTime,
+                    startTimeStamp: request.resourceStartTimeStamp,
+                    endTimeStamp: request.resourceEndTimeStamp
+                })
             }
         )
         console.log(Date()+" "+request.data+" "+request.totalTime);
