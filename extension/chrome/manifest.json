@@ -11,7 +11,11 @@
     "content_scripts":[{
         "js": ["js/content.js"],
         "matches": ["*://stackoverflow.com/*","*://*.stackoverflow.com/*","https://www.w3schools.com/sql/*"]
-    }],
+      },
+      {
+        "js": ["js/platform.js"],
+        "matches": ["http://localhost/*"]
+      }],
     "manifest_version": 2,
     "permissions":[
         "history",

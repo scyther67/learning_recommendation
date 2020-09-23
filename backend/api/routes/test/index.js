@@ -1,2 +1,1 @@
-module.exports.ResourceAccess = require('./resourceAccess');
-module.exports.TestMessage = require('./testMessage');
+module.exports.testDetails = require('./testDetails');

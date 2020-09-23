@@ -19,6 +19,7 @@ async function sendUrlTime(event) {   //send data to background.js
         totalTime += resourceEndTimeStamp - segmentStartTimeStamp;
     }
     chrome.runtime.sendMessage({
+        function:"visitedResource",
         url: location.href,
         resourceStartTimeStamp,
         resourceEndTimeStamp,
