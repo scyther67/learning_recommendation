@@ -100,7 +100,7 @@ const ViewQuestion = () => {
       <Row>
         <Col style={{ display: "flex", justifyContent: "center" }}>
           {showButton ? (
-            <Button style={cardStyles2} onClick={nextQuestion}>
+            <Button style={cardStyles2} onClick={nextQuestion} id={"fin-btn"}>
               {nr === total ? "Finish quiz" : "Next question"}
             </Button>
           ) : null}
