@@ -2,6 +2,7 @@
 /backend/package-lock.json
 /backend/combined.log
 /backend/error.log
+/backend/config/loadConfig.js
 /frontend/shards-dashboard-react/node_modules
 /frontend/shards-dashboard-react/.pnp
 /frontend/shards-dashboard-react/.pnp.js
