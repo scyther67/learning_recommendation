@@ -46,12 +46,14 @@ const ViewQuestion = () => {
     setQA(true);
   };
 
-  const nextQuestion = () => {
+  const nextQuestion = e => {
     if (nr != total) {
       setNr(nr + 1);
       pushData(nr);
       setShowButton(false);
       setQA(false);
+    } else {
+      console.log("Final List ", timestamps);
     }
   };
 
@@ -94,6 +96,7 @@ const ViewQuestion = () => {
             showButton={handleShowButton}
             isAnswered={questionAnswered}
             setTimestamp={setTimestamp}
+            questionNumber={nr}
           />
         </Col>
       </Row>
@@ -101,7 +104,7 @@ const ViewQuestion = () => {
         <Col style={{ display: "flex", justifyContent: "center" }}>
           {showButton ? (
             <Button style={cardStyles2} onClick={nextQuestion} id={"fin-btn"}>
-              {nr === total ? "Finish quiz" : "Next question"}
+              {nr === total ? "Finish Quiz" : "Next Question"}
             </Button>
           ) : null}
         </Col>

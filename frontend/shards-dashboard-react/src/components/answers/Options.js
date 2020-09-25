@@ -14,11 +14,14 @@ function Options(props) {
   const [classNames, setCN] = useState(["", "", "", ""]);
 
   const checkAnswer = e => {
-    let { isAnswered } = props;
+    let { isAnswered, questionNumber } = props;
+
     let updatedClassNames = classNames;
     if (!isAnswered) {
-      props.setTimestamp(Date.now());
       let elem = e.currentTarget;
+      let key = "Question " + questionNumber.toString();
+      props.setTimestamp({ [key]: Date.now() });
+
       let { correct } = props;
       let answer = Number(elem.dataset.id);
 
