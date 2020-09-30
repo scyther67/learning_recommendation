@@ -27,6 +27,12 @@ export default class UserActions extends React.Component {
     });
   }
 
+  onClickLogout = e => {
+    console.log("Logout");
+    localStorage.removeItem("user_name");
+    localStorage.removeItem("user_token");
+  };
+
   render() {
     return (
       <NavItem tag={Dropdown} caret toggle={this.toggleUserActions}>
@@ -52,7 +58,12 @@ export default class UserActions extends React.Component {
             <i className="material-icons">&#xE896;</i> Transactions
           </DropdownItem>
           <DropdownItem divider />
-          <DropdownItem tag={Link} to="/" className="text-danger">
+          <DropdownItem
+            tag={Link}
+            to="/"
+            className="text-danger"
+            onClick={this.onClickLogout}
+          >
             <i className="material-icons text-danger">&#xE879;</i> Logout
           </DropdownItem>
         </Collapse>

@@ -2,24 +2,23 @@ import React from "react";
 import { Redirect } from "react-router-dom";
 
 // Layout Types
-import { DefaultLayout } from "./layouts";
+import { DefaultLayout, NoLayout } from "./layouts";
 
 // Route Views
 import BlogOverview from "./views/BlogOverview";
 import UserProfileLite from "./views/UserProfileLite";
-import AddNewPost from "./views/AddNewPost";
 import Errors from "./views/Errors";
-import Tables from "./views/Tables";
-import BlogPosts from "./views/BlogPosts";
 import QuizStart from "./views/QuizStart";
 import ViewQuestion from "./views/ViewQuestion";
+import Signup from "./views/Signup";
+import Signin from "./views/Signin";
 
 export default [
   {
     path: "/",
     exact: true,
     layout: DefaultLayout,
-    component: () => <Redirect to="/blog-overview" />
+    component: () => <Redirect to="/sign-in" />
   },
   {
     path: "/blog-overview",
@@ -35,13 +34,7 @@ export default [
     noNavbar: false,
     noFooter: false
   },
-  {
-    path: "/add-new-post",
-    layout: DefaultLayout,
-    component: AddNewPost,
-    noNavbar: false,
-    noFooter: false
-  },
+
   {
     path: "/errors",
     layout: DefaultLayout,
@@ -56,25 +49,26 @@ export default [
     noNavbar: false,
     noFooter: false
   },
-  {
-    path: "/tables",
-    layout: DefaultLayout,
-    component: Tables,
-    noNavbar: false,
-    noFooter: false
-  },
-  {
-    path: "/blog-posts",
-    layout: DefaultLayout,
-    component: BlogPosts,
-    noNavbar: false,
-    noFooter: false
-  },
+
   {
     path: "/start-test",
     layout: DefaultLayout,
     component: ViewQuestion,
     noNavbar: false,
+    noFooter: true
+  },
+  {
+    path: "/sign-up",
+    layout: NoLayout,
+    component: Signup,
+    noNavbar: true,
+    noFooter: true
+  },
+  {
+    path: "/sign-in",
+    layout: NoLayout,
+    component: Signin,
+    noNavbar: true,
     noFooter: true
   }
 ];
