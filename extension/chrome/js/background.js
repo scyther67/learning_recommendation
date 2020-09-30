@@ -1,5 +1,5 @@
 let testResources = [];
-let test = true; 
+let test = false; 
 
 chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {
@@ -9,6 +9,7 @@ chrome.runtime.onMessage.addListener(
             console.log(request.url);
         else if (request.function == "visitedResource") {
             if (!test) {
+                console.log(request.intervals);
                 fetch('http://localhost:5000/api/learning/visitedResource',
                     {
                         method: 'POST',
@@ -19,7 +20,8 @@ chrome.runtime.onMessage.addListener(
                             url: request.url,
                             totalTime: request.totalTime,
                             startTimeStamp: request.resourceStartTimeStamp,
-                            endTimeStamp: request.resourceEndTimeStamp
+                            endTimeStamp: request.resourceEndTimeStamp, 
+                            intervals: request.intervals
                         })
                     }
                 )
@@ -66,3 +68,6 @@ chrome.runtime.onMessage.addListener(
 //     console.log("--------------------");
 //     // chrome.tabs.create({ url: "https://www.google.com" });
 // })
+chrome.browserAction.onClicked.addListener(function() {
+    console.log("clicked");
+  });
