@@ -11,7 +11,7 @@ module.exports = async (req, res) => {
     // console.log(existing_user);
     if (existing_user)
       return res.json({ ...Conflict, message: "User with given email exists" });
-
+    console.log("Password", name);
     const passwordhash = await hash(password);
     console.log(passwordhash);
     const user = await addUser(name, email, passwordhash);
@@ -23,6 +23,7 @@ module.exports = async (req, res) => {
     console.log(token);
     return res.json({ ...Success, token: token.token });
   } catch (error) {
+    console.log(error);
     logger.error({ error, message: "Some error occured" });
     res.json(ServerError);
   }

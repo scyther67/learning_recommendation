@@ -21,6 +21,10 @@ const cardStyles = {
 };
 
 const QuizStart = () => {
+  const onClickTest = () => {
+    console.log("Test Started ", Date.now());
+  };
+
   return (
     <Container>
       <Row>
@@ -77,7 +81,9 @@ const QuizStart = () => {
       <Row>
         <Col sm={{ offset: 5 }}>
           <NavLink tag={RouteNavLink} to={"/start-test"}>
-            <Button style={buttonStyles}>Take a Test</Button>
+            <Button onClick={onClickTest} style={buttonStyles}>
+              Take a Test
+            </Button>
           </NavLink>
         </Col>
       </Row>

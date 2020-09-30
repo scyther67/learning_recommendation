@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -47,7 +47,21 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function SignInSide() {
+  const onChangeEmail = e => {
+    setEmail(e.target.value);
+  };
+
+  const onChangePass = e => {
+    setPass(e.target.value);
+  };
+
+  const onClickSubmit = () => {
+    console.log(email, pass);
+  };
+
   const classes = useStyles();
+  const [email, setEmail] = useState("");
+  const [pass, setPass] = useState("");
 
   return (
     <Grid container component="main" className={classes.root}>
@@ -72,6 +86,7 @@ export default function SignInSide() {
               name="email"
               autoComplete="email"
               autoFocus
+              onChange={onChangeEmail}
             />
             <TextField
               variant="outlined"
@@ -83,23 +98,25 @@ export default function SignInSide() {
               type="password"
               id="password"
               autoComplete="current-password"
+              onChange={onChangePass}
             />
 
             <Button
-              type="submit"
+              // type="submit"
               fullWidth
               variant="contained"
               color="primary"
               className={classes.submit}
+              onClick={onClickSubmit}
             >
               Sign In
             </Button>
             <Grid container>
               <Grid item>
                 <NavLink tag={RouteNavLink} to={"/sign-up"}>
-                  <Link href="#" variant="body2">
-                    {"Don't have an account? Sign Up"}
-                  </Link>
+                  {/* <Link href="#" variant="body2"> */}
+                  {"Don't have an account? Sign Up"}
+                  {/* </Link> */}
                 </NavLink>
               </Grid>
             </Grid>

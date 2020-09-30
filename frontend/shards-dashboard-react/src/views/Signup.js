@@ -1,16 +1,15 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
-import Link from "@material-ui/core/Link";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
+import axios from "axios";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -46,8 +45,60 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function SignInSide() {
+export default function SignInSide(props) {
+  let history = useHistory();
+  const [email, setEmail] = useState("");
+  const [pass, setPass] = useState("");
+  const [name, setName] = useState("");
+
+  const onChangeEmail = e => {
+    setEmail(e.target.value);
+  };
+
+  const onChangeName = e => {
+    setName(e.target.value);
+  };
+
+  const onChangePass = e => {
+    setPass(e.target.value);
+  };
+
+  const onClickSubmit = async () => {
+    console.log(name, email, pass);
+    const form = {
+      name: name,
+      password: pass,
+      email: email
+    };
+    const formData = new FormData();
+    formData.append("email", email);
+    formData.append("name", name);
+    formData.append("password", pass);
+
+    try {
+      const res = await axios.post(
+        "http://localhost:5000/api/auth/register",
+        form
+      );
+      const user = {
+        token: res.data.token,
+        username: name
+      };
+      localStorage.setItem("user_token", user.token);
+      localStorage.setItem("user_name", user.username);
+      setTimeout(() => {
+        history.push("/quiz");
+      }, 2000);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const classes = useStyles();
+
+  useEffect(() => {
+    console.log("On this page");
+  }, []);
 
   return (
     <Grid container component="main" className={classes.root}>
@@ -67,11 +118,24 @@ export default function SignInSide() {
               margin="normal"
               required
               fullWidth
+              id="username"
+              label="Username"
+              name="email"
+              // autoComplete="email"
+              autoFocus
+              onChange={onChangeName}
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
               id="email"
               label="Email Address"
               name="email"
               autoComplete="email"
               autoFocus
+              onChange={onChangeEmail}
             />
             <TextField
               variant="outlined"
@@ -83,14 +147,16 @@ export default function SignInSide() {
               type="password"
               id="password"
               autoComplete="current-password"
+              onChange={onChangePass}
             />
 
             <Button
-              type="submit"
+              // type="submit"
               fullWidth
               variant="contained"
               color="primary"
               className={classes.submit}
+              onClick={onClickSubmit}
             >
               Register
             </Button>
