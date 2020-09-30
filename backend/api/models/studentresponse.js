@@ -1,9 +1,26 @@
 const mongoose = require('mongoose');
 
 const StudentResponse = new mongoose.Schema({
-    // studentid reference
-    // response [{questionid}:[{hisresponse},{starttime},{endtime}]]
-    // learning_behaviour
+    student_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    },
+    response: [{
+        questionid: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Question'
+        },
+        answer: {
+            type: Number, 
+            enum: [1, 2, 3]
+        },
+        start_time: {
+            type: Date
+        },
+        end_time: {
+            type: Date
+        }
+    }]
 });
 
 module.exports = mongoose.model('studentresponse', StudentResponse);
