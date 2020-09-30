@@ -10,13 +10,9 @@ router.get("/", (req, res) => {
   res.send("Working Fine");
 });
 
-<<<<<<< HEAD
-router.post('/learning/visitedResource', Learning.visitedResource);
-=======
 router.post("/auth/register", User.Register);
 router.post("/auth/login", User.Login);
 router.post("/learning/visitedResource", Auth, Learning.visitedResource);
->>>>>>> features/frontend
 
 // router.post("/learning/visitedResource", Learning.visitedResource);
 
