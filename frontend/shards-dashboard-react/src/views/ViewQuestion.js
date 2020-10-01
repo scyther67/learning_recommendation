@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Button } from "shards-react";
 import Options from "../components/answers/Options";
 import data from "../data/questions";
+import axios from "axios";
 
 const cardStyles = {
   background: "white",
@@ -36,6 +37,8 @@ const ViewQuestion = () => {
   const [answers, setAnswer] = useState([]);
   const [correct, setCorrect] = useState("");
   const [timestamps, setTS] = useState([]);
+  const [responses, setRP] = useState([]);
+  const [QId, setQid] = useState(0);
 
   useEffect(() => {
     pushData(nr);
@@ -46,15 +49,47 @@ const ViewQuestion = () => {
     setQA(true);
   };
 
-  const nextQuestion = e => {
+  const nextQuestion = async e => {
     if (nr != total) {
       setNr(nr + 1);
       pushData(nr);
       setShowButton(false);
       setQA(false);
     } else {
-      console.log("Final List ", timestamps);
+      let modified_tp = timestamps;
+      let start_time = await localStorage.getItem("start_time");
+      modified_tp[0]["start_time"] = Number(start_time);
+      modified_tp[0]["end_time"] = modified_tp[0]["tp"];
+      for (let i = 1; i < timestamps.length; i++) {
+        modified_tp[i]["start_time"] = modified_tp[i - 1]["tp"];
+        modified_tp[i]["end_time"] = modified_tp[i]["tp"];
+      }
+
+      try {
+        const config = {
+          headers: {
+            Authorization: localStorage.getItem("user_token")
+          }
+        };
+        console.log(config);
+        const res = await axios.post(
+          "http://localhost:5000/api/student-response",
+          { timestamps: modified_tp },
+          config
+        );
+        console.log(res.status);
+        localStorage.removeItem("start_time");
+      } catch (error) {
+        console.log(error);
+      }
     }
+  };
+
+  const setResponse = rp => {
+    let newrp = responses;
+    newrp.push(rp);
+    setRP(newrp);
+    console.log(newrp);
   };
 
   const setTimestamp = ts => {
@@ -72,6 +107,7 @@ const ViewQuestion = () => {
       data[nr].answers[2],
       data[nr].answers[3]
     ]);
+    setQid(data[nr].qid);
     setCorrect(data[nr].correct);
     setNr(nr + 1);
   };
@@ -97,6 +133,8 @@ const ViewQuestion = () => {
             isAnswered={questionAnswered}
             setTimestamp={setTimestamp}
             questionNumber={nr}
+            setRP={setResponse}
+            QId={QId}
           />
         </Col>
       </Row>

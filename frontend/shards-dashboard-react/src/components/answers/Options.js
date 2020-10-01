@@ -19,11 +19,16 @@ function Options(props) {
     let updatedClassNames = classNames;
     if (!isAnswered) {
       let elem = e.currentTarget;
-      let key = "Question " + questionNumber.toString();
-      props.setTimestamp({ [key]: Date.now() });
 
       let { correct } = props;
       let answer = Number(elem.dataset.id);
+      let key1 = "tp";
+      let key2 = "user_reponse";
+      props.setTimestamp({
+        [key1]: Date.now(),
+        [key2]: answer,
+        question_id: props.QId
+      });
 
       if (answer === correct) {
         updatedClassNames[answer - 1] = "right";

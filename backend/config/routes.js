@@ -5,10 +5,13 @@ const { Auth } = require("../api/policies");
 const Test = require("../api/routes/test");
 const Learning = require("../api/routes/learning");
 const User = require("../api/routes/user");
+const StudentResponse = require("../api/routes/student_response");
 
 router.get("/", (req, res) => {
   res.send("Working Fine");
 });
+
+router.post("/student-response", Auth, StudentResponse.Response);
 
 router.post("/auth/register", User.Register);
 router.post("/auth/login", User.Login);
