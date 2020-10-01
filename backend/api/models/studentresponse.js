@@ -1,17 +1,17 @@
 const mongoose = require("mongoose");
 
-const StudentResponse = new mongoose.Schema({
+const Student_Response = new mongoose.Schema({
   student_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
   response: [
     {
-      questionid: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Question",
+      question_id: {
+        type: Number,
+        // ref: "Question",
       },
-      answer: {
+      user_response: {
         type: Number,
         enum: [1, 2, 3, 4],
       },
@@ -25,4 +25,4 @@ const StudentResponse = new mongoose.Schema({
   ],
 });
 
-module.exports = mongoose.model("studentresponse", StudentResponse);
+module.exports = mongoose.model("Student_Response", Student_Response);

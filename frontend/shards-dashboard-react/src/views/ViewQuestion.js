@@ -64,7 +64,10 @@ const ViewQuestion = () => {
         modified_tp[i]["start_time"] = modified_tp[i - 1]["tp"];
         modified_tp[i]["end_time"] = modified_tp[i]["tp"];
       }
-
+      for (let i = 1; i < timestamps.length; i++) {
+        delete modified_tp[i].tp;
+      }
+      delete modified_tp[0].tp;
       try {
         const config = {
           headers: {

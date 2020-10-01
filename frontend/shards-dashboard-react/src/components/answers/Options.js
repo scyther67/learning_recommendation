@@ -23,7 +23,7 @@ function Options(props) {
       let { correct } = props;
       let answer = Number(elem.dataset.id);
       let key1 = "tp";
-      let key2 = "user_reponse";
+      let key2 = "user_response";
       props.setTimestamp({
         [key1]: Date.now(),
         [key2]: answer,
