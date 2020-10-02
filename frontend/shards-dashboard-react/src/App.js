@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
-import { BrowserRouter as Router, Route, withRouter } from "react-router-dom";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 
 import routes from "./routes";
 // import withTracker from "./withTracker";
@@ -15,7 +15,7 @@ const App = () => {
   useEffect(() => {
     var eid = localStorage.getItem("user_name");
     if (eid) {
-      console.log(eid);
+      console.log("Logged In");
     } else {
       console.log("User Not Logged In ");
     }
@@ -33,10 +33,7 @@ const App = () => {
                 exact={route.exact}
                 component={() => {
                   return (
-                    <route.layout
-                      // noFooter={route.noFooter}
-                      noNavbar={route.noNavbar}
-                    >
+                    <route.layout noNavbar={route.noNavbar}>
                       <route.component />
                     </route.layout>
                   );

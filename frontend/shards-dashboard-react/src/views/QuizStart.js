@@ -22,7 +22,8 @@ const cardStyles = {
 
 const QuizStart = () => {
   const onClickTest = () => {
-    console.log("Test Started ", Date.now());
+    // console.log("Test Started ", Date.now());
+    localStorage.setItem("start_time", Date.now());
   };
 
   return (
@@ -30,17 +31,22 @@ const QuizStart = () => {
       <Row>
         <Col sm={{ size: 10, order: 2, offset: 1 }}>
           <div style={cardStyles}>
-            <Row noGutters className="page-header py-4">
+            <Row
+              noGutters
+              className="page-header py-4"
+              style={{ height: "60vh" }}
+            >
               <Col
                 style={{
                   display: "flex",
-                  justifyContent: "center"
+                  justifyContent: "center",
+                  alignItems: "center"
                 }}
               >
-                <h2>Why take a test?</h2>
+                <h1>Let's Take an SQL Quiz</h1>
               </Col>
             </Row>
-            <Row>
+            {/* <Row>
               <Col
                 style={{
                   textAlign: "justify",
@@ -74,7 +80,7 @@ const QuizStart = () => {
                   illum qui dolorem eum fugiat quo voluptas nulla pariatur
                 </p>
               </Col>
-            </Row>
+            </Row> */}
           </div>
         </Col>
       </Row>
