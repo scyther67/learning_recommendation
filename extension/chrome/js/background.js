@@ -5,47 +5,70 @@ chrome.runtime.onMessage.addListener(
     function (req, sender, sendResponse) {
         if (req.visitedResource) {
             if (!test) {
-                console.log(req.intervals);
+                // console.log(req.intervals);
                 chrome.storage.local.get('authorization', function (res) {
-                    console.log(res.authorization);
-                    fetch('http://localhost:5000/api/learning/visitedResource',
-                        {
-                            method: 'POST',
-                            headers: {
-                                'authorization': res.authorization,
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                url: req.url,
-                                totalTime: req.totalTime,
-                                startTimeStamp: req.resourceStartTimeStamp,
-                                endTimeStamp: req.resourceEndTimeStamp,
-                                intervals: req.intervals
-                            })
-                        }
-                    )
+                    // console.log(res.authorization);
+                    if (res.authorization) {
+                        fetch('http://localhost:5000/api/learning/visitedResource',
+                            {
+                                method: 'POST',
+                                headers: {
+                                    'authorization': res.authorization,
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    url: req.url,
+                                    totalTime: req.totalTime,
+                                    startTimeStamp: req.resourceStartTimeStamp,
+                                    endTimeStamp: req.resourceEndTimeStamp,
+                                    intervals: req.intervals
+                                })
+                            }
+                        )
+                    }
                 });
             }
-            else {
-                let site = {
-                    "url": req.url,
-                    "totalTime": req.totalTime,
-                    "startTimeStamp": req.resourceStartTimeStamp,
-                    "endTimeStamp": req.resourceEndTimeStamp
-                }
-                testResources.push(site);
-                console.log(testResources);
-            }
+            // else {
+            //     let site = {
+            //         "url": req.url,
+            //         "totalTime": req.totalTime,
+            //         "startTimeStamp": req.resourceStartTimeStamp,
+            //         "endTimeStamp": req.resourceEndTimeStamp,
+            //         "intervals": req.intervals
+            //     }
+            //     testResources.push(site);
+            //     console.log(testResources);
+            // }
             // console.log(Date()+" "+req.data+" "+req.totalTime);
         }
-        else if(req.finishTest){
-            // fetch('http://localhost:5000/api/test/resourceAcc')
-            // setTimeout(function () {
-            //     sendUrlTime();    //if 1 hour is up then send the data to the background script
-            //     window.removeEventListener("unload", sendUrlTime);// and remove listener so that event does not fire again
-            // }, 3600000);
-            console.log("Test done");
-        }
+        // else if (req.onTesting)
+        //     console.log("Testing");
+        // else if (req.startTest) {
+        //     console.log("Start Test");
+        //     test = true;
+        // }
+        // else if (req.finishTest) {
+        //     console.log("End Test");
+        //     chrome.storage.local.get('authorization', function (res) {
+        //         console.log(res.authorization);
+        //         if (res.authorization) {
+        //             fetch('http://localhost:5000/api/test/testLearningDetails',
+        //                 {
+        //                     method: 'POST',
+        //                     headers: {
+        //                         'authorization': res.authorization,
+        //                         'Content-Type': 'application/json'
+        //                     },
+        //                     body: JSON.stringify({
+        //                         testResources
+        //                     })
+        //                 }
+        //             )
+        //         }
+        //     });
+        //     testResources = [];
+        //     test = false;
+        // }
     });
 
 // chrome.history.onVisited.addListener(function (object) {
@@ -68,6 +91,6 @@ chrome.runtime.onMessage.addListener(
 //     console.log("--------------------");
 //     // chrome.tabs.create({ url: "https://www.google.com" });
 // })
-chrome.browserAction.onClicked.addListener(function() {
-    console.log("clicked");
-  });
+// chrome.browserAction.onClicked.addListener(function() {
+//     console.log("clicked");
+//   });

@@ -17,9 +17,10 @@
         "matches": ["*://stackoverflow.com/*","*://*.stackoverflow.com/*","https://www.w3schools.com/sql/*"]
       },
       {
-        "js": ["js/platform.js"],
-        "matches": ["http://localhost/*"]
-      }],
+        "js":["js/fintest.js"],
+        "matches": ["http://localhost:3000/quiz"]
+      }
+    ],
     "manifest_version": 2,
     "permissions":[
         "history",

@@ -87,7 +87,7 @@ const QuizStart = () => {
       <Row>
         <Col sm={{ offset: 5 }}>
           <NavLink tag={RouteNavLink} to={"/start-test"}>
-            <Button onClick={onClickTest} style={buttonStyles}>
+            <Button id="start-btn" onClick={onClickTest} style={buttonStyles}>
               Take a Test
             </Button>
           </NavLink>

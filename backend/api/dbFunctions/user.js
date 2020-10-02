@@ -10,5 +10,8 @@ module.exports = {
     },
     findUserByEmail: async (email) => {
         return User.findOne({ email });
+    },
+    findUserById: async (id) => {
+        return User.findById(id);
     }
 }
