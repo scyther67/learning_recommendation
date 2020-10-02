@@ -11,11 +11,11 @@ module.exports = async (req, res) => {
     // console.log(existing_user);
     if (existing_user)
       return res.json({ ...Conflict, message: "User with given email exists" });
-    console.log("Password", name);
+    // console.log("Password", name);
     const passwordhash = await hash(password);
-    console.log(passwordhash);
+    // console.log(passwordhash);
     const user = await addUser(name, email, passwordhash);
-    console.log(user);
+    // console.log(user);
     if (user == null)
       return res.json({ ...ServerError, message: "Error creating user" });
 

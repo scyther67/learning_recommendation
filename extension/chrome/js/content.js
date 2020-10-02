@@ -25,7 +25,7 @@ async function sendUrlTime(event) {   //send data to background.js
         intervals.push([segmentStartTimeStamp, resourceEndTimeStamp]);
     }
     chrome.runtime.sendMessage({
-        function:"visitedResource",
+        visitedResource:true,
         url: location.href,
         resourceStartTimeStamp,
         resourceEndTimeStamp,

@@ -1,18 +1,31 @@
 <html>
     <head>
-
+        <title>Recommender</title>
+        <style>
+            html, body{
+                min-width: 400px;
+                min-height: 500px;
+            }
+        </style>
     </head>
-    <script type="text/js" src="popup.js"></script>
     <body>
-        <p id="p_success" hidden="false">Login successful</p>
+        <p id="p_success" hidden="true">Login successful</p>
+        <input type="button" hidden = "true" value = "Logout" id="logout">
         <div id = "form_login">
             <form>
                 Email
-                <input type="email" name="email" id="email">
+                <input type="email" name="email" id="emailid">
+                <br>
                 Password
                 <input type="password" name="password" id="password">
-                <input type="button" value="submit" id="submit">
+                <br>
+                <input type="button" value="submit" id="send_login">
             </form>
         </div>
+        <p id= "p_failure" hidden = "true">Login Unsuccessful</p>
+        <input type="button" hidden= "true" value = "Retry" id="retry"> 
+            
+        </div>
+    <script type="text/javascript" src="popup.js"></script>
     </body>
 </html>

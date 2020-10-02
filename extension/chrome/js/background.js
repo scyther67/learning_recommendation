@@ -2,43 +2,43 @@ let testResources = [];
 let test = false; 
 
 chrome.runtime.onMessage.addListener(
-    function (request, sender, sendResponse) {
-        //   if (request.greeting == "hello")
-        //     sendResponse({farewell: "goodbye"});
-        if (request.function == "testFinish")
-            console.log(request.url);
-        else if (request.function == "visitedResource") {
+    function (req, sender, sendResponse) {
+        if (req.visitedResource) {
             if (!test) {
-                console.log(request.intervals);
-                fetch('http://localhost:5000/api/learning/visitedResource',
-                    {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            url: request.url,
-                            totalTime: request.totalTime,
-                            startTimeStamp: request.resourceStartTimeStamp,
-                            endTimeStamp: request.resourceEndTimeStamp, 
-                            intervals: request.intervals
-                        })
-                    }
-                )
+                console.log(req.intervals);
+                chrome.storage.local.get('authorization', function (res) {
+                    console.log(res.authorization);
+                    fetch('http://localhost:5000/api/learning/visitedResource',
+                        {
+                            method: 'POST',
+                            headers: {
+                                'authorization': res.authorization,
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                url: req.url,
+                                totalTime: req.totalTime,
+                                startTimeStamp: req.resourceStartTimeStamp,
+                                endTimeStamp: req.resourceEndTimeStamp,
+                                intervals: req.intervals
+                            })
+                        }
+                    )
+                });
             }
             else {
                 let site = {
-                    "url": request.url,
-                    "totalTime": request.totalTime,
-                    "startTimeStamp": request.resourceStartTimeStamp,
-                    "endTimeStamp": request.resourceEndTimeStamp
+                    "url": req.url,
+                    "totalTime": req.totalTime,
+                    "startTimeStamp": req.resourceStartTimeStamp,
+                    "endTimeStamp": req.resourceEndTimeStamp
                 }
                 testResources.push(site);
                 console.log(testResources);
             }
-            // console.log(Date()+" "+request.data+" "+request.totalTime);
+            // console.log(Date()+" "+req.data+" "+req.totalTime);
         }
-        else if(request.function == "finishTest"){
+        else if(req.finishTest){
             // fetch('http://localhost:5000/api/test/resourceAcc')
             // setTimeout(function () {
             //     sendUrlTime();    //if 1 hour is up then send the data to the background script
