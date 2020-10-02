@@ -3,6 +3,7 @@ import { Container, Row, Col, Button } from "shards-react";
 import Options from "../components/answers/Options";
 import data from "../data/questions";
 import axios from "axios";
+import { useHistory } from "react-router-dom";
 
 const cardStyles = {
   background: "white",
@@ -29,6 +30,12 @@ const cardStyles2 = {
 };
 
 const ViewQuestion = () => {
+  let history = useHistory();
+  useEffect(() => {
+    if (!localStorage.getItem("user_token")) {
+      history.push("/sign-in");
+    }
+  }, []);
   const [nr, setNr] = useState(0);
   const [total, setTotal] = useState(data.length);
   const [showButton, setShowButton] = useState(false);
