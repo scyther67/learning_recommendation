@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Container, Row, Col } from "shards-react";
 import { Button } from "shards-react";
 import { NavItem, NavLink } from "shards-react";
-import { NavLink as RouteNavLink } from "react-router-dom";
+import { NavLink as RouteNavLink, useHistory } from "react-router-dom";
 
 const buttonStyles = {
   fontSize: "20px",
@@ -21,6 +21,12 @@ const cardStyles = {
 };
 
 const QuizStart = () => {
+  let history = useHistory();
+  useEffect(() => {
+    if (!localStorage.getItem("user_token")) {
+      history.push("/sign-in");
+    }
+  }, []);
   const onClickTest = () => {
     // console.log("Test Started ", Date.now());
     localStorage.setItem("start_time", Date.now());
