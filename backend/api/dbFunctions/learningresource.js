@@ -1,21 +1,21 @@
 const mongoose = require('mongoose');
-const TestLearning = require('../models/testlearning');
+const TraceLearning = require('../models/tracelearning');
 
 module.exports = {
-    createTestLearning: async (id) => {
-        let testlearning = new TestLearning({
+    createTraceLearning: async (id) => {
+        let tracelearning = new TraceLearning({
             student_id: id,
             learning_behavior:[]
         });
-        return testlearning.save();
+        return tracelearning.save();
     },
-    findTestLearning: async (id) => {
-        return TestLearning.findOne({ student_id: id });  
+    findTraceLearning: async (id) => {
+        return TraceLearning.findOne({ student_id: id });  
     },
-    appendTestLearning: async (testlearning, singleresource) => {
-        testlearning.learning_behaviour.push(singleresource);
+    appendTraceLearning: async (tracelearning, singleresource) => {
+        tracelearning.learning_behaviour.push(singleresource);
         // console.log(oldlearningbehavior);
         // let newlearningbehavior = oldlearningbehavior.push(singleresource);
-        return TestLearning.findOneAndUpdate({_id:testlearning._id}, { learning_behaviour: testlearning.learning_behaviour });
+        return TraceLearning.findByIdAndUpdate( tracelearning._id, { learning_behaviour: tracelearning.learning_behaviour }, {new:true});
     }
 }

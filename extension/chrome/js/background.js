@@ -4,29 +4,40 @@ let test = false;
 chrome.runtime.onMessage.addListener(
     function (req, sender, sendResponse) {
         if (req.visitedResource) {
-            if (!test) {
-                // console.log(req.intervals);
-                chrome.storage.local.get('authorization', function (res) {
-                    // console.log(res.authorization);
-                    if (res.authorization) {
-                        fetch('http://localhost:5000/api/learning/visitedResource',
-                            {
-                                method: 'POST',
-                                headers: {
-                                    'authorization': res.authorization,
-                                    'Content-Type': 'application/json'
-                                },
-                                body: JSON.stringify({
-                                    url: req.url,
-                                    totalTime: req.totalTime,
-                                    startTimeStamp: req.resourceStartTimeStamp,
-                                    endTimeStamp: req.resourceEndTimeStamp,
-                                    intervals: req.intervals
-                                })
-                            }
-                        )
-                    }
-                });
+            // console.log("Visited resource called");
+            try {
+                if (!test) {
+                    // console.log("Not in test mode");
+                    chrome.storage.local.get('authorization', function (res) {
+                        // console.log(res.authorization);
+                        // console.log("after res.auth");
+                        if (res.authorization) {
+                            console.log("Sending data for " + req.url);
+                            fetch('http://localhost:5000/api/learning/visitedResource',
+                                {
+                                    method: 'POST',
+                                    headers: {
+                                        'authorization': res.authorization,
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({
+                                        url: req.url,
+                                        totalTime: req.totalTime,
+                                        startTimeStamp: req.resourceStartTimeStamp,
+                                        endTimeStamp: req.resourceEndTimeStamp,
+                                        intervals: req.intervals
+                                    })
+                                }
+                            )
+                            .catch(err => {
+                                // console.log(err);
+                            })
+                        }
+                    });
+                }
+            }
+            catch (err) {
+                console.log(err);
             }
             // else {
             //     let site = {

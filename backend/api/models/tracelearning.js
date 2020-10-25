@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const TestLearning = new mongoose.Schema({
+const TraceLearning = new mongoose.Schema({
     student_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
@@ -18,4 +18,4 @@ const TestLearning = new mongoose.Schema({
     // learning_behaviour
 });
 
-module.exports = mongoose.model('TestLearning', TestLearning);
+module.exports = mongoose.model('TraceLearning', TraceLearning);
