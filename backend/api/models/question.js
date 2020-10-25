@@ -13,7 +13,9 @@ const Question = new mongoose.Schema({
     subtopic: { type: String,
         //enum:[]
     },
-    questionImageUrl: { type: String, required:false
+    questionImageUrl: {
+        type: String,
+        required: false
     }
 })
 

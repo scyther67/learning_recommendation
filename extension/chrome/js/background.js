@@ -2,50 +2,84 @@ let testResources = [];
 let test = false; 
 
 chrome.runtime.onMessage.addListener(
-    function (request, sender, sendResponse) {
-        //   if (request.greeting == "hello")
-        //     sendResponse({farewell: "goodbye"});
-        if (request.function == "testFinish")
-            console.log(request.url);
-        else if (request.function == "visitedResource") {
-            if (!test) {
-                console.log(request.intervals);
-                fetch('http://localhost:5000/api/learning/visitedResource',
-                    {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            url: request.url,
-                            totalTime: request.totalTime,
-                            startTimeStamp: request.resourceStartTimeStamp,
-                            endTimeStamp: request.resourceEndTimeStamp, 
-                            intervals: request.intervals
-                        })
-                    }
-                )
-            }
-            else {
-                let site = {
-                    "url": request.url,
-                    "totalTime": request.totalTime,
-                    "startTimeStamp": request.resourceStartTimeStamp,
-                    "endTimeStamp": request.resourceEndTimeStamp
+    function (req, sender, sendResponse) {
+        if (req.visitedResource) {
+            // console.log("Visited resource called");
+            try {
+                if (!test) {
+                    // console.log("Not in test mode");
+                    chrome.storage.local.get('authorization', function (res) {
+                        // console.log(res.authorization);
+                        // console.log("after res.auth");
+                        if (res.authorization) {
+                            console.log("Sending data for " + req.url);
+                            fetch('http://localhost:5000/api/learning/visitedResource',
+                                {
+                                    method: 'POST',
+                                    headers: {
+                                        'authorization': res.authorization,
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({
+                                        url: req.url,
+                                        totalTime: req.totalTime,
+                                        startTimeStamp: req.resourceStartTimeStamp,
+                                        endTimeStamp: req.resourceEndTimeStamp,
+                                        intervals: req.intervals
+                                    })
+                                }
+                            )
+                            .catch(err => {
+                                // console.log(err);
+                            })
+                        }
+                    });
                 }
-                testResources.push(site);
-                console.log(testResources);
             }
-            // console.log(Date()+" "+request.data+" "+request.totalTime);
+            catch (err) {
+                console.log(err);
+            }
+            // else {
+            //     let site = {
+            //         "url": req.url,
+            //         "totalTime": req.totalTime,
+            //         "startTimeStamp": req.resourceStartTimeStamp,
+            //         "endTimeStamp": req.resourceEndTimeStamp,
+            //         "intervals": req.intervals
+            //     }
+            //     testResources.push(site);
+            //     console.log(testResources);
+            // }
+            // console.log(Date()+" "+req.data+" "+req.totalTime);
         }
-        else if(request.function == "finishTest"){
-            // fetch('http://localhost:5000/api/test/resourceAcc')
-            // setTimeout(function () {
-            //     sendUrlTime();    //if 1 hour is up then send the data to the background script
-            //     window.removeEventListener("unload", sendUrlTime);// and remove listener so that event does not fire again
-            // }, 3600000);
-            console.log("Test done");
-        }
+        // else if (req.onTesting)
+        //     console.log("Testing");
+        // else if (req.startTest) {
+        //     console.log("Start Test");
+        //     test = true;
+        // }
+        // else if (req.finishTest) {
+        //     console.log("End Test");
+        //     chrome.storage.local.get('authorization', function (res) {
+        //         console.log(res.authorization);
+        //         if (res.authorization) {
+        //             fetch('http://localhost:5000/api/test/testLearningDetails',
+        //                 {
+        //                     method: 'POST',
+        //                     headers: {
+        //                         'authorization': res.authorization,
+        //                         'Content-Type': 'application/json'
+        //                     },
+        //                     body: JSON.stringify({
+        //                         testResources
+        //                     })
+        //                 }
+        //             )
+        //         }
+        //     });
+        //     testResources = [];
+        //     test = false;
+        // }
     });
 
 // chrome.history.onVisited.addListener(function (object) {
@@ -68,6 +102,6 @@ chrome.runtime.onMessage.addListener(
 //     console.log("--------------------");
 //     // chrome.tabs.create({ url: "https://www.google.com" });
 // })
-chrome.browserAction.onClicked.addListener(function() {
-    console.log("clicked");
-  });
+// chrome.browserAction.onClicked.addListener(function() {
+//     console.log("clicked");
+//   });

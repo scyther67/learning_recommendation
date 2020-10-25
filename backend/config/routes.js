@@ -20,5 +20,6 @@ router.post("/learning/visitedResource", Auth, Learning.visitedResource);
 // router.post("/learning/visitedResource", Learning.visitedResource);
 
 router.post("/test/testDetails", Test.testDetails);
+router.post("/test/testLearningDetails", Test.testLearningDetails);
 
 module.exports = router;

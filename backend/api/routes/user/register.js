@@ -8,19 +8,16 @@ module.exports = async (req, res) => {
   try {
     const { name, email, password } = req.body;
     const existing_user = await findUserByEmail(email);
-    // console.log(existing_user);
     if (existing_user)
       return res.json({ ...Conflict, message: "User with given email exists" });
-    console.log("Password", name);
+    
     const passwordhash = await hash(password);
-    console.log(passwordhash);
     const user = await addUser(name, email, passwordhash);
-    console.log(user);
+    
     if (user == null)
       return res.json({ ...ServerError, message: "Error creating user" });
 
     let token = await generate({ id: user.id });
-    console.log(token);
     return res.json({ ...Success, token: token.token });
   } catch (error) {
     console.log(error);
