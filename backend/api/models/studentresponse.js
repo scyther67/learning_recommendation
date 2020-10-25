@@ -9,11 +9,11 @@ const Student_Response = new mongoose.Schema({
     {
       question_id: {
         type: Number,
-        // ref: "Question",
+        ref: "Question",
       },
       user_response: {
         type: Number,
-        enum: [1, 2, 3, 4],
+        enum: [0, 1, 2, 3],
       },
       start_time: {
         type: Date,

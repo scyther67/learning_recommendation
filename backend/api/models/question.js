@@ -2,16 +2,21 @@ const mongoose = require('mongoose');
 
 const Question = new mongoose.Schema({
     description: { type: String },
-    alternatives : [
-        {
-            text: { type: String, required: true
-            },
-            isCorrect: { type: Boolean, required: true, default: false
-            }
-        }
+    alternatives: [{
+            type: String,
+            required: true
+        },
     ],
-    subtopic: { type: String,
-        //enum:[]
+    subtopic: {
+        type: String,
+        enum: ["from", "where", "select", "andornot", "likeinbetween", "join", "subquery",
+            "aggregation", "grouping", "having", "create", "alter", "drop", "insert", "update",
+            "delete"],
+    },
+    correct: {
+        type: Number,
+        enum: [0, 1, 2, 3],
+        required: true
     },
     questionImageUrl: {
         type: String,
