@@ -4,7 +4,17 @@ module.exports = {
         let user = new User({
             name,
             email,
-            password:passwordhash
+            password: passwordhash,
+            isAdmin: false
+        })
+        return user.save();
+    },
+    addAdmin: async (name, email, passwordhash) => {
+        let user = new User({
+            name,
+            email,
+            password: passwordhash,
+            isAdmin: true
         })
         return user.save();
     },
@@ -13,5 +23,8 @@ module.exports = {
     },
     findUserById: async (id) => {
         return User.findById(id);
+    },
+    convertToAdmin: async (email) => {
+        return User.findOneAndUpdate({email}, {isAdmin:true}, { new: true });
     }
 }

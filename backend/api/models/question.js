@@ -12,12 +12,12 @@ const Question = new mongoose.Schema({
             }
         }
     ],
-    subtopic: [ 
-        {
-            type: String,
-        }
-    ],
-    questionImageUrl: { type: String, required:false
+    subtopic: { type: String,
+        //enum:[]
+    },
+    questionImageUrl: {
+        type: String,
+        required: false
     }
 })
 

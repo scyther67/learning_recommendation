@@ -1,4 +1,4 @@
-const { findTestLearning, createTestLearning, appendTestLearning } = require("../../dbFunctions/learningresource");
+const { findTraceLearning, createTraceLearning, appendTraceLearning } = require("../../dbFunctions/learningresource");
 const {Success} = require('../../responses')
 module.exports = async (req, res) => {
     // console.log("URL : " + req.body.url + "\tTotal Time : " + req.body.totalTime);
@@ -7,10 +7,10 @@ module.exports = async (req, res) => {
     // res.json({ status: "OK" });
     // let learning = await 
     try {
-        let testlearning = await findTestLearning(req.body.userId);
+        let tracelearning = await findTraceLearning(req.body.userId);
 
-        if (!testlearning) { testlearning = await createTestLearning(req.body.userId) }
-        // console.log(testlearning);
+        if (!tracelearning) { tracelearning = await createTraceLearning(req.body.userId) }
+        // console.log(tracelearning);
 
         let singleresource = {
             url:req.body.url,
@@ -19,7 +19,7 @@ module.exports = async (req, res) => {
             endTimeStamp:req.body.endTimeStamp,
             intervals:req.body.intervals
         }
-        let finallearning = await appendTestLearning(testlearning, singleresource);
+        let finallearning = await appendTraceLearning(tracelearning, singleresource);
         console.log(finallearning);
         res.json({ ...Success });
         }

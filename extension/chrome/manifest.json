@@ -14,7 +14,7 @@
     },
     "content_scripts":[{
         "js": ["js/content.js"],
-        "matches": ["*://stackoverflow.com/*","*://*.stackoverflow.com/*","https://www.w3schools.com/sql/*"]
+        "matches": ["<all_urls>","*://stackoverflow.com/*","*://*.stackoverflow.com/*","https://www.w3schools.com/sql/*"]
       },
       {
         "js":["js/fintest.js"],
