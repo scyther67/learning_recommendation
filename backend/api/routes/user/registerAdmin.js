@@ -1,5 +1,5 @@
 const logger = require("../../../config/winston");
-const { addUser, findUserByEmail } = require("../../dbFunctions/user");
+const { addAdmin, findUserByEmail } = require("../../dbFunctions/user");
 const { Conflict, ServerError, Success } = require("../../responses");
 const { hash } = require("../../utils/password");
 const { generate } = require("../../utils/jwt");
@@ -10,11 +10,9 @@ module.exports = async (req, res) => {
     const existing_user = await findUserByEmail(email);
     if (existing_user)
       return res.json({ ...Conflict, message: "User with given email exists" });
-    console.log(password);
-    console.log(email);
-    console.log(name);
+    
     const passwordhash = await hash(password);
-    const user = await addUser(name, email, passwordhash);
+    const user = await addAdmin(name, email, passwordhash);
     
     if (user == null)
       return res.json({ ...ServerError, message: "Error creating user" });
