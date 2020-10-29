@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const TestLearning = require('../models/testlearning');
+const Question = require('../models/question');
 
 module.exports = {
     createTestLearning: async (id) => {
@@ -17,5 +18,10 @@ module.exports = {
         // console.log(oldlearningbehavior);
         // let newlearningbehavior = oldlearningbehavior.push(singleresource);
         return TestLearning.findOneAndUpdate({_id:testlearning._id}, { learning_behaviour: testlearning.learning_behaviour });
+    },
+
+    addQuestion: async(question_data) => {
+        let question = new Question(question_data);
+        return question.save();
     }
 }
