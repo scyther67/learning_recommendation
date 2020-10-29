@@ -10,9 +10,7 @@ module.exports = async (req, res) => {
     const existing_user = await findUserByEmail(email);
     if (existing_user)
       return res.json({ ...Conflict, message: "User with given email exists" });
-    console.log(password);
-    console.log(email);
-    console.log(name);
+    
     const passwordhash = await hash(password);
     const user = await addUser(name, email, passwordhash);
     

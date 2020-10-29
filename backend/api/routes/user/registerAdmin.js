@@ -9,7 +9,7 @@ module.exports = async (req, res) => {
     const { name, email, password } = req.body;
     const existing_user = await findUserByEmail(email);
     if (existing_user)
-      return res.json({ ...Conflict, message: "User with given email exists" });
+      return res.json({ ...Conflict, message: "User with given email exists, use convert route" });
     
     const passwordhash = await hash(password);
     const user = await addAdmin(name, email, passwordhash);

@@ -23,5 +23,8 @@ module.exports = {
     },
     findUserById: async (id) => {
         return User.findById(id);
+    },
+    convertToAdmin: async (email) => {
+        return User.findOneAndUpdate({email}, {isAdmin:true}, { new: true });
     }
 }
