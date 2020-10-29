@@ -12,6 +12,7 @@ import QuizStart from "./views/QuizStart";
 import ViewQuestion from "./views/ViewQuestion";
 import Signup from "./views/Signup";
 import Signin from "./views/Signin";
+import QuestionUpload from "./views/QuestionUpload";
 
 export default [
   {
@@ -69,6 +70,13 @@ export default [
     layout: NoLayout,
     component: Signin,
     noNavbar: true,
+    noFooter: true
+  },
+  {
+    path: "/add-question",
+    layout: DefaultLayout,
+    component: QuestionUpload,
+    noNavbar: false,
     noFooter: true
   }
 ];
