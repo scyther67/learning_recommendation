@@ -9,8 +9,9 @@ import Grid from "@material-ui/core/Grid";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-import { NavLink as RouteNavLink } from "react-router-dom";
+import { NavLink as RouteNavLink, useHistory } from "react-router-dom";
 import { NavItem, NavLink } from "shards-react";
+import axios from "axios";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -47,21 +48,46 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function SignInSide() {
+  let history = useHistory();
+  const classes = useStyles();
+  const [email, setEmail] = useState("");
+  const [pass, setPass] = useState("");
+
   const onChangeEmail = e => {
     setEmail(e.target.value);
+  };
+
+  const onClickSubmit = async () => {
+    const form = {
+      password: pass,
+      email: email
+    };
+    const formData = new FormData();
+    formData.append("email", email);
+    // formData.append("name", name);
+    formData.append("password", pass);
+
+    try {
+      const res = await axios.post(
+        "http://localhost:5000/api/auth/register",
+        form
+      );
+      const user = {
+        token: res.data.token
+      };
+      localStorage.setItem("user_token", user.token);
+      // localStorage.setItem("user_name", user.username);
+      setTimeout(() => {
+        history.push("/quiz");
+      }, 1000);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const onChangePass = e => {
     setPass(e.target.value);
   };
-
-  const onClickSubmit = () => {
-    console.log(email, pass);
-  };
-
-  const classes = useStyles();
-  const [email, setEmail] = useState("");
-  const [pass, setPass] = useState("");
 
   return (
     <Grid container component="main" className={classes.root}>
