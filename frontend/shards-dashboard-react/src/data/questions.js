@@ -1,6 +1,7 @@
 export default [
   {
     question: "What does SQL stand for?",
+    qid: 100,
     answers: [
       "Structured Query Language",
       "Simple Query Language",
@@ -11,36 +12,40 @@ export default [
   },
 
   {
+    question: "Which clause is mandatory with the clause “SELECT” in Mysql?",
+    qid: 101,
+    answers: ["FROM", "WHERE", "Both FROM and WHERE", "None of the above"],
+    correct: 1
+  },
+  // {
+  //   question:
+  //     "What is the significance of the statement “GROUP BY d.name” in the following  MySQL statement? SELECT d.name, COUNT (emp_id) emp_no\n FROM department d INNER JOIN Employee e\n ON d.dept_id=e.emp_id \nGROUP BY d.name ",
+  //   answers: [
+  //     "Aggregation of the field “name” of both table",
+  //     "Aggregation of the field “name” of table “department”",
+  //     "Sorting of the field “name”",
+  //     "None of the mentioned "
+  //   ],
+  //   correct: 2
+  // },
+  {
+    question: " Which of the following belongs to an “aggregate function”?",
+    qid: 102,
+    answers: ["COUNT", "SUM/AVG", "MIN/MAX", "All of the mentioned"],
+    correct: 4
+  },
+  {
     question:
-      "Where in an HTML document is the correct place to refer to an external style sheet?",
+      "In SQL, which command(s) are used to change a table’s storage characteristics?",
+    qid: 103,
     answers: [
-      "In the <head> section",
-      "In the <body> section",
-      "At the end of the document",
-      "You can't refer to an external style sheet"
+      "ALTER TABLE",
+      "MODIFY TABLE",
+      "CHANGE TABLE",
+      " All of the above"
     ],
     correct: 1
   }
-  // {
-  //   question: "Which HTML tag is used to define an internal style sheet?",
-  //   answers: ["<style>", "<script>", "<headStyle>", "<css>"],
-  //   correct: 1
-  // },
-  // {
-  //   question: "Which HTML attribute is used to define inline styles?",
-  //   answers: ["class", "style", "font", "styles"],
-  //   correct: 2
-  // },
-  // {
-  //   question: "Which is the correct CSS syntax?",
-  //   answers: [
-  //     "{body:color=black;}",
-  //     "{body;color:black;}",
-  //     "body:color=black;",
-  //     "body {color: black;}"
-  //   ],
-  //   correct: 4
-  // }
   // {
   //   question: "How do you insert a comment in a CSS file?",
   //   answers: [

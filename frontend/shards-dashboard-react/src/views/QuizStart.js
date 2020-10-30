@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Container, Row, Col } from "shards-react";
 import { Button } from "shards-react";
 import { NavItem, NavLink } from "shards-react";
-import { NavLink as RouteNavLink } from "react-router-dom";
+import { NavLink as RouteNavLink, useHistory } from "react-router-dom";
 
 const buttonStyles = {
   fontSize: "20px",
@@ -21,8 +21,15 @@ const cardStyles = {
 };
 
 const QuizStart = () => {
+  let history = useHistory();
+  useEffect(() => {
+    if (!localStorage.getItem("user_token")) {
+      history.push("/sign-in");
+    }
+  }, []);
   const onClickTest = () => {
-    console.log("Test Started ", Date.now());
+    // console.log("Test Started ", Date.now());
+    localStorage.setItem("start_time", Date.now());
   };
 
   return (
@@ -30,17 +37,22 @@ const QuizStart = () => {
       <Row>
         <Col sm={{ size: 10, order: 2, offset: 1 }}>
           <div style={cardStyles}>
-            <Row noGutters className="page-header py-4">
+            <Row
+              noGutters
+              className="page-header py-4"
+              style={{ height: "60vh" }}
+            >
               <Col
                 style={{
                   display: "flex",
-                  justifyContent: "center"
+                  justifyContent: "center",
+                  alignItems: "center"
                 }}
               >
-                <h2>Why take a test?</h2>
+                <h1>Let's Take an SQL Quiz</h1>
               </Col>
             </Row>
-            <Row>
+            {/* <Row>
               <Col
                 style={{
                   textAlign: "justify",
@@ -74,14 +86,14 @@ const QuizStart = () => {
                   illum qui dolorem eum fugiat quo voluptas nulla pariatur
                 </p>
               </Col>
-            </Row>
+            </Row> */}
           </div>
         </Col>
       </Row>
       <Row>
         <Col sm={{ offset: 5 }}>
           <NavLink tag={RouteNavLink} to={"/start-test"}>
-            <Button onClick={onClickTest} style={buttonStyles}>
+            <Button id="start-btn" onClick={onClickTest} style={buttonStyles}>
               Take a Test
             </Button>
           </NavLink>

@@ -8,7 +8,7 @@ let segmentEndTimeStamp;
 window.addEventListener("blur", function () {
     segmentEndTimeStamp = new Date();
     totalTime += segmentEndTimeStamp - segmentStartTimeStamp;
-    intervals.push([segmentStartTimeStamp, segmentEndTimeStamp]);
+    intervals.push({ start: segmentStartTimeStamp, end: segmentEndTimeStamp });
     console.log(intervals);
 })
 
@@ -22,10 +22,10 @@ async function sendUrlTime(event) {   //send data to background.js
     let resourceEndTimeStamp = new Date();
     if (document.hasFocus()) {
         totalTime += resourceEndTimeStamp - segmentStartTimeStamp;
-        intervals.push([segmentStartTimeStamp, resourceEndTimeStamp]);
+        intervals.push({ start: segmentStartTimeStamp, end: resourceEndTimeStamp });
     }
     chrome.runtime.sendMessage({
-        function:"visitedResource",
+        visitedResource:true,
         url: location.href,
         resourceStartTimeStamp,
         resourceEndTimeStamp,
