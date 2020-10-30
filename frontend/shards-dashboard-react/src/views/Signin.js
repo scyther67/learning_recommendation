@@ -69,17 +69,20 @@ export default function SignInSide() {
 
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/auth/register",
+        "http://localhost:5000/api/auth/login",
         form
       );
       const user = {
         token: res.data.token
       };
+      console.log(res);
       localStorage.setItem("user_token", user.token);
       // localStorage.setItem("user_name", user.username);
-      setTimeout(() => {
-        history.push("/quiz");
-      }, 1000);
+      if (res.data.code == 200) {
+        setTimeout(() => {
+          history.push("/quiz");
+        }, 1000);
+      }
     } catch (error) {
       console.log(error);
     }
