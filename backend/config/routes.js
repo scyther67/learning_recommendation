@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { Auth, AuthAdmin } = require("../api/policies");
+const multer1 = require("../api/utils/uploadFile");
 
 const Test = require("../api/routes/test");
 const Learning = require("../api/routes/learning");
@@ -27,4 +28,13 @@ router.post("/test/testLearningDetails", Test.testLearningDetails);
 
 router.post("/question/addQuestion", AuthAdmin, Question.addQuestion);
 
+router.post("/image", multer1.single("image"), (req, res, next) => {
+  try {
+    console.log(req.file);
+    return res.json({ message: "Uploaded" });
+  }
+  catch(err){
+    res.json({ message: "Error" });
+  }
+});
 module.exports = router;
