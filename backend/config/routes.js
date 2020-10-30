@@ -26,15 +26,15 @@ router.post("/learning/visitedResource", Auth, Learning.visitedResource);
 router.post("/test/testDetails", Test.testDetails);
 router.post("/test/testLearningDetails", Test.testLearningDetails);
 
-router.post("/question/addQuestion", AuthAdmin, Question.addQuestion);
+router.post("/question/addQuestion", AuthAdmin, multer1.single("excelfile"), Question.addQuestion);
 
-router.post("/image", multer1.single("image"), (req, res, next) => {
-  try {
-    console.log(req.file);
-    return res.json({ message: "Uploaded" });
-  }
-  catch(err){
-    res.json({ message: "Error" });
-  }
-});
+// router.post("/image", multer1.single("excelfile"), (req, res, next) => {
+//   try {
+//     console.log(req.file);
+//     return res.json({ message: "Uploaded" });
+//   }
+//   catch(err){
+//     res.json({ message: "Error" });
+//   }
+// });
 module.exports = router;

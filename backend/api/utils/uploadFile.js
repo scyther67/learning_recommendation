@@ -7,7 +7,7 @@ const storage = multer.diskStorage({
     },
     filename: function (req, file, cb) {
         req.body[file.fieldname] = file.originalname;
-        cb(null, Date.now()+file.originalname);
+        cb(null, /*Date.now()+*/file.originalname);
     }
 });
 
@@ -21,22 +21,4 @@ const storage = multer.diskStorage({
 //     }
 // });
 
-// const fileFilter = (req, file, cb) => {
-//     if (file.mimetype == 'image/*' || file.mimetype == 'image/png') {
-//         cb(null, true);
-//     } else {
-//         cb(null, false);
-//     }
-// }
 module.exports = multer({ storage: storage/*, fileFilter: fileFilter */});
-// module.exports = multer({
-//     storage,
-//     fileFilter: function (req, file, callback) {
-//         var type = file.mimetype;
-//         if(type != "image/*") {
-//             req.body.errorFormat = 'Error';
-//             return callback(null, false);
-//         }
-//         callback(null, true);
-//     }
-// });
