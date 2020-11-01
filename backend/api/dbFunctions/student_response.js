@@ -14,8 +14,8 @@ module.exports = {
     // getLatestResponse: async (student_id, response) => {
     //     return Student_Response.find({ student_id }).sort({ datetime: -1 })[0];    
     // },
-    appendQuestionResponse: async (student_response, response_to_append)=>{
-        student_response.response.append(response_to_append);
+    appendQuestionResponse: async (student_response, response_to_append) => {
+        student_response.response.push(response_to_append);
         return Student_Response.findByIdAndUpdate({ _id: student_response._id },
             { response: student_response.response }, { new: true });
     }
