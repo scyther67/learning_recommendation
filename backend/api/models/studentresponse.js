@@ -7,9 +7,9 @@ const Student_Response = new mongoose.Schema({
   },
   response: [
     {
-      question_id: {
-        type: Number,
-        // ref: "Question",
+      question_ref: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Question",
       },
       user_response: {
         type: Number,
@@ -23,6 +23,10 @@ const Student_Response = new mongoose.Schema({
       },
     },
   ],
+  datetime: {
+    type: Date,
+    default: Date.now()
+  }
 });
 
 module.exports = mongoose.model("Student_Response", Student_Response);

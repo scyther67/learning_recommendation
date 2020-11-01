@@ -14,5 +14,10 @@ module.exports = {
     },
     findByQuestionId: async (questionid) => {
         return Question.findOne({ questionid });
+    },
+    findRandomQuestionByTopic: async (subtopic) => {
+        const all_questions = await Question.find({ subtopic });
+        return all_questions[Math.floor(Math.random() * all_questions.length)];
+
     }
 }

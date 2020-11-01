@@ -20,7 +20,8 @@ const Question = new mongoose.Schema({
     },
     subtopic: {
         type: String,
-        enum:["SELECT", "FROM", "WHERE", "UPDATE", "GROUP BY", "CREATE", "INSERT", "DELETE", "JOINS", "PREDICATE","SET OPERATORS", "AGGREGATION"]
+        enum: ["SELECT", "UPDATE", "GROUP BY", "CREATE", "INSERT", "DELETE", "JOINS",
+            "PREDICATE", "SET OPERATORS", "AGGREGATION"]
     },
     questionImageUrl: {
         type: String,

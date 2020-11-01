@@ -15,7 +15,6 @@ const TraceLearning = new mongoose.Schema({
             end: Date
         }]
     }],
-    // learning_behaviour
 });
 
 module.exports = mongoose.model('TraceLearning', TraceLearning);

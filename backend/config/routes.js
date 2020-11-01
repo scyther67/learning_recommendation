@@ -28,6 +28,8 @@ router.post("/test/testLearningDetails", Test.testLearningDetails);
 
 router.post("/question/addQuestion", AuthAdmin, multer1.single("excelfile"), Question.addQuestion);
 
+router.post("/question/reqQuestion", Auth, Question.reqQuestion);
+router.post("/question/allTopicQuestions", Question.allTopicQuestions);
 // router.post("/image", multer1.single("excelfile"), (req, res, next) => {
 //   try {
 //     console.log(req.file);
