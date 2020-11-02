@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Button, func } from "shards-react";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import Options from "../components/answers/Options";
 // import data from "../data/questions";
 import axios from "axios";
@@ -48,6 +49,7 @@ const ViewQuestion = () => {
   const [responses, setRP] = useState([]);
   const [QId, setQid] = useState(0);
   const [student_response_id, setSRId] = useState("");
+  const [showLoader, setLoader] = useState(false);
 
   useEffect(() => {
     //request first question
@@ -86,6 +88,7 @@ const ViewQuestion = () => {
   const nextQuestion = async e => {
     if (nr != total) {
       //axios request to get next question
+      setLoader(true);
       try {
         const config = {
           headers: {
@@ -103,6 +106,7 @@ const ViewQuestion = () => {
           modified_tp["end_time"] = modified_tp["tp"];
         }
         delete modified_tp.tp;
+        console.log(modified_tp);
         const res = await axios.post(
           "http://localhost:5000/api/question/reqQuestion",
           {
@@ -115,11 +119,12 @@ const ViewQuestion = () => {
           },
           config
         );
-        console.log(res.data);
+        // console.log(res.data);
         //add question to data array
         let newData = data;
         newData.push(res.data.random_question);
         setData(newData);
+        setLoader(false);
       } catch (error) {
         console.log(error);
       }
@@ -175,7 +180,7 @@ const ViewQuestion = () => {
   };
 
   const pushData = nr => {
-    console.log(data[nr]);
+    // console.log(data[nr]);
     setQuestion(data[nr].description);
     setAnswer([
       data[nr].alternatives[0].text,
@@ -186,7 +191,7 @@ const ViewQuestion = () => {
     setQid(data[nr]._id);
     setCorrect(data[nr].correct);
     setNr(nr + 1);
-    console.log(question);
+    // console.log(question);
   };
 
   return (
@@ -218,9 +223,16 @@ const ViewQuestion = () => {
       <Row>
         <Col style={{ display: "flex", justifyContent: "center" }}>
           {showButton ? (
-            <Button style={cardStyles2} onClick={nextQuestion} id={"fin-btn"}>
-              {nr === total ? "Finish Quiz" : "Next Question"}
-            </Button>
+            <React.Fragment>
+              <Button style={cardStyles2} onClick={nextQuestion} id={"fin-btn"}>
+                {nr === total ? "Finish Quiz" : "Next Question"}
+              </Button>
+              {showLoader == true ? (
+                <div style={{ marginTop: "40px", marginLeft: "20px" }}>
+                  <CircularProgress />
+                </div>
+              ) : null}
+            </React.Fragment>
           ) : null}
         </Col>
       </Row>

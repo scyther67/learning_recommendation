@@ -4,7 +4,7 @@ import "../../assets/color.css";
 
 const cardStyles = {
   width: "100%",
-  minHeight: "8vh",
+  minHeight: "9vh",
   marginTop: "3vh",
   boxShadow: "0 4px 8px 0 rgba(0,0,0,0.2)"
 };
@@ -12,6 +12,7 @@ const cardStyles = {
 function Options(props) {
   const [isAnswered, setIA] = useState(props.isAnswered);
   const [classNames, setCN] = useState(["", "", "", ""]);
+  const [WA, setWA] = useState([]);
 
   const checkAnswer = e => {
     let { isAnswered, questionNumber } = props;
@@ -21,25 +22,32 @@ function Options(props) {
       let elem = e.currentTarget;
 
       let { correct } = props;
+      let all_answers = [];
       let answer = Number(elem.dataset.id);
+      all_answers.push(answer);
       let key1 = "tp";
       let key2 = "user_response";
-      props.setTimestamp({
-        [key1]: Date.now(),
-        [key2]: answer,
-        question_id: props.QId
-      });
 
       if (answer === correct) {
         updatedClassNames[answer - 1] = "right";
         alert("Bingo!");
+        props.setTimestamp({
+          [key1]: Date.now(),
+          [key2]: answer,
+          question_id: props.QId,
+          incorrect_attempts: WA
+        });
+        setWA([]);
+        props.showButton();
       } else {
         updatedClassNames[answer - 1] = "wrong";
         alert("Sorry!");
+        let arr = WA;
+        arr.push(answer);
+        setWA(arr);
       }
-      setCN(updatedClassNames);
 
-      props.showButton();
+      setCN(updatedClassNames);
     }
   };
 
@@ -55,7 +63,7 @@ function Options(props) {
               outline
               className="right"
             >
-              {props.answers[0]}
+              <pre>{props.answers[0]}</pre>
             </Button>
           </Col>
           <Col>
@@ -66,7 +74,7 @@ function Options(props) {
               outline
               className={classNames[1]}
             >
-              {props.answers[1]}
+              <pre>{props.answers[1]}</pre>
             </Button>
           </Col>
         </Row>
@@ -79,7 +87,7 @@ function Options(props) {
               outline
               className={classNames[2]}
             >
-              {props.answers[2]}
+              <pre> {props.answers[2]}</pre>
             </Button>
           </Col>
           <Col>
@@ -90,7 +98,7 @@ function Options(props) {
               outline
               className={classNames[3]}
             >
-              {props.answers[3]}
+              <pre>{props.answers[3]}</pre>
             </Button>
           </Col>
         </Row>
