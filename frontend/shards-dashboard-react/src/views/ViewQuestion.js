@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Container, Row, Col, Button } from "shards-react";
+import { Container, Row, Col, Button, func } from "shards-react";
 import Options from "../components/answers/Options";
 // import data from "../data/questions";
 import axios from "axios";
@@ -38,7 +38,7 @@ const ViewQuestion = () => {
   }, []);
   const [data, setData] = useState([]);
   const [nr, setNr] = useState(0);
-  const [total, setTotal] = useState(data.length);
+  const [total, setTotal] = useState(5);
   const [showButton, setShowButton] = useState(false);
   const [questionAnswered, setQA] = useState(false);
   const [question, setQuestion] = useState("");
@@ -49,29 +49,33 @@ const ViewQuestion = () => {
   const [QId, setQid] = useState(0);
   const [student_response_id, setSRId] = useState("");
 
-  useEffect(async () => {
+  useEffect(() => {
     //request first question
-    try {
-      const config = {
-        headers: {
-          Authorization: localStorage.getItem("user_token")
-        }
-      };
-      const res = await axios.post(
-        "http://localhost:5000/api/question/reqQuestion",
-        { question_no: 0 },
-        config
-      );
-      console.log(res.status);
-      //add question to data array
-      let newData = data;
-      setSRId(res.data.student_response_id);
-      newData.append(res.data.random_question);
-      setData(newData);
-    } catch (error) {
-      console.log(error);
+    async function fetchData() {
+      try {
+        const config = {
+          headers: {
+            Authorization: localStorage.getItem("user_token")
+          }
+        };
+        const res = await axios.post(
+          "http://localhost:5000/api/question/reqQuestion",
+          { question_no: 0 },
+          config
+        );
+        console.log(res.data);
+        //add question to data array
+        let newData = data;
+        setSRId(res.data.student_response_id);
+        newData.push(res.data.random_question);
+        console.log(newData);
+        setData(newData);
+      } catch (error) {
+        console.log(error);
+      }
+      pushData(nr);
     }
-    pushData(nr);
+    fetchData();
   }, []);
 
   const handleShowButton = () => {
@@ -111,10 +115,10 @@ const ViewQuestion = () => {
           },
           config
         );
-        console.log(res.status);
+        console.log(res.data);
         //add question to data array
         let newData = data;
-        newData.append(res.data.random_question);
+        newData.push(res.data.random_question);
         setData(newData);
       } catch (error) {
         console.log(error);
@@ -171,16 +175,18 @@ const ViewQuestion = () => {
   };
 
   const pushData = nr => {
+    console.log(data[nr]);
     setQuestion(data[nr].description);
     setAnswer([
-      data[nr].alternatives[0],
-      data[nr].alternatives[1],
-      data[nr].alternatives[2],
-      data[nr].alternatives[3]
+      data[nr].alternatives[0].text,
+      data[nr].alternatives[1].text,
+      data[nr].alternatives[2].text,
+      data[nr].alternatives[3].text
     ]);
     setQid(data[nr]._id);
     setCorrect(data[nr].correct);
     setNr(nr + 1);
+    console.log(question);
   };
 
   return (

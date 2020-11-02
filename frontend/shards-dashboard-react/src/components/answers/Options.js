@@ -51,7 +51,7 @@ function Options(props) {
             <Button
               style={cardStyles}
               onClick={checkAnswer}
-              data-id="1"
+              data-id="0"
               outline
               className="right"
             >
@@ -62,7 +62,7 @@ function Options(props) {
             <Button
               style={cardStyles}
               onClick={checkAnswer}
-              data-id="2"
+              data-id="1"
               outline
               className={classNames[1]}
             >
@@ -75,7 +75,7 @@ function Options(props) {
             <Button
               style={cardStyles}
               onClick={checkAnswer}
-              data-id="3"
+              data-id="2"
               outline
               className={classNames[2]}
             >
@@ -86,7 +86,7 @@ function Options(props) {
             <Button
               style={cardStyles}
               onClick={checkAnswer}
-              data-id="4"
+              data-id="3"
               outline
               className={classNames[3]}
             >
