@@ -11,7 +11,7 @@ const cors = require('cors');
 module.exports = (app) => {
   app.use(compression());
   app.use(bodyParser.json());
-  app.use(bodyParser.urlencoded({extended: false}));
+  app.use(bodyParser.urlencoded({ extended: false }));
   app.use(cookieParser());
   app.use(cors(/*{origin: 'http://localhost:4200', credentials: true}*/));    
   app.use(helmet());
