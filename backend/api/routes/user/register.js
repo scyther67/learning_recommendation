@@ -1,11 +1,15 @@
 const logger = require("../../../config/winston");
 const { addUser, findUserByEmail } = require("../../dbFunctions/user");
-const { Conflict, ServerError, Success } = require("../../responses");
+const { Conflict, ServerError, Success, ValidationError } = require("../../responses");
 const { hash } = require("../../utils/password");
 const { generate } = require("../../utils/jwt");
+const { validationResult } = require('express-validator');
 
 module.exports = async (req, res) => {
   try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) return res.json({ ...ValidationError, errors: errors.array() });
+    
     const { name, email, password } = req.body;
     const existing_user = await findUserByEmail(email);
     if (existing_user)
