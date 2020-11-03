@@ -22,7 +22,7 @@ export default [
     component: () => <Redirect to="/sign-in" />
   },
   {
-    path: "/blog-overview",
+    path: "/dashboard",
     layout: DefaultLayout,
     component: BlogOverview,
     noNavbar: false,

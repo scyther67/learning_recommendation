@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -52,6 +52,12 @@ export default function SignInSide() {
   const classes = useStyles();
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
+
+  useEffect(() => {
+    if (localStorage.getItem("user_token")) {
+      history.push("/dashboard");
+    }
+  });
 
   const onChangeEmail = e => {
     setEmail(e.target.value);

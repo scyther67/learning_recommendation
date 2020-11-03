@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Button, func } from "shards-react";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Options from "../components/answers/Options";
-// import data from "../data/questions";
+import QuestionLoader from "../components/QuestionLoader";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
 
@@ -30,7 +30,7 @@ const cardStyles2 = {
   boxShadow: "0 4px 8px 0 rgba(0,0,0,0.2)"
 };
 
-const ViewQuestion = () => {
+const ViewQuestion = props => {
   let history = useHistory();
   useEffect(() => {
     if (!localStorage.getItem("user_token")) {
@@ -53,6 +53,8 @@ const ViewQuestion = () => {
 
   useEffect(() => {
     //request first question
+    // props.setLoading(true);
+    console.log(props);
     async function fetchData() {
       try {
         const config = {
