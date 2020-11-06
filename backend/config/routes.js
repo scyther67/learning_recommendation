@@ -18,7 +18,7 @@ router.get("/", (req, res) => {
 router.post("/auth/register", Validators.authRegister() ,User.Register);
 router.post("/auth/login", Validators.authLogin(), User.Login);
 // router.post("/auth/registerAdmin", AuthAdmin, User.RegisterAdmin);
-router.post("/auth/convertToAdmin", AuthAdmin, User.ConvertToAdmin);
+router.post("/auth/convertToAdmin", AuthAdmin, Validators.convertToAdmin(), User.ConvertToAdmin);
 
 router.post("/learning/visitedResource", Auth, Learning.visitedResource);
 
