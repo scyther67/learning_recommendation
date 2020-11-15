@@ -10,7 +10,6 @@ module.exports = async (req, res) => {
         let tracelearning = await findTraceLearning(req.body.userId);
 
         if (!tracelearning) { tracelearning = await createTraceLearning(req.body.userId) }
-        // console.log(tracelearning);
 
         let singleresource = {
             url:req.body.url,
@@ -20,7 +19,6 @@ module.exports = async (req, res) => {
             intervals:req.body.intervals
         }
         let finallearning = await appendTraceLearning(tracelearning, singleresource);
-        console.log(finallearning);
         res.json({ ...Success });
         }
         catch (err) {
