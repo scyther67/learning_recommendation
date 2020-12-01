@@ -4,7 +4,7 @@ import React from "react";
 
 export default function QuestionLoader({ active, children }) {
   return (
-    <LoadingOverlay active={active} spinner={<CircularProgress />}>
+    <LoadingOverlay active={true} spinner={<CircularProgress />}>
       {children}
     </LoadingOverlay>
   );
