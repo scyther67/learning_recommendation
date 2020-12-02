@@ -11,7 +11,23 @@ const WebResource = new mongoose.Schema({
         title: String,
         keywords: String
     },
-    domain: { type: String, enum: ["Education", "Entertainment", "Other"]
+    domain: { 
+        type: String, enum: ["Education", "Entertainment", "Other"]
+    },
+    subtopic: {
+        type: String, enum: [
+                            "SELECT", 
+                            "UPDATE", 
+                            "GROUP BY", 
+                            "CREATE", 
+                            "INSERT",
+                            "DELETE", 
+                            "JOINS",
+                            "PREDICATE", 
+                            "SET OPERATORS", 
+                            "AGGREGATION",
+                            "N/A"
+                        ]
     }
 })
 

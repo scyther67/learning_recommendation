@@ -17,7 +17,8 @@ module.exports = {
             domain_name: domain_name,
             base_url: base_url,
             metadata: content,
-            domain: magic_value
+            domain: magic_value,
+            subtopic: "N/A"
         });
         return website.save();
     },
