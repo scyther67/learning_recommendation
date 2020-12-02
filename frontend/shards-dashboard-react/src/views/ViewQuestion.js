@@ -1,9 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { Container, Row, Col, Button } from "shards-react";
+import { Container, Row, Col, Button, func } from "shards-react";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import Options from "../components/answers/Options";
-import data from "../data/questions";
+import QuestionLoader from "../components/QuestionLoader";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
+import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
 
 const cardStyles = {
   background: "white",
@@ -29,15 +36,24 @@ const cardStyles2 = {
   boxShadow: "0 4px 8px 0 rgba(0,0,0,0.2)"
 };
 
-const ViewQuestion = () => {
+const cornerBtn = {
+  position: "absolute",
+  right: "45px",
+  top: "15vh",
+  fontSize: "45px",
+  color: "#008080"
+};
+
+const ViewQuestion = props => {
   let history = useHistory();
   useEffect(() => {
     if (!localStorage.getItem("user_token")) {
       history.push("/sign-in");
     }
   }, []);
+  const [data, setData] = useState([]);
   const [nr, setNr] = useState(0);
-  const [total, setTotal] = useState(data.length);
+  const [total, setTotal] = useState(5);
   const [showButton, setShowButton] = useState(false);
   const [questionAnswered, setQA] = useState(false);
   const [question, setQuestion] = useState("");
@@ -46,10 +62,49 @@ const ViewQuestion = () => {
   const [timestamps, setTS] = useState([]);
   const [responses, setRP] = useState([]);
   const [QId, setQid] = useState(0);
+  const [student_response_id, setSRId] = useState("");
+  const [showLoader, setLoader] = useState(false);
+  const [open, setOpen] = React.useState(false);
+  const [showHelp, setHelp] = React.useState(false);
 
   useEffect(() => {
-    pushData(nr);
+    //request first question
+    // props.setLoading(true);
+    console.log(props);
+    async function fetchData() {
+      try {
+        const config = {
+          headers: {
+            Authorization: localStorage.getItem("user_token")
+          }
+        };
+        const res = await axios.post(
+          "http://localhost:5000/api/question/reqQuestion",
+          { question_no: 0 },
+          config
+        );
+        console.log(res.data);
+        //add question to data array
+        let newData = data;
+        setSRId(res.data.student_response_id);
+        newData.push(res.data.random_question);
+        console.log(newData);
+        setData(newData);
+      } catch (error) {
+        console.log(error);
+      }
+      pushData(nr);
+    }
+    fetchData();
   }, []);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const handleShowButton = () => {
     setShowButton(true);
@@ -58,41 +113,93 @@ const ViewQuestion = () => {
 
   const nextQuestion = async e => {
     if (nr != total) {
-      setNr(nr + 1);
-      pushData(nr);
-      setShowButton(false);
-      setQA(false);
-    } else {
-      let modified_tp = timestamps;
-      let start_time = await localStorage.getItem("start_time");
-      modified_tp[0]["start_time"] = Number(start_time);
-      modified_tp[0]["end_time"] = modified_tp[0]["tp"];
-      for (let i = 1; i < timestamps.length; i++) {
-        modified_tp[i]["start_time"] = modified_tp[i - 1]["tp"];
-        modified_tp[i]["end_time"] = modified_tp[i]["tp"];
-      }
-      for (let i = 1; i < timestamps.length; i++) {
-        delete modified_tp[i].tp;
-      }
-      delete modified_tp[0].tp;
+      //axios request to get next question
+      setLoader(true);
       try {
         const config = {
           headers: {
             Authorization: localStorage.getItem("user_token")
           }
         };
-        console.log(config);
+        //editing timestamps
+        let modified_tp = timestamps[nr - 1];
+        if (nr - 1 == 0) {
+          let start_time = localStorage.getItem("start_time");
+          modified_tp["start_time"] = Number(start_time);
+          modified_tp["end_time"] = modified_tp["tp"];
+        } else {
+          modified_tp["start_time"] = timestamps[nr - 1]["tp"];
+          modified_tp["end_time"] = modified_tp["tp"];
+        }
+        delete modified_tp.tp;
+        console.log(modified_tp);
         const res = await axios.post(
-          "http://localhost:5000/api/student-response",
-          { timestamps: modified_tp },
+          "http://localhost:5000/api/question/reqQuestion",
+          {
+            question_no: nr,
+            question_response: {
+              ...modified_tp,
+              student_response: responses[nr - 1]
+            },
+            student_response_id: student_response_id
+          },
           config
         );
-        console.log(res.status);
-        localStorage.removeItem("start_time");
+        // console.log(res.data);
+        //add question to data array
+        let newData = data;
+        newData.push(res.data.random_question);
+        setData(newData);
+        setLoader(false);
+      } catch (error) {
+        console.log(error);
+      }
+      pushData(nr);
+      setShowButton(false);
+      setQA(false);
+    } else {
+      //if all questions are answered
+      setLoader(true);
+      try {
+        const config = {
+          headers: {
+            Authorization: localStorage.getItem("user_token")
+          }
+        };
+        //editing timestamps
+        let modified_tp = timestamps[nr - 1];
+        if (nr - 1 == 0) {
+          let start_time = localStorage.getItem("start_time");
+          modified_tp["start_time"] = Number(start_time);
+          modified_tp["end_time"] = modified_tp["tp"];
+        } else {
+          modified_tp["start_time"] = timestamps[nr - 1]["tp"];
+          modified_tp["end_time"] = modified_tp["tp"];
+        }
+        delete modified_tp.tp;
+        console.log(modified_tp);
+        const res = await axios.post(
+          "http://localhost:5000/api/question/reqQuestion",
+          {
+            question_response: {
+              ...modified_tp,
+              student_response: responses[nr - 1]
+            },
+            student_response_id: student_response_id
+          },
+          config
+        );
+        setLoader(false);
+        history.push("/dashboard");
+        // console.log(res.data);
       } catch (error) {
         console.log(error);
       }
     }
+  };
+
+  const changeHelp = val => {
+    setHelp(val);
   };
 
   const setResponse = rp => {
@@ -110,54 +217,129 @@ const ViewQuestion = () => {
   };
 
   const pushData = nr => {
-    setQuestion(data[nr].question);
+    // console.log(data[nr]);
+    setQuestion(data[nr].description);
     setAnswer([
-      data[nr].answers[0],
-      data[nr].answers[1],
-      data[nr].answers[2],
-      data[nr].answers[3]
+      data[nr].alternatives[0].text,
+      data[nr].alternatives[1].text,
+      data[nr].alternatives[2].text,
+      data[nr].alternatives[3].text
     ]);
-    setQid(data[nr].qid);
+    setQid(data[nr]._id);
     setCorrect(data[nr].correct);
     setNr(nr + 1);
+    // console.log(question);
   };
 
   return (
-    <Container>
-      <Row>
-        <Col sm={{ size: 10, order: 2, offset: 1 }}>
-          <div style={cardStyles}>
-            <h4>
-              Question {nr}/{total}
-            </h4>
-            <h2>{question}</h2>
-          </div>
-        </Col>
-      </Row>
-      <Row>
-        <Col sm={{ size: 10, order: 2, offset: 1 }}>
-          <Options
-            answers={answers}
-            correct={correct}
-            showButton={handleShowButton}
-            isAnswered={questionAnswered}
-            setTimestamp={setTimestamp}
-            questionNumber={nr}
-            setRP={setResponse}
-            QId={QId}
-          />
-        </Col>
-      </Row>
-      <Row>
-        <Col style={{ display: "flex", justifyContent: "center" }}>
-          {showButton ? (
-            <Button style={cardStyles2} onClick={nextQuestion} id={"fin-btn"}>
-              {nr === total ? "Finish Quiz" : "Next Question"}
-            </Button>
-          ) : null}
-        </Col>
-      </Row>
-    </Container>
+    <React.Fragment>
+      <Container>
+        <Row>
+          <Col sm={{ size: 10, order: 2, offset: 1 }}>
+            <div style={cardStyles}>
+              <h4>
+                Question {nr}/{total}
+              </h4>
+              <h2>{question}</h2>
+            </div>
+          </Col>
+        </Row>
+        <Row>
+          <Col sm={{ size: 10, order: 2, offset: 1 }}>
+            <Options
+              answers={answers}
+              correct={correct}
+              showButton={handleShowButton}
+              isAnswered={questionAnswered}
+              setTimestamp={setTimestamp}
+              questionNumber={nr}
+              setRP={setResponse}
+              QId={QId}
+              changeHelp={changeHelp}
+            />
+          </Col>
+        </Row>
+        <Row>
+          <Col style={{ display: "flex", justifyContent: "center" }}>
+            {showButton ? (
+              <React.Fragment>
+                <Button
+                  style={cardStyles2}
+                  onClick={nextQuestion}
+                  id={"fin-btn"}
+                >
+                  {nr === total ? "Finish Quiz" : "Next Question"}
+                </Button>
+                {showLoader == true ? (
+                  <div style={{ marginTop: "40px", marginLeft: "20px" }}>
+                    <CircularProgress />
+                  </div>
+                ) : null}
+              </React.Fragment>
+            ) : null}
+          </Col>
+        </Row>
+      </Container>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Oops! Need Help ?"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            We have curated a list of web resources that you might want to read
+            before attempting this question again.
+            <ul>
+              <li>
+                <a
+                  target="_blank"
+                  href="https://www.studytonight.com/dbms/select-query.php"
+                >
+                  https://www.studytonight.com/dbms/select-query.php
+                </a>
+              </li>
+              <li>
+                <a
+                  target="_blank"
+                  href="https://www.tutorialspoint.com/sql/sql-select-query.htm"
+                >
+                  https://www.tutorialspoint.com/sql/sql-select-query.htm
+                </a>
+              </li>
+              <li>
+                <a
+                  target="_blank"
+                  href="https://www.geeksforgeeks.org/sql-select-query/"
+                >
+                  https://www.geeksforgeeks.org/sql-select-query/
+                </a>
+              </li>
+              <li>
+                <a
+                  target="_blank"
+                  href="https://www.w3schools.com/sql/sql_select.asp"
+                >
+                  https://www.w3schools.com/sql/sql_select.asp
+                </a>
+              </li>
+            </ul>
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary" autoFocus>
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+      {showHelp ? (
+        <HelpOutlineIcon
+          onClick={handleClickOpen}
+          style={cornerBtn}
+        ></HelpOutlineIcon>
+      ) : null}
+    </React.Fragment>
   );
 };
 

@@ -80,15 +80,18 @@ export default function SignInSide(props) {
         "http://localhost:5000/api/auth/register",
         form
       );
-      const user = {
-        token: res.data.token,
-        username: name
-      };
-      localStorage.setItem("user_token", user.token);
-      localStorage.setItem("user_name", user.username);
-      setTimeout(() => {
-        history.push("/quiz");
-      }, 2000);
+      console.log(res);
+      if (res.data.token) {
+        const user = {
+          token: res.data.token,
+          username: name
+        };
+        localStorage.setItem("user_token", user.token);
+        localStorage.setItem("user_name", user.username);
+        setTimeout(() => {
+          history.push("/quiz");
+        }, 2000);
+      }
     } catch (error) {
       console.log(error);
     }
