@@ -9,9 +9,9 @@ const TraceLearning = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'WebResource'
     },
+    totalTime: { type: Number },
     intervals: [
         {
-            totalTime: { type: Number },
             startTimeStamp: { type: Date },
             endTimeStamp: { type: Date },
         }

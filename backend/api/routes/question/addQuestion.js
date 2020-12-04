@@ -10,19 +10,23 @@ module.exports = async (req, res) => {
                 const questionid = cols[7];
                 const existing_question = await findByQuestionId(questionid);
                 if (existing_question == null) {
-                    const description = cols[0];
+                    const question_header = cols[0];
+                    const question_query = cols[1];
+                    const question_footer = cols[2];
                     const alternatives = [];
-                    for (var i = 0; i < 4; i++) {
+                    for (var i = 3; i < 7; i++) {
                         alternatives.push(
                             {
                                 'text': cols[i + 1],
                             }
                         )
                     }
-                    const isCorrect = cols[5];
-                    const subtopic = cols[6];
+                    const isCorrect = cols[8];
+                    const subtopic = cols[9];
                     await addQuestion(
-                        description,
+                        question_header,
+                        question_query,
+                        question_footer,
                         alternatives,
                         subtopic,
                         isCorrect,

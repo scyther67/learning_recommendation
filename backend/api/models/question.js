@@ -1,7 +1,9 @@
 const mongoose = require('mongoose');
 
 const Question = new mongoose.Schema({
-    description: { type: String },
+    question_header: { type: String },
+    question_query: { type: String },
+    question_footer: { type: String },
     questionid: {
         type: String,
         required: true,
