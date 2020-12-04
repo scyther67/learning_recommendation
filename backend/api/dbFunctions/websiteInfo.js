@@ -3,12 +3,7 @@ const WebResource = require('../models/web_resources');
 const urlMetadata = require('url-metadata');
 
 module.exports = {
-    createWebsite: async (url) => {
-
-        content = await this.understandWebsiteContent(url)
-        domain_name = url.split("/")[0]
-        base_url = url.split("?")[0]
-
+    createWebsite: async (url, content, domain_name, base_url) => {
 
         magic_value = "Educational" //Need to create ML algo to classify on the basis of webiste metadata
 

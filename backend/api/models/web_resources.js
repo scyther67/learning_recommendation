@@ -12,7 +12,7 @@ const WebResource = new mongoose.Schema({
         keywords: String
     },
     domain: { 
-        type: String, enum: ["Education", "Entertainment", "Other"]
+        type: String, enum: ["Educational", "Entertainment", "Other"]
     },
     subtopic: {
         type: String, enum: [
