@@ -42,7 +42,9 @@ export default class UserActions extends React.Component {
             src={require("./../../../../images/avatars/5.png")}
             alt="User Avatar"
           />{" "}
-          <span className="d-none d-md-inline-block">Abheet Shaju</span>
+          <span className="d-none d-md-inline-block">
+            {localStorage.getItem("user_name")}
+          </span>
         </DropdownToggle>
         <Collapse tag={DropdownMenu} right small open={this.state.visible}>
           <DropdownItem tag={Link} to="user-profile">

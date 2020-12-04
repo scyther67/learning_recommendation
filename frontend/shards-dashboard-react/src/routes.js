@@ -54,7 +54,7 @@ export default [
 
   {
     path: "/start-test",
-    layout: DefaultLayout,
+    layout: NoLayout,
     component: ViewQuestion,
     noNavbar: false,
     noFooter: true

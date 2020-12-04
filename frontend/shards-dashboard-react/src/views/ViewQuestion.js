@@ -6,17 +6,33 @@ import QuestionLoader from "../components/QuestionLoader";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
 import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
+import Tooltip from "@material-ui/core/Tooltip";
+import Typography from "@material-ui/core/Typography";
+import { withStyles, makeStyles } from "@material-ui/core/styles";
+import "../assets/prism.css";
+const Prism = require("prismjs");
+
+const HtmlTooltip = withStyles(theme => ({
+  tooltip: {
+    backgroundColor: "#add8e6",
+    color: "rgba(0, 0, 0, 0.87)",
+    maxWidth: 400,
+    fontSize: theme.typography.pxToRem(12),
+    border: "1px solid black"
+  }
+}))(Tooltip);
+
+const textStyles = makeStyles(theme => ({
+  text: {
+    maxWidth: 400
+  }
+}));
 
 const cardStyles = {
-  background: "white",
+  background: "#2b2b2b",
   borderRadius: "15px",
   width: "100%",
-  minHeight: "50vh",
+  minHeight: "40vh",
   marginTop: "5vh",
   marginBottom: "1vh",
   boxShadow: "0 4px 8px 0 rgba(0,0,0,0.2)",
@@ -45,6 +61,9 @@ const cornerBtn = {
 };
 
 const ViewQuestion = props => {
+  // const quesCode = question;
+  // const html = Prism.highlight(quesCode, Prism.languages.sql, "sql");
+  const classes = textStyles();
   let history = useHistory();
   useEffect(() => {
     if (!localStorage.getItem("user_token")) {
@@ -66,11 +85,15 @@ const ViewQuestion = props => {
   const [showLoader, setLoader] = useState(false);
   const [open, setOpen] = React.useState(false);
   const [showHelp, setHelp] = React.useState(false);
+  const [btn1, setBtn1] = useState("default");
+  const [btn2, setBtn2] = useState("default");
+  const [btn3, setBtn3] = useState("default");
+  const [btn4, setBtn4] = useState("default");
 
   useEffect(() => {
     //request first question
-    // props.setLoading(true);
     console.log(props);
+    Prism.highlightAll();
     async function fetchData() {
       try {
         const config = {
@@ -157,6 +180,10 @@ const ViewQuestion = props => {
       pushData(nr);
       setShowButton(false);
       setQA(false);
+      setBtn1("default");
+      setBtn2("default");
+      setBtn3("default");
+      setBtn4("default");
     } else {
       //if all questions are answered
       setLoader(true);
@@ -237,10 +264,20 @@ const ViewQuestion = props => {
         <Row>
           <Col sm={{ size: 10, order: 2, offset: 1 }}>
             <div style={cardStyles}>
-              <h4>
+              <h4 style={{ color: "white" }}>
                 Question {nr}/{total}
               </h4>
-              <h2>{question}</h2>
+              <pre
+                style={{
+                  fontSize: "20px",
+                  maxWidth: "100%",
+                  overflowWrap: "break-word",
+                  whiteSpace: "pre-wrap"
+                  // border: "2px solid red"
+                }}
+              >
+                <code className="language-sql">{question}</code>
+              </pre>
             </div>
           </Col>
         </Row>
@@ -256,6 +293,14 @@ const ViewQuestion = props => {
               setRP={setResponse}
               QId={QId}
               changeHelp={changeHelp}
+              setBtn1={setBtn1}
+              setBtn2={setBtn2}
+              setBtn3={setBtn3}
+              setBtn4={setBtn4}
+              btn1={btn1}
+              btn2={btn2}
+              btn3={btn3}
+              btn4={btn4}
             />
           </Col>
         </Row>
@@ -280,64 +325,64 @@ const ViewQuestion = props => {
           </Col>
         </Row>
       </Container>
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">{"Oops! Need Help ?"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            We have curated a list of web resources that you might want to read
-            before attempting this question again.
-            <ul>
-              <li>
-                <a
-                  target="_blank"
-                  href="https://www.studytonight.com/dbms/select-query.php"
-                >
-                  https://www.studytonight.com/dbms/select-query.php
-                </a>
-              </li>
-              <li>
-                <a
-                  target="_blank"
-                  href="https://www.tutorialspoint.com/sql/sql-select-query.htm"
-                >
-                  https://www.tutorialspoint.com/sql/sql-select-query.htm
-                </a>
-              </li>
-              <li>
-                <a
-                  target="_blank"
-                  href="https://www.geeksforgeeks.org/sql-select-query/"
-                >
-                  https://www.geeksforgeeks.org/sql-select-query/
-                </a>
-              </li>
-              <li>
-                <a
-                  target="_blank"
-                  href="https://www.w3schools.com/sql/sql_select.asp"
-                >
-                  https://www.w3schools.com/sql/sql_select.asp
-                </a>
-              </li>
-            </ul>
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="primary" autoFocus>
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
+
       {showHelp ? (
-        <HelpOutlineIcon
-          onClick={handleClickOpen}
-          style={cornerBtn}
-        ></HelpOutlineIcon>
+        <HtmlTooltip
+          interactive
+          leaveDelay={500}
+          placement="bottom-start"
+          classes={{ tooltip: classes.text }}
+          arrow
+          title={
+            <React.Fragment>
+              <Typography variant="h6" color="inherit">
+                Need Help ?
+              </Typography>
+              <br />
+              <Typography>
+                We have curated a list of web resources that you might want to
+                read before attempting this question again.
+              </Typography>
+              <hr></hr>
+              <ul>
+                <li>
+                  <a
+                    target="_blank"
+                    href="https://www.studytonight.com/dbms/select-query.php"
+                  >
+                    https://www.studytonight.com/dbms/select-query.php
+                  </a>
+                </li>
+                <li>
+                  <a
+                    target="_blank"
+                    href="https://www.tutorialspoint.com/sql/sql-select-query.htm"
+                  >
+                    https://www.tutorialspoint.com/sql/sql-select-query.htm
+                  </a>
+                </li>
+                <li>
+                  <a
+                    target="_blank"
+                    href="https://www.geeksforgeeks.org/sql-select-query/"
+                  >
+                    https://www.geeksforgeeks.org/sql-select-query/
+                  </a>
+                </li>
+                <li>
+                  <a
+                    target="_blank"
+                    href="https://www.w3schools.com/sql/sql_select.asp"
+                  >
+                    https://www.w3schools.com/sql/sql_select.asp
+                  </a>
+                </li>
+              </ul>
+            </React.Fragment>
+          }
+        >
+          <HelpOutlineIcon style={cornerBtn}></HelpOutlineIcon>
+        </HtmlTooltip>
       ) : null}
     </React.Fragment>
   );

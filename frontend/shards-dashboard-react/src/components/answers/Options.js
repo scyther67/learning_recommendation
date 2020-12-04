@@ -2,27 +2,43 @@ import React, { useState, useEffect } from "react";
 import { Container, Row, Col } from "shards-react";
 import Button from "@material-ui/core/Button";
 import { ThemeProvider } from "@material-ui/core/styles";
+import "../../assets/prism.css";
 import theme from "../../assets/theme";
+import Prism from "prismjs";
+import "prismjs/components/prism-sql";
 
 const cardStyles = {
   width: "100%",
-  minHeight: "9vh",
+  height: "10vh",
   marginTop: "3vh",
   boxShadow: "0 4px 8px 0 rgba(0,0,0,0.2)",
-  color: "white"
+  padding: "5px"
+  // color: "white",
+};
+
+const synStyle = {
+  width: "95%"
 };
 
 function Options(props) {
   const [isAnswered, setIA] = useState(props.isAnswered);
   const [classNames, setCN] = useState(["", "", "", ""]);
   const [WA, setWA] = useState([]);
-  const [btn1, setBtn1] = useState("default");
-  const [btn2, setBtn2] = useState("default");
-  const [btn3, setBtn3] = useState("default");
-  const [btn4, setBtn4] = useState("default");
+  var { btn1, btn2, btn3, btn4 } = props;
+
+  useEffect(() => {
+    Prism.highlightAll();
+  });
 
   const checkAnswer = e => {
-    let { isAnswered, questionNumber } = props;
+    var {
+      isAnswered,
+      questionNumber,
+      setBtn1,
+      setBtn2,
+      setBtn3,
+      setBtn4
+    } = props;
 
     let updatedClassNames = classNames;
     if (!isAnswered) {
@@ -95,7 +111,9 @@ function Options(props) {
                 color={btn1}
                 // className="right"
               >
-                <pre>{props.answers[0]}</pre>
+                <pre style={synStyle}>
+                  <code className="language-sql">{props.answers[0]}</code>
+                </pre>
               </Button>
             </Col>
             <Col>
@@ -107,7 +125,9 @@ function Options(props) {
                 color={btn2}
                 className={classNames[1]}
               >
-                <pre>{props.answers[1]}</pre>
+                <pre style={synStyle}>
+                  <code className="language-sql">{props.answers[1]}</code>
+                </pre>
               </Button>
             </Col>
           </Row>
@@ -121,7 +141,9 @@ function Options(props) {
                 color={btn3}
                 className={classNames[2]}
               >
-                <pre> {props.answers[2]}</pre>
+                <pre style={synStyle}>
+                  <code className="language-sql">{props.answers[2]}</code>
+                </pre>
               </Button>
             </Col>
             <Col>
@@ -133,7 +155,9 @@ function Options(props) {
                 color={btn4}
                 className={classNames[3]}
               >
-                <pre>{props.answers[3]}</pre>
+                <pre style={synStyle}>
+                  <code className="language-sql">{props.answers[3]}</code>
+                </pre>
               </Button>
             </Col>
           </Row>

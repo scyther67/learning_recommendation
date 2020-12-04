@@ -83,8 +83,9 @@ export default function SignInSide() {
         const user = {
           token: res.data.token
         };
-        console.log(res);
+        console.log("Here", res.data.name);
         localStorage.setItem("user_token", user.token);
+        localStorage.setItem("user_name", res.data.name);
         // localStorage.setItem("user_name", user.username);
         if (res.data.code == 200) {
           setTimeout(() => {
