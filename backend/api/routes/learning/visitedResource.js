@@ -1,4 +1,4 @@
-const { findTraceLearning, createTraceLearning, appendTraceLearning, understandWebsiteContent } = require("../../dbFunctions/learningresource");
+const { findTraceLearning, createTraceLearning, appendTraceLearning } = require("../../dbFunctions/learningresource");
 const { findExistingResource, createWebsite } = require("../../dbFunctions/websiteInfo");
 const {Success} = require('../../responses')
 module.exports = async (req, res) => {
@@ -23,8 +23,7 @@ module.exports = async (req, res) => {
             tracelearning = await createTraceLearning(req.body.userId, website) 
         }
 
-        
-
+    
         let singleresource = {
             totalTime:req.body.totalTime,
             startTimeStamp:req.body.startTimeStamp,

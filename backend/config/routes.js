@@ -9,6 +9,7 @@ const User = require("../api/routes/user");
 const StudentResponse = require("../api/routes/student_response");
 const Question = require("../api/routes/question");
 const Validators = require("../api/policies/validators");
+const Suggestions = require("../api/routes/suggestions/suggestions")
 
 router.get("/", (req, res) => {
   res.send("Working Fine");
@@ -33,6 +34,9 @@ router.post("/question/reqQuestion", Auth, Question.reqQuestion);
 router.post("/question/allTopicQuestions", Question.allTopicQuestions);
 
 router.post("/student-response", Auth, StudentResponse.Response);//not used rn
+
+router.get("/suggestions", Suggestions);
+
 // router.post("/image", multer1.single("excelfile"), (req, res, next) => {
   //   try {
     //     console.log(req.file);

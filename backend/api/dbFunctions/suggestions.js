@@ -1,22 +1,21 @@
 const mongoose = require('mongoose');
 const TraceLearning = require('../models/tracelearning');
+const User = require('../models/user')
 const WebResource = require('../models/web_resources');
 
 module.exports = {
     findUnusedResources: async (id, subtopic) => {
-        learnings = TraceLearning.find({ 
-                                        student_id: id, 
-                                        interval: { $slice: -1,  } 
-                                    })
-        let websites = learnings.map(a => a.website_id);
 
+        learnings = await TraceLearning.find({
+            student_id: id
+        })
+        
+        let websites = learnings.map(a => mongoose.Types.ObjectId(a.website._id) );
 
-        unused_resources = WebResource.find({
-            _id: {$not: { $in: [websites] } },
-            subtopic: subtopic,
-            domain: "Educational"
+        return WebResource.find({
+            _id: { $nin: websites },
+            subtopic: subtopic
         })
 
-        return unused_resources
     },
 }

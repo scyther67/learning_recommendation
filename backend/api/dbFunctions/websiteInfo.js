@@ -5,7 +5,7 @@ const urlMetadata = require('url-metadata');
 module.exports = {
     createWebsite: async (url) => {
 
-        content = await this.understandWebsiteContent(url)
+        content = understandWebsiteContent(url)
         domain_name = url.split("/")[0]
         base_url = url.split("?")[0]
 
@@ -29,17 +29,15 @@ module.exports = {
 
     understandWebsiteContent: async (resource_url) => {
 
-        urlMetadata(resource_url).then(
-        function (metadata) { 
+        urlMetadata(resource_url).then( (metadata) => {
             return {
                 "description": metadata.description,
                 "title": metadata.title,
                 "keywords": metadata.keywords,
             }
-        },
-        function (error) { 
-            console.log(error)
-  })
+        }).catch((err) => {
+            console.log(error);
+        })
+    },
 
-    }
 }
