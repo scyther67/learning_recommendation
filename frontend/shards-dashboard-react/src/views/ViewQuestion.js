@@ -137,6 +137,7 @@ const ViewQuestion = props => {
   const nextQuestion = async e => {
     if (nr != total) {
       //axios request to get next question
+      changeHelp(false);
       setLoader(true);
       try {
         const config = {

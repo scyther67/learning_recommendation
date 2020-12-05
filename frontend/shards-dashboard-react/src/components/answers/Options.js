@@ -21,7 +21,7 @@ const synStyle = {
 };
 
 function Options(props) {
-  const [isAnswered, setIA] = useState(props.isAnswered);
+  // const [isAnswered, setIA] = useState(props.isAnswered);
   const [classNames, setCN] = useState(["", "", "", ""]);
   const [WA, setWA] = useState([]);
   var { btn1, btn2, btn3, btn4 } = props;
@@ -63,15 +63,15 @@ function Options(props) {
         }
         updatedClassNames[answer] = "right";
         // alert("Bingo!");
-        props.setTimestamp({
-          [key1]: Date.now(),
-          [key2]: answer,
-          question_id: props.QId,
-          incorrect_attempts: WA
-        });
-        setWA([]);
-        props.changeHelp(false);
-        props.showButton();
+        // props.setTimestamp({
+        //   [key1]: Date.now(),
+        //   [key2]: answer,
+        //   question_id: props.QId,
+        //   incorrect_attempts: WA
+        // });
+        // setWA([]);
+        // props.changeHelp(false);
+        // props.showButton();
       } else {
         if (answer == 0) {
           setBtn1("secondary");
@@ -87,11 +87,18 @@ function Options(props) {
         let arr = WA;
         arr.push(answer);
         setWA(arr);
-        if (arr.length >= 2) {
-          props.changeHelp(true);
-        }
-      }
 
+        props.changeHelp(true);
+      }
+      props.setTimestamp({
+        [key1]: Date.now(),
+        [key2]: answer,
+        question_id: props.QId,
+        incorrect_attempts: WA
+      });
+      setWA([]);
+
+      props.showButton();
       setCN(updatedClassNames);
     }
   };
