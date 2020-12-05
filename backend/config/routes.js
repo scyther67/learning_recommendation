@@ -9,7 +9,7 @@ const User = require("../api/routes/user");
 const StudentResponse = require("../api/routes/student_response");
 const Question = require("../api/routes/question");
 const Validators = require("../api/policies/validators");
-const Suggestions = require("../api/routes/suggestions/suggestions")
+const Suggestions = require("../api/routes/suggestions")
 
 router.get("/", (req, res) => {
   res.send("Working Fine");
@@ -35,15 +35,6 @@ router.post("/question/allTopicQuestions", Question.allTopicQuestions);
 
 router.post("/student-response", Auth, StudentResponse.Response);//not used rn
 
-router.get("/suggestions", Suggestions);
+router.get("/suggestions", Auth, Suggestions.suggestWebsites);
 
-// router.post("/image", multer1.single("excelfile"), (req, res, next) => {
-  //   try {
-    //     console.log(req.file);
-    //     return res.json({ message: "Uploaded" });
-    //   }
-    //   catch(err){
-      //     res.json({ message: "Error" });
-//   }
-// });
 module.exports = router;
