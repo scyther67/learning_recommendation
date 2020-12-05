@@ -12,13 +12,18 @@ module.exports = async (req, res) => {
     try {
         url = req.body.url;
         let website = await findExistingResource(url);
-
+        // console.log(website);
         if (!website){
-            content = await understandWebsiteContent(url);
-            domain_name = url.split("/")[0];
-            base_url = url.split("?")[0];
 
-            website = await createWebsite(url, content, domain_name, base_url);
+            domain_name = url.split("/").slice(0,3).join("/");
+            // console.log(domain_name);
+            parameterless_url = url.split("?")[0];
+            // content = await understandWebsiteContent(url);
+            // console.log(content);
+            
+
+            website = await createWebsite(url, /*content,*/ domain_name, parameterless_url);
+            // console.log(website);
         }
 
         let tracelearning = await findTraceLearning(req.body.userId, website); //pass url too

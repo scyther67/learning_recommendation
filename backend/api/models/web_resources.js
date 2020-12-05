@@ -5,7 +5,8 @@ const WebResource = new mongoose.Schema({
             type: String,
             unique: true 
         },
-    base_url: { type: String },
+    paramterless_url: { type: String },
+    domain_name: { type: String },
     metadata: {
         description: String,
         title: String,
