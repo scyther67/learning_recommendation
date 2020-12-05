@@ -14,6 +14,7 @@ import ViewQuestion from "./views/ViewQuestion";
 import Signup from "./views/Signup";
 import Signin from "./views/Signin";
 import QuestionUpload from "./views/QuestionUpload";
+import ResultSubmission from "./views/ResultSubmission";
 
 export default [
   {
@@ -23,7 +24,7 @@ export default [
     component: () => < Redirect to="/sign-in" />
   },
   {
-    path: "/blog-overview",
+    path: "/dashboard",
     layout: DefaultLayout,
     component: BlogOverview,
     noNavbar: false,
@@ -77,6 +78,13 @@ export default [
     path: "/add-question",
     layout: DefaultLayout,
     component: QuestionUpload,
+    noNavbar: false,
+    noFooter: true
+  },
+  {
+    path: "/finish-quiz",
+    layout: DefaultLayout,
+    component: ResultSubmission,
     noNavbar: false,
     noFooter: true
   }

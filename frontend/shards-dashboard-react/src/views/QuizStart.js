@@ -20,7 +20,7 @@ const cardStyles = {
   boxShadow: "0 4px 8px 0 rgba(0,0,0,0.2)"
 };
 
-const QuizStart = () => {
+const QuizStart = props => {
   let history = useHistory();
   useEffect(() => {
     if (!localStorage.getItem("user_token")) {
@@ -29,6 +29,7 @@ const QuizStart = () => {
   }, []);
   const onClickTest = () => {
     // console.log("Test Started ", Date.now());
+
     localStorage.setItem("start_time", Date.now());
   };
 

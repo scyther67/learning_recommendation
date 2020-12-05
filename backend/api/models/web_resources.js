@@ -5,14 +5,15 @@ const WebResource = new mongoose.Schema({
             type: String,
             unique: true 
         },
-    base_url: { type: String },
+    paramterless_url: { type: String },
+    domain_name: { type: String },
     metadata: {
         description: String,
         title: String,
         keywords: String
     },
     domain: { 
-        type: String, enum: ["Education", "Entertainment", "Other"]
+        type: String, enum: ["Educational", "Entertainment", "Other"]
     },
     subtopic: {
         type: String, enum: [

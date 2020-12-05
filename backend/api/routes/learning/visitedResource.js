@@ -1,5 +1,5 @@
 const { findTraceLearning, createTraceLearning, appendTraceLearning } = require("../../dbFunctions/learningresource");
-const { findExistingResource, createWebsite } = require("../../dbFunctions/websiteInfo");
+const { findExistingResource, createWebsite, understandWebsiteContent } = require("../../dbFunctions/websiteInfo");
 const {Success} = require('../../responses')
 module.exports = async (req, res) => {
 
@@ -10,11 +10,20 @@ module.exports = async (req, res) => {
     // let learning = await 
 
     try {
-
-        let website = await findExistingResource(req.body.url)
-
+        url = req.body.url;
+        let website = await findExistingResource(url);
+        // console.log(website);
         if (!website){
-            website = await createWebsite(req.body.url)
+
+            domain_name = url.split("/").slice(0,3).join("/");
+            // console.log(domain_name);
+            parameterless_url = url.split("?")[0];
+            // content = await understandWebsiteContent(url);
+            // console.log(content);
+            
+
+            website = await createWebsite(url, /*content,*/ domain_name, parameterless_url);
+            // console.log(website);
         }
 
         let tracelearning = await findTraceLearning(req.body.userId, website); //pass url too

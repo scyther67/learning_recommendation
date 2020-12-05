@@ -3,20 +3,19 @@ const WebResource = require('../models/web_resources');
 const urlMetadata = require('url-metadata');
 
 module.exports = {
-    createWebsite: async (url) => {
-
-        content = understandWebsiteContent(url)
-        domain_name = url.split("/")[0]
-        base_url = url.split("?")[0]
-
+    createWebsite: async (url/*, content*/, domain_name, parameterless_url) => {
 
         magic_value = "Educational" //Need to create ML algo to classify on the basis of webiste metadata
-
+        // metadata = {
+        //     "decription": content.description,
+        //     "title": content.title,
+        //     "keywords": content.keywords
+        // }
         let website = new WebResource({
             url: url,
-            domain_name: domain_name,
-            base_url: base_url,
-            metadata: content,
+            domain_name,
+            parameterless_url,
+            // metadata,
             domain: magic_value,
             subtopic: "N/A"
         });
@@ -24,20 +23,20 @@ module.exports = {
     },
 
     findExistingResource: async (url) => {
-        return WebResource.findOne({ url: url });  
+        return WebResource.findOne({ url });  
     },
 
     understandWebsiteContent: async (resource_url) => {
 
-        urlMetadata(resource_url).then( (metadata) => {
-            return {
-                "description": metadata.description,
-                "title": metadata.title,
-                "keywords": metadata.keywords,
-            }
-        }).catch((err) => {
-            console.log(error);
-        })
-    },
-
+        return urlMetadata(resource_url);//.then( (metadata)=>{ 
+        //     return metadata;
+        //     // return {
+        //     //     "description": metadata.description,
+        //     //     "title": metadata.title,
+        //     //     "keywords": metadata.keywords,
+        //     // }
+        // }).catch((err)=>{
+        //      console.log(err);
+        //  })
+    }
 }
