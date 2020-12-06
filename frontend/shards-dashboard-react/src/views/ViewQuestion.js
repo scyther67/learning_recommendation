@@ -9,6 +9,10 @@ import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
 import Tooltip from "@material-ui/core/Tooltip";
 import Typography from "@material-ui/core/Typography";
 import { withStyles, makeStyles } from "@material-ui/core/styles";
+import Dialog from "@material-ui/core/Dialog";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
 import "../assets/prism.css";
 const Prism = require("prismjs");
 
@@ -65,17 +69,13 @@ const ViewQuestion = props => {
   // const html = Prism.highlight(quesCode, Prism.languages.sql, "sql");
   const classes = textStyles();
   let history = useHistory();
-  useEffect(() => {
-    if (!localStorage.getItem("user_token")) {
-      history.push("/sign-in");
-    }
-  }, []);
+  // useEffect(() => {}, []);
   const [data, setData] = useState([]);
   const [nr, setNr] = useState(0);
   const [total, setTotal] = useState(5);
   const [showButton, setShowButton] = useState(false);
   const [questionAnswered, setQA] = useState(false);
-  const [question, setQuestion] = useState("");
+  const [question, setQuestion] = useState({});
   const [answers, setAnswer] = useState([]);
   const [correct, setCorrect] = useState("");
   const [timestamps, setTS] = useState([]);
@@ -91,8 +91,11 @@ const ViewQuestion = props => {
   const [btn4, setBtn4] = useState("default");
 
   useEffect(() => {
+    if (!localStorage.getItem("user_token")) {
+      history.push("/sign-in");
+    }
     //request first question
-    console.log(props);
+    console.log("Here", props);
     Prism.highlightAll();
     async function fetchData() {
       try {
@@ -111,7 +114,7 @@ const ViewQuestion = props => {
         let newData = data;
         setSRId(res.data.student_response_id);
         newData.push(res.data.random_question);
-        console.log(newData);
+        // console.log(newData);
         setData(newData);
       } catch (error) {
         console.log(error);
@@ -246,7 +249,7 @@ const ViewQuestion = props => {
 
   const pushData = nr => {
     // console.log(data[nr]);
-    setQuestion(data[nr].description);
+    setQuestion(data[nr]);
     setAnswer([
       data[nr].alternatives[0].text,
       data[nr].alternatives[1].text,
@@ -265,20 +268,25 @@ const ViewQuestion = props => {
         <Row>
           <Col sm={{ size: 10, order: 2, offset: 1 }}>
             <div style={cardStyles}>
-              <h4 style={{ color: "white" }}>
+              <h4 style={{ color: "white", marginTop: "2vh" }}>
                 Question {nr}/{total}
               </h4>
+              <Typography variant="h6" style={{ color: "white" }}>
+                {question.question_header}
+              </Typography>
               <pre
                 style={{
                   fontSize: "20px",
-                  maxWidth: "100%",
-                  overflowWrap: "break-word",
-                  whiteSpace: "pre-wrap"
-                  // border: "2px solid red"
+                  maxWidth: "100%"
+                  // overflowWrap: "break-word",
+                  // whiteSpace: "pre-wrap"
                 }}
               >
-                <code className="language-sql">{question}</code>
+                <code className="language-sql">{question.question_query}</code>
               </pre>
+              <Typography variant="h6" style={{ color: "white" }}>
+                {question.question_footer}
+              </Typography>
             </div>
           </Col>
         </Row>
@@ -326,6 +334,43 @@ const ViewQuestion = props => {
           </Col>
         </Row>
       </Container>
+      {question.questionImageUrl ? (
+        <Button
+          onClick={handleClickOpen}
+          style={{
+            position: "absolute",
+            borderRadius: "25px",
+            left: "40px",
+            top: "15vh",
+            backgroundColor: "#2b2b2b",
+            fontSize: "14px"
+          }}
+        >
+          View Question Image
+        </Button>
+      ) : null}
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        style={{ width: "100vw" }}
+      >
+        <DialogTitle id="alert-dialog-title">{"Table View"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Table/Schema for the Question
+          </DialogContentText>
+          <img
+            style={{
+              height: "300px",
+              width: "500px"
+            }}
+            src={question.questionImageUrl}
+            alt="No Image for this"
+          />
+        </DialogContent>
+      </Dialog>
 
       {showHelp ? (
         <HtmlTooltip
@@ -339,6 +384,7 @@ const ViewQuestion = props => {
               <Typography variant="h6" color="inherit">
                 Need Help ?
               </Typography>
+
               <br />
               <Typography>
                 We have curated a list of web resources that you might want to
