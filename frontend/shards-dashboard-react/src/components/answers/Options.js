@@ -87,7 +87,9 @@ function Options(props) {
         let arr = WA;
         arr.push(answer);
         setWA(arr);
-
+        //  API request for recommendation content would be placed here
+        console.log(props.updateContent);
+        props.setUpdate(props.updateContent + 1);
         props.changeHelp(true);
       }
       props.setTimestamp({

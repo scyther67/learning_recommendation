@@ -13,6 +13,7 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import RecommendationContent from "../components/RecommendationContent";
 import "../assets/prism.css";
 const Prism = require("prismjs");
 
@@ -65,11 +66,8 @@ const cornerBtn = {
 };
 
 const ViewQuestion = props => {
-  // const quesCode = question;
-  // const html = Prism.highlight(quesCode, Prism.languages.sql, "sql");
   const classes = textStyles();
   let history = useHistory();
-  // useEffect(() => {}, []);
   const [data, setData] = useState([]);
   const [nr, setNr] = useState(0);
   const [total, setTotal] = useState(5);
@@ -89,6 +87,7 @@ const ViewQuestion = props => {
   const [btn2, setBtn2] = useState("default");
   const [btn3, setBtn3] = useState("default");
   const [btn4, setBtn4] = useState("default");
+  const [updateContent, setUpdate] = useState(1);
 
   useEffect(() => {
     if (!localStorage.getItem("user_token")) {
@@ -310,6 +309,8 @@ const ViewQuestion = props => {
               btn2={btn2}
               btn3={btn3}
               btn4={btn4}
+              updateContent={updateContent}
+              setUpdate={setUpdate}
             />
           </Col>
         </Row>
@@ -384,47 +385,8 @@ const ViewQuestion = props => {
               <Typography variant="h6" color="inherit">
                 Need Help ?
               </Typography>
-
               <br />
-              <Typography>
-                We have curated a list of web resources that you might want to
-                read before attempting this question again.
-              </Typography>
-              <hr></hr>
-              <ul>
-                <li>
-                  <a
-                    target="_blank"
-                    href="https://www.studytonight.com/dbms/select-query.php"
-                  >
-                    https://www.studytonight.com/dbms/select-query.php
-                  </a>
-                </li>
-                <li>
-                  <a
-                    target="_blank"
-                    href="https://www.tutorialspoint.com/sql/sql-select-query.htm"
-                  >
-                    https://www.tutorialspoint.com/sql/sql-select-query.htm
-                  </a>
-                </li>
-                <li>
-                  <a
-                    target="_blank"
-                    href="https://www.geeksforgeeks.org/sql-select-query/"
-                  >
-                    https://www.geeksforgeeks.org/sql-select-query/
-                  </a>
-                </li>
-                <li>
-                  <a
-                    target="_blank"
-                    href="https://www.w3schools.com/sql/sql_select.asp"
-                  >
-                    https://www.w3schools.com/sql/sql_select.asp
-                  </a>
-                </li>
-              </ul>
+              <RecommendationContent updateContent={updateContent} />
             </React.Fragment>
           }
         >
