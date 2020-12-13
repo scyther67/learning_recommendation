@@ -22,7 +22,7 @@ module.exports = async (req, res) => {
       return res.json({ ...ServerError, message: "Error creating user" });
 
     let token = await generate({ id: user.id });
-    return res.json({ ...Success, token: token.token });
+    return res.json({ ...Success, token: token.token, name: user.name });
   } catch (error) {
     console.log(error);
     logger.error({ error, message: "Some error occured" });

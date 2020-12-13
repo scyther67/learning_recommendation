@@ -1,9 +1,13 @@
 const logger = require("../../../config/winston");
 const { findUserByEmail,convertToAdmin } = require("../../dbFunctions/user");
-const { Conflict, ServerError, Success, NotFound } = require("../../responses");
+const { Conflict, ServerError, Success, NotFound, ValidationError } = require("../../responses");
+const { validationResult } = require('express-validator');
 
 module.exports = async (req, res) => {
   try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) return res.json({ ...ValidationError, errors: errors.array() });
+
         const { email } = req.body;
         const existing_user = await findUserByEmail(email); 
 

@@ -1,21 +1,33 @@
 const mongoose = require('mongoose');
 const TraceLearning = require('../models/tracelearning');
 
+
 module.exports = {
-    createTraceLearning: async (id) => {
+    createTraceLearning: async (id, website) => {
         let tracelearning = new TraceLearning({
             student_id: id,
-            learning_behavior:[]
+            website: website,
+            intervals: []
         });
         return tracelearning.save();
     },
-    findTraceLearning: async (id) => {
-        return TraceLearning.findOne({ student_id: id });  
+
+    findTraceLearning: async (id, website) => {
+        return TraceLearning.findOne({ student_id: id, website: website });  
     },
+
     appendTraceLearning: async (tracelearning, singleresource) => {
-        tracelearning.learning_behaviour.push(singleresource);
-        // console.log(oldlearningbehavior);
-        // let newlearningbehavior = oldlearningbehavior.push(singleresource);
-        return TraceLearning.findByIdAndUpdate( tracelearning._id, { learning_behaviour: tracelearning.learning_behaviour }, {new:true});
+        tracelearning.intervals.push(singleresource);
+ 
+
+        return TraceLearning.findByIdAndUpdate( tracelearning._id, 
+                                                { intervals: tracelearning.intervals }, 
+                                                {new:true});
+    },
+
+    findTraceLearningById: async(id)=>{
+        return TraceLearning.find({
+            student_id: id
+        });
     }
 }

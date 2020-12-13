@@ -87,7 +87,22 @@ const ViewQuestion = props => {
   const [btn2, setBtn2] = useState("default");
   const [btn3, setBtn3] = useState("default");
   const [btn4, setBtn4] = useState("default");
-  const [updateContent, setUpdate] = useState(1);
+  const [updateContent, setUpdate] = useState(0);
+  const [subtopic_index, setIndex] = useState(0);
+  const [showMessage, setShowMessage] = useState(null);
+  const [weblist, setWeblist] = useState([]);
+  const subtopics_list = [
+    "SELECT",
+    "UPDATE",
+    "GROUP BY",
+    "CREATE",
+    "INSERT",
+    "DELETE",
+    "JOINS",
+    "PREDICATE",
+    "SET OPERATORS",
+    "AGGREGATION"
+  ];
 
   useEffect(() => {
     if (!localStorage.getItem("user_token")) {
@@ -154,8 +169,9 @@ const ViewQuestion = props => {
           modified_tp["start_time"] = Number(start_time);
           modified_tp["end_time"] = modified_tp["tp"];
         } else {
-          modified_tp["start_time"] = timestamps[nr - 1]["tp"];
-          modified_tp["end_time"] = modified_tp["tp"];
+          console.log("NR", nr);
+          modified_tp["start_time"] = timestamps[nr - 2]["end_time"];
+          modified_tp["end_time"] = timestamps[nr - 1]["tp"];
         }
         delete modified_tp.tp;
         console.log(modified_tp);
@@ -203,7 +219,7 @@ const ViewQuestion = props => {
           modified_tp["start_time"] = Number(start_time);
           modified_tp["end_time"] = modified_tp["tp"];
         } else {
-          modified_tp["start_time"] = timestamps[nr - 1]["tp"];
+          modified_tp["start_time"] = timestamps[nr - 2]["tp"];
           modified_tp["end_time"] = modified_tp["tp"];
         }
         delete modified_tp.tp;
@@ -236,7 +252,7 @@ const ViewQuestion = props => {
     let newrp = responses;
     newrp.push(rp);
     setRP(newrp);
-    console.log(newrp);
+    // console.log(newrp);
   };
 
   const setTimestamp = ts => {
@@ -311,6 +327,12 @@ const ViewQuestion = props => {
               btn4={btn4}
               updateContent={updateContent}
               setUpdate={setUpdate}
+              timestamps={timestamps}
+              NR={nr}
+              subtopic_index={subtopic_index}
+              setIndex={setIndex}
+              setShowMessage={setShowMessage}
+              setWeblist={setWeblist}
             />
           </Col>
         </Row>
@@ -386,7 +408,11 @@ const ViewQuestion = props => {
                 Need Help ?
               </Typography>
               <br />
-              <RecommendationContent updateContent={updateContent} />
+              <RecommendationContent
+                updateContent={updateContent}
+                showMessage={showMessage}
+                weblist={weblist}
+              />
             </React.Fragment>
           }
         >

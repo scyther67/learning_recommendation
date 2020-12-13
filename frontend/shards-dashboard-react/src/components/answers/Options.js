@@ -5,6 +5,7 @@ import { ThemeProvider } from "@material-ui/core/styles";
 import "../../assets/prism.css";
 import theme from "../../assets/theme";
 import Prism from "prismjs";
+import axios from "axios";
 import "prismjs/components/prism-sql";
 
 const cardStyles = {
@@ -25,12 +26,24 @@ function Options(props) {
   const [classNames, setCN] = useState(["", "", "", ""]);
   const [WA, setWA] = useState([]);
   var { btn1, btn2, btn3, btn4 } = props;
+  const subtopics_list = [
+    "SELECT",
+    "UPDATE",
+    "GROUP BY",
+    "CREATE",
+    "INSERT",
+    "DELETE",
+    "JOINS",
+    "PREDICATE",
+    "SET OPERATORS",
+    "AGGREGATION"
+  ];
 
   useEffect(() => {
     Prism.highlightAll();
   });
 
-  const checkAnswer = e => {
+  const checkAnswer = async e => {
     var {
       isAnswered,
       questionNumber,
@@ -61,17 +74,8 @@ function Options(props) {
         } else if (answer == 3) {
           setBtn4("primary");
         }
+        props.setIndex(props.subtopic_index + 1);
         updatedClassNames[answer] = "right";
-        // alert("Bingo!");
-        // props.setTimestamp({
-        //   [key1]: Date.now(),
-        //   [key2]: answer,
-        //   question_id: props.QId,
-        //   incorrect_attempts: WA
-        // });
-        // setWA([]);
-        // props.changeHelp(false);
-        // props.showButton();
       } else {
         if (answer == 0) {
           setBtn1("secondary");
@@ -83,12 +87,55 @@ function Options(props) {
           setBtn4("secondary");
         }
         updatedClassNames[answer] = "wrong";
-        // alert("Sorry!");
+
         let arr = WA;
         arr.push(answer);
         setWA(arr);
         //  API request for recommendation content would be placed here
-        console.log(props.updateContent);
+        const config = {
+          headers: {
+            Authorization: localStorage.getItem("user_token")
+          }
+        };
+        try {
+          if (props.NR - 1 == 0) {
+            const res = await axios.post(
+              "http://localhost:5000/api/suggestions",
+              {
+                // subtopic: subtopics_list[props.subtopic_index],
+                subtopic: "N/A",
+                question_start_timestamp: localStorage.getItem("start_time")
+              },
+              config
+            );
+            console.log("DATA RETURN ", res.data);
+            if (res.data.showMessage) {
+              props.setShowMessage(res.data.showMessage);
+            } else {
+              props.setWeblist(res.data.suggestions);
+            }
+          } else {
+            const res = await axios.post(
+              "http://localhost:5000/api/suggestions",
+              {
+                // subtopic: subtopics_list[props.subtopic_index],
+                subtopic: "N/A",
+                question_start_timestamp:
+                  props.timestamps[props.NR - 2]["end_time"]
+              },
+              config
+            );
+            console.log("DATA RETURN ", res.data);
+            if (res.data.showMessage) {
+              props.setShowMessage(res.data.showMessage);
+            } else {
+              props.setWeblist(res.data.suggestions);
+            }
+          }
+        } catch (error) {
+          console.log("ERROR", error);
+        }
+
         props.setUpdate(props.updateContent + 1);
         props.changeHelp(true);
       }
@@ -118,7 +165,6 @@ function Options(props) {
                 outline
                 variant="contained"
                 color={btn1}
-                // className="right"
               >
                 <pre style={synStyle}>
                   <code className="language-sql">{props.answers[0]}</code>

@@ -5,16 +5,17 @@ const TraceLearning = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
-    learning_behaviour: [{
-        url: { type: String },
-        totalTime: { type: Number },
-        startTimeStamp: { type: Date },
-        endTimeStamp: { type: Date },
-        intervals: [{
-            start: Date,
-            end: Date
-        }]
-    }],
+    website: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'WebResource'
+    },
+    totalTime: { type: Number },
+    intervals: [
+        {
+            startTimeStamp: { type: Date },
+            endTimeStamp: { type: Date },
+        }
+    ]
 });
 
 module.exports = mongoose.model('TraceLearning', TraceLearning);
