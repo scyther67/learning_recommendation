@@ -21,7 +21,18 @@ module.exports = {
         });
         return website.save();
     },
-
+    createWebsiteBySubtopicAndId: async (url, subtopic, websiteid, domain_name, parameterless_url) => {
+        magic_value = "Educational";
+        let website = new WebResource({
+            url,
+            domain_name,
+            parameterless_url,
+            domain: magic_value,
+            subtopic,
+            websiteid
+        });
+        return website.save();
+    },
     findExistingResource: async (url) => {
         return WebResource.findOne({ url });  
     },
@@ -38,5 +49,8 @@ module.exports = {
         // }).catch((err)=>{
         //      console.log(err);
         //  })
+    },
+    findByWebsiteId: async (websiteid)=>{
+        return WebResource.findOne({websiteid});
     }
 }

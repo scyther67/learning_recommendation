@@ -35,6 +35,8 @@ router.post("/question/allTopicQuestions", Question.allTopicQuestions);
 
 router.post("/student-response", Auth, StudentResponse.Response);//not used rn
 
-router.get("/suggestions", Auth, Suggestions.suggestWebsites);
+router.get("/suggestions/suggestionBySubTopic", Auth, Suggestions.suggestWebsites);
+
+router.post("/suggestions/addSuggestionsExcel", Auth, multer1.single("websitefile"), Suggestions.addSuggestionsExcel);
 
 module.exports = router;
