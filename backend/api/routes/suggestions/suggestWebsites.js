@@ -15,7 +15,7 @@ module.exports = async (req, res) => {
         learning.intervals[learning.intervals.length - 1].startTimeStamp >
         question_start_timestamp
     );
-
+    console.log("CHECK", learning_after_question_start);
     if (learning_after_question_start.length == 0) {
       return res.json({ showMessage: true });
     }

@@ -13,7 +13,8 @@ const cardStyles = {
   height: "10vh",
   marginTop: "3vh",
   boxShadow: "0 4px 8px 0 rgba(0,0,0,0.2)",
-  padding: "5px"
+  padding: "5px",
+  borderRadius: "5px"
   // color: "white",
 };
 
@@ -109,9 +110,11 @@ function Options(props) {
               config
             );
             console.log("DATA RETURN ", res.data);
-            if (res.data.showMessage) {
-              props.setShowMessage(res.data.showMessage);
-            } else {
+            console.log("STAR TS ", localStorage.getItem("start_time"));
+            console.log("DATE NOW", Date.now());
+
+            props.setShowMessage(res.data.showMessage);
+            if (!res.data.showMessage) {
               props.setWeblist(res.data.suggestions);
             }
           } else {
@@ -126,9 +129,10 @@ function Options(props) {
               config
             );
             console.log("DATA RETURN ", res.data);
-            if (res.data.showMessage) {
-              props.setShowMessage(res.data.showMessage);
-            } else {
+            console.log("STAR TS ", props.timestamps[props.NR - 2]["end_time"]);
+            console.log("DATE NOW", Date.now());
+            props.setShowMessage(res.data.showMessage);
+            if (!res.data.showMessage) {
               props.setWeblist(res.data.suggestions);
             }
           }

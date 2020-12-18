@@ -4,10 +4,11 @@ import Typography from "@material-ui/core/Typography";
 const RecommendationContent = props => {
   return (
     <React.Fragment>
+      {/* <Typography>{props.showMessage}</Typography> */}
       {props.showMessage ? (
         <Typography>
           {
-            "Stuck at this question ? We suggest you to browse to learn some exciting concepts that will help you to answer this question."
+            "Stuck at this question ? We suggest you to browse the web in order to learn some exciting concepts that will help you to answer the next question."
           }
         </Typography>
       ) : (
@@ -17,7 +18,7 @@ const RecommendationContent = props => {
             before attempting the next question.
           </Typography>
 
-          <hr></hr>
+          <hr style={{ backgroundColor: "white" }}></hr>
           <ul>
             <li>
               <a target="_blank" href={props.weblist[0]}>

@@ -19,11 +19,13 @@ const Prism = require("prismjs");
 
 const HtmlTooltip = withStyles(theme => ({
   tooltip: {
-    backgroundColor: "#add8e6",
-    color: "rgba(0, 0, 0, 0.87)",
-    maxWidth: 400,
+    backgroundColor: "#2b2b2b",
+    color: "white",
+    // width: "20vw",
     fontSize: theme.typography.pxToRem(12),
-    border: "1px solid black"
+    border: "1px solid black",
+    borderRadius: "5px",
+    padding: "20px"
   }
 }))(Tooltip);
 
@@ -35,7 +37,7 @@ const textStyles = makeStyles(theme => ({
 
 const cardStyles = {
   background: "#2b2b2b",
-  borderRadius: "15px",
+  borderRadius: "5px",
   width: "100%",
   minHeight: "40vh",
   marginTop: "5vh",
@@ -70,7 +72,7 @@ const ViewQuestion = props => {
   let history = useHistory();
   const [data, setData] = useState([]);
   const [nr, setNr] = useState(0);
-  const [total, setTotal] = useState(5);
+  const [total, setTotal] = useState(10);
   const [showButton, setShowButton] = useState(false);
   const [questionAnswered, setQA] = useState(false);
   const [question, setQuestion] = useState({});
@@ -109,7 +111,7 @@ const ViewQuestion = props => {
       history.push("/sign-in");
     }
     //request first question
-    console.log("Here", props);
+    // console.log("Here", props);
     Prism.highlightAll();
     async function fetchData() {
       try {
@@ -118,12 +120,17 @@ const ViewQuestion = props => {
             Authorization: localStorage.getItem("user_token")
           }
         };
+        var subtopic_number = subtopic_index;
+        if (localStorage.getItem("subtopic_index")) {
+          subtopic_number = localStorage.getItem("subtopic_index");
+          setIndex(subtopic_number);
+        }
         const res = await axios.post(
           "http://localhost:5000/api/question/reqQuestion",
-          { question_no: 0 },
+          { question_no: 0, subtopic_number: subtopic_number },
           config
         );
-        console.log(res.data);
+        // console.log(res.data);
         //add question to data array
         let newData = data;
         setSRId(res.data.student_response_id);
@@ -179,6 +186,7 @@ const ViewQuestion = props => {
           "http://localhost:5000/api/question/reqQuestion",
           {
             question_no: nr,
+            subtopic_number: subtopic_index,
             question_response: {
               ...modified_tp,
               student_response: responses[nr - 1]
@@ -212,6 +220,7 @@ const ViewQuestion = props => {
             Authorization: localStorage.getItem("user_token")
           }
         };
+
         //editing timestamps
         let modified_tp = timestamps[nr - 1];
         if (nr - 1 == 0) {
@@ -235,8 +244,10 @@ const ViewQuestion = props => {
           },
           config
         );
+        //Saving Last Subtopic asked
+        localStorage.setItem("subtopic_index", subtopic_index);
         setLoader(false);
-        history.push("/dashboard");
+        history.push("/");
         // console.log(res.data);
       } catch (error) {
         console.log(error);
@@ -348,7 +359,13 @@ const ViewQuestion = props => {
                   {nr === total ? "Finish Quiz" : "Next Question"}
                 </Button>
                 {showLoader == true ? (
-                  <div style={{ marginTop: "40px", marginLeft: "20px" }}>
+                  <div
+                    style={{
+                      // position: "relative",
+                      marginTop: "40px",
+                      marginLeft: "20px"
+                    }}
+                  >
                     <CircularProgress />
                   </div>
                 ) : null}
@@ -362,11 +379,12 @@ const ViewQuestion = props => {
           onClick={handleClickOpen}
           style={{
             position: "absolute",
-            borderRadius: "25px",
-            left: "40px",
+            borderRadius: "5px",
+            left: "10vw",
             top: "15vh",
             backgroundColor: "#2b2b2b",
-            fontSize: "14px"
+            fontSize: "14px",
+            height: "5vh"
           }}
         >
           View Question Image
@@ -386,8 +404,7 @@ const ViewQuestion = props => {
           </DialogContentText>
           <img
             style={{
-              height: "300px",
-              width: "500px"
+              width: "550px"
             }}
             src={question.questionImageUrl}
             alt="No Image for this"
@@ -416,7 +433,7 @@ const ViewQuestion = props => {
             </React.Fragment>
           }
         >
-          <HelpOutlineIcon style={cornerBtn}></HelpOutlineIcon>
+          <HelpOutlineIcon style={cornerBtn}>Hint</HelpOutlineIcon>
         </HtmlTooltip>
       ) : null}
     </React.Fragment>
