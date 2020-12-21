@@ -28,6 +28,14 @@ const Question = new mongoose.Schema({
     questionImageUrl: {
         type: String,
         required: false
+    },
+    avg_time: {
+        type: Number,
+        default: 0
+    },
+    number_of_attempts: {
+        type: Number,
+        default: 0
     }
 })
 

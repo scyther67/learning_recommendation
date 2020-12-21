@@ -24,4 +24,10 @@ module.exports = {
                                                 { intervals: tracelearning.intervals }, 
                                                 {new:true});
     },
+
+    findTraceLearningById: async(id)=>{
+        return TraceLearning.find({
+            student_id: id
+        });
+    }
 }

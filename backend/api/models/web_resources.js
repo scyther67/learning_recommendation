@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
 
 const WebResource = new mongoose.Schema({
+    webresouceid:{
+        type:String,
+    },
     url:{ 
             type: String,
             unique: true 
@@ -27,7 +30,10 @@ const WebResource = new mongoose.Schema({
                             "PREDICATE", 
                             "SET OPERATORS", 
                             "AGGREGATION",
-                            "N/A"
+                            "N/A",
+                            "FROM",
+                            "WHERE",
+                            "JOIN"
                         ]
     }
 })

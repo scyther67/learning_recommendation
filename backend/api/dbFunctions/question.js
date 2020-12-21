@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const Question = require('../models/question');
+const Test = require('../models/studentresponse');
+
 
 module.exports = {
     addQuestion: async (question_header, question_query, question_footer, alternatives, subtopic, correct, questionid) => {
@@ -21,5 +23,16 @@ module.exports = {
         const all_questions = await Question.find({ subtopic });
         return all_questions[Math.floor(Math.random() * all_questions.length)];
 
+    },
+    findQuestionAnswerTime: async (response_to_append) => {
+        // test = await Test.findById(test_id);
+        question = Question.findById(response_to_append.question_ref._id);
+        time_taken = response_to_append.end_time - response_to_append.start_time;
+        //convert to seconds (Look up syntax)
+        attempts = question.number_of_attempts;
+        question.avg_time = (time_taken + 
+                            (question.avg_time * attempts)) / (attempts + 1);
+        question.number_of_attempts += 1;
+        return question.save()
     }
 }
