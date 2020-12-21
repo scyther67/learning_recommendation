@@ -1,7 +1,9 @@
 const mongoose = require('mongoose');
 
 const Question = new mongoose.Schema({
-    description: { type: String },
+    question_header: { type: String },
+    question_query: { type: String },
+    question_footer: { type: String },
     questionid: {
         type: String,
         required: true,
@@ -20,7 +22,8 @@ const Question = new mongoose.Schema({
     },
     subtopic: {
         type: String,
-        enum:["SELECT", "FROM", "WHERE", "UPDATE", "GROUP BY", "CREATE", "INSERT", "DELETE", "JOINS", "PREDICATE","SET OPERATORS", "AGGREGATION"]
+        enum: ["SELECT", "UPDATE", "GROUP BY", "CREATE", "INSERT", "DELETE", "JOINS",
+            "PREDICATE", "SET OPERATORS", "AGGREGATION"]
     },
     questionImageUrl: {
         type: String,

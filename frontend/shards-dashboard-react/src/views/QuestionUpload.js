@@ -53,7 +53,13 @@ const options = [
 
 function QuestionUpload() {
   const classes = useStyles();
-  const [option, setOption] = React.useState("EUR");
+  const [option, setOption] = useState("EUR");
+  const [selectedFile, setFile] = useState(null);
+
+  const onFileChange = e => {
+    console.log(e.target.files[0]);
+    setFile(e.target.files[0]);
+  };
 
   const handleChange = event => {
     setOption(event.target.value);
@@ -166,7 +172,11 @@ function QuestionUpload() {
           <Row>
             <Col sm={{ size: 10, order: 1, offset: 1 }}>
               <div className="row-3" style={rowstyle}>
-                <TextField name="Upload File" type="file" />
+                <TextField
+                  name="Upload File"
+                  type="file"
+                  onChange={onFileChange}
+                />
               </div>
             </Col>
           </Row>
@@ -177,6 +187,9 @@ function QuestionUpload() {
                   variant="contained"
                   color="primary"
                   style={{ width: "30vw", margin: "1vh", height: "50px" }}
+                  onClick={() => {
+                    console.log(selectedFile);
+                  }}
                 >
                   Add Question
                 </Button>

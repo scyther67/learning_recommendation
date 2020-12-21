@@ -1,29 +1,40 @@
 const { findTraceLearning, createTraceLearning, appendTraceLearning } = require("../../dbFunctions/learningresource");
-const {Success} = require('../../responses')
+const { findExistingResource, createWebsite, understandWebsiteContent } = require("../../dbFunctions/websiteInfo");
+const {Success, ServerError} = require('../../responses')
 module.exports = async (req, res) => {
-    // console.log("URL : " + req.body.url + "\tTotal Time : " + req.body.totalTime);
-    // console.log(req.body.intervals);
-    // console.log(req.body.userId);
-    // res.json({ status: "OK" });
-    // let learning = await 
+
     try {
-        let tracelearning = await findTraceLearning(req.body.userId);
+        url = req.body.url;
+        let website = await findExistingResource(url);
+        if (!website){
 
-        if (!tracelearning) { tracelearning = await createTraceLearning(req.body.userId) }
-        // console.log(tracelearning);
+            domain_name = url.split("/").slice(0,3).join("/");
+            parameterless_url = url.split("?")[0];
+                        
 
+            website = await createWebsite(url, domain_name, parameterless_url);
+        }
+
+        let tracelearning = await findTraceLearning(req.body.userId, website); //pass url too
+
+        if (!tracelearning) { 
+            tracelearning = await createTraceLearning(req.body.userId, website) 
+        }
+
+    
         let singleresource = {
-            url:req.body.url,
             totalTime:req.body.totalTime,
             startTimeStamp:req.body.startTimeStamp,
             endTimeStamp:req.body.endTimeStamp,
-            intervals:req.body.intervals
         }
+
+
         let finallearning = await appendTraceLearning(tracelearning, singleresource);
-        console.log(finallearning);
+        
         res.json({ ...Success });
         }
         catch (err) {
             console.log(err);
+            res.json({...ServerError});
         }
 }

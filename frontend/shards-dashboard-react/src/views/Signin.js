@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -52,6 +52,13 @@ export default function SignInSide() {
   const classes = useStyles();
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    if (localStorage.getItem("user_token")) {
+      history.push("/dashboard");
+    }
+  });
 
   const onChangeEmail = e => {
     setEmail(e.target.value);
@@ -69,17 +76,25 @@ export default function SignInSide() {
 
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/auth/register",
+        "http://localhost:5000/api/auth/login",
         form
       );
-      const user = {
-        token: res.data.token
-      };
-      localStorage.setItem("user_token", user.token);
-      // localStorage.setItem("user_name", user.username);
-      setTimeout(() => {
-        history.push("/quiz");
-      }, 1000);
+      if (res.data.token) {
+        const user = {
+          token: res.data.token
+        };
+        console.log(res);
+        localStorage.setItem("user_token", user.token);
+        // localStorage.setItem("user_name", user.username);
+        if (res.data.code == 200) {
+          setTimeout(() => {
+            history.push("/quiz");
+          }, 1000);
+        }
+      } else {
+        console.log("Error");
+        setError(true);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -113,6 +128,7 @@ export default function SignInSide() {
               autoComplete="email"
               autoFocus
               onChange={onChangeEmail}
+              error={error}
             />
             <TextField
               variant="outlined"
@@ -125,6 +141,7 @@ export default function SignInSide() {
               id="password"
               autoComplete="current-password"
               onChange={onChangePass}
+              error={error}
             />
 
             <Button
