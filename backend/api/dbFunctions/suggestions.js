@@ -7,7 +7,8 @@ module.exports = {
     findUnusedResources: async (id, subtopic) => {
 
         learnings = await TraceLearning.find({
-            student_id: id
+            student_id: id,
+            
         })
         
         let websites = learnings.map(a => mongoose.Types.ObjectId(a.website._id) );
