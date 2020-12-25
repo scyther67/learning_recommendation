@@ -32,6 +32,7 @@ router.post("/question/addQuestion", AuthAdmin, multer1.single("excelfile"), Que
 
 router.post("/question/reqQuestion", Auth, Question.reqQuestion);
 router.post("/question/allTopicQuestions", Question.allTopicQuestions);
+router.post("/question/averageAnswerTime", Auth, Question.averageAnswerTime);
 
 router.post("/student-response", Auth, StudentResponse.Response);//not used rn
 

@@ -24,11 +24,9 @@ module.exports = {
         return all_questions[Math.floor(Math.random() * all_questions.length)];
 
     },
-    findQuestionAnswerTime: async (response_to_append) => {
-        // test = await Test.findById(test_id);
-        question = Question.findById(response_to_append.question_ref._id);
-        time_taken = response_to_append.end_time - response_to_append.start_time;
-        //convert to seconds (Look up syntax)
+
+    UpdateQuestionAnswerTime: async (question, time_taken) => {
+
         attempts = question.number_of_attempts;
         question.avg_time = (time_taken + 
                             (question.avg_time * attempts)) / (attempts + 1);
