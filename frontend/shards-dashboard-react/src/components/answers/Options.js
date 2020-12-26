@@ -75,7 +75,12 @@ function Options(props) {
         } else if (answer == 3) {
           setBtn4("primary");
         }
+
+        var copy = props.subtopic_arr;
+        copy.shift();
+        props.setSubArr(copy);
         props.setIndex(props.subtopic_index + 1);
+        localStorage.setItem("subtopic_index", copy[0]);
         updatedClassNames[answer] = "right";
       } else {
         if (answer == 0) {
@@ -109,9 +114,6 @@ function Options(props) {
               },
               config
             );
-            console.log("DATA RETURN ", res.data);
-            console.log("STAR TS ", localStorage.getItem("start_time"));
-            console.log("DATE NOW", Date.now());
 
             props.setShowMessage(res.data.showMessage);
             if (!res.data.showMessage) {
@@ -128,9 +130,7 @@ function Options(props) {
               },
               config
             );
-            console.log("DATA RETURN ", res.data);
-            console.log("STAR TS ", props.timestamps[props.NR - 2]["end_time"]);
-            console.log("DATE NOW", Date.now());
+
             props.setShowMessage(res.data.showMessage);
             if (!res.data.showMessage) {
               props.setWeblist(res.data.suggestions);

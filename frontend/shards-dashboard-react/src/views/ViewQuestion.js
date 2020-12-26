@@ -93,6 +93,28 @@ const ViewQuestion = props => {
   const [subtopic_index, setIndex] = useState(0);
   const [showMessage, setShowMessage] = useState(null);
   const [weblist, setWeblist] = useState([]);
+  const [subtopic_arr, setSubArr] = useState([
+    1,
+    1,
+    2,
+    2,
+    3,
+    3,
+    4,
+    4,
+    5,
+    5,
+    6,
+    6,
+    7,
+    7,
+    8,
+    8,
+    9,
+    9,
+    10,
+    10
+  ]);
   const subtopics_list = [
     "SELECT",
     "UPDATE",
@@ -125,6 +147,7 @@ const ViewQuestion = props => {
           subtopic_number = localStorage.getItem("subtopic_index");
           setIndex(subtopic_number);
         }
+        console.log("Subtopic Number", subtopic_number);
         const res = await axios.post(
           "http://localhost:5000/api/question/reqQuestion",
           { question_no: 0, subtopic_number: subtopic_number },
@@ -137,6 +160,18 @@ const ViewQuestion = props => {
         newData.push(res.data.random_question);
         // console.log(newData);
         setData(newData);
+        var copy = subtopic_arr;
+        if (localStorage.getItem("subtopic_index")) {
+          for (let index = 0; index < subtopic_arr.length; ) {
+            if (copy[index] != localStorage.getItem("subtopic_index")) {
+              copy.shift();
+            } else {
+              break;
+            }
+          }
+          console.log("Sub Array", copy);
+          setSubArr(copy);
+        }
       } catch (error) {
         console.log(error);
       }
@@ -186,7 +221,7 @@ const ViewQuestion = props => {
           "http://localhost:5000/api/question/reqQuestion",
           {
             question_no: nr,
-            subtopic_number: subtopic_index,
+            subtopic_number: subtopic_arr[0],
             question_response: {
               ...modified_tp,
               student_response: responses[nr - 1]
@@ -344,6 +379,8 @@ const ViewQuestion = props => {
               setIndex={setIndex}
               setShowMessage={setShowMessage}
               setWeblist={setWeblist}
+              subtopic_arr={subtopic_arr}
+              setSubArr={setSubArr}
             />
           </Col>
         </Row>
