@@ -143,6 +143,39 @@ function Options(props) {
         props.setUpdate(props.updateContent + 1);
         props.changeHelp(true);
       }
+
+      //Show Avg Time Message by setting Violation Level Array
+      //Make Avg Time API req
+      const config = {
+        headers: {
+          Authorization: localStorage.getItem("user_token")
+        }
+      };
+      const response = await axios.post(
+        "SOME Endpoint",
+        {
+          question_start_timestamp:
+            props.timestamps[props.NR - 2]["end_time"] ||
+            localStorage.getItem("start_time"),
+          question_end_timestamp: props.timestamps[props.NR - 1]["tp"]
+        },
+        config
+      );
+      var newVLA = props.violationLevelArray;
+      newVLA.push(response.violation_level);
+      props.setVLA(newVLA);
+
+      //Check for past violation levels
+      if (newVLA.length >= 2) {
+        if (newVLA[newVLA.length - 1] >= 2 && newVLA[newVLA.length - 2] >= 2) {
+          props.setFlukeMsg(true);
+        }
+      }
+
+      //Make Hint Visible
+      props.changeHelp(true);
+
+      //Setting TS for current question
       props.setTimestamp({
         [key1]: Date.now(),
         [key2]: answer,
@@ -150,7 +183,7 @@ function Options(props) {
         incorrect_attempts: WA
       });
       setWA([]);
-
+      //Show Next Question Button
       props.showButton();
       setCN(updatedClassNames);
     }

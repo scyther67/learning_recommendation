@@ -38,6 +38,11 @@ const RecommendationContent = props => {
           </ul>
         </React.Fragment>
       )}
+      {props.showFlukeMsg ? (
+        <React.Fragment>
+          Are you fluking your answers by any chance ?
+        </React.Fragment>
+      ) : null}
     </React.Fragment>
   );
 };

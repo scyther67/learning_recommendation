@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Button, func } from "shards-react";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Options from "../components/answers/Options";
-import QuestionLoader from "../components/QuestionLoader";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
 import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
@@ -15,13 +14,13 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import RecommendationContent from "../components/RecommendationContent";
 import "../assets/prism.css";
+
 const Prism = require("prismjs");
 
 const HtmlTooltip = withStyles(theme => ({
   tooltip: {
     backgroundColor: "#2b2b2b",
     color: "white",
-    // width: "20vw",
     fontSize: theme.typography.pxToRem(12),
     border: "1px solid black",
     borderRadius: "5px",
@@ -92,6 +91,8 @@ const ViewQuestion = props => {
   const [updateContent, setUpdate] = useState(0);
   const [subtopic_index, setIndex] = useState(0);
   const [showMessage, setShowMessage] = useState(null);
+  const [showFlukeMessage, setFlukeMsg] = useState(false);
+  const [violationLevelArray, setVLA] = useState([]);
   const [weblist, setWeblist] = useState([]);
   const [subtopic_arr, setSubArr] = useState([
     1,
@@ -381,6 +382,10 @@ const ViewQuestion = props => {
               setWeblist={setWeblist}
               subtopic_arr={subtopic_arr}
               setSubArr={setSubArr}
+              setFlukeMsg={setFlukeMsg}
+              showFlukeMessage={showFlukeMessage}
+              violationLevelArray={violationLevelArray}
+              setVLA={setVLA}
             />
           </Col>
         </Row>
@@ -398,7 +403,6 @@ const ViewQuestion = props => {
                 {showLoader == true ? (
                   <div
                     style={{
-                      // position: "relative",
                       marginTop: "40px",
                       marginLeft: "20px"
                     }}
@@ -466,6 +470,7 @@ const ViewQuestion = props => {
                 updateContent={updateContent}
                 showMessage={showMessage}
                 weblist={weblist}
+                showFlukeMessage={showFlukeMessage}
               />
             </React.Fragment>
           }
