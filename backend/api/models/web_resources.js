@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
 
 const WebResource = new mongoose.Schema({
+    webresouceid:{
+        type:String,
+    },
     url:{ 
             type: String,
             unique: true 
@@ -27,9 +30,30 @@ const WebResource = new mongoose.Schema({
                             "PREDICATE", 
                             "SET OPERATORS", 
                             "AGGREGATION",
-                            "N/A"
+                            "N/A",
+                            "FROM",
+                            "WHERE",
+                            "JOIN"
                         ]
     }
 })
 
 module.exports = mongoose.model('WebResource', WebResource);
+
+
+function getRandomInt(arr) {  
+
+    random_list = [];
+    vals = []
+    max = arr.length();
+    for(i=0; i<3; i++){
+        let rand = Math.floor(Math.random() * Math.floor(max))
+        while(rand in vals){
+            rand = Math.floor(Math.random() * Math.floor(max))
+        }
+        random_list.push(arr[rand]);
+        vals.push[rand];
+    }
+    return random_list;
+}
+

@@ -37,9 +37,37 @@ const Question = new mongoose.Schema({
       "AGGREGATION",
     ],
   },
+  correct: {
+    type: Number,
+    enum: [0, 1, 2, 3],
+    required: true,
+  },
+  subtopic: {
+    type: String,
+    enum: [
+      "SELECT",
+      "UPDATE",
+      "GROUP BY",
+      "CREATE",
+      "INSERT",
+      "DELETE",
+      "JOINS",
+      "PREDICATE",
+      "SET OPERATORS",
+      "AGGREGATION",
+    ],
+  },
   questionImageUrl: {
     type: String,
     required: false,
+  },
+  avg_time: {
+    type: Number,
+    default: 0,
+  },
+  number_of_attempts: {
+    type: Number,
+    default: 0,
   },
 });
 
