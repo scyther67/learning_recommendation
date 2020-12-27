@@ -4,7 +4,10 @@ const { findUnusedResources,
         getTotalTimeArray,
         generateSuggestionsFromCommonDomains
      } = require('../../dbFunctions/suggestions');
-const { findTraceLearningById } = require("../../dbFunctions/learningresource")
+
+const { arrSum, softmax } = require("../../utils/domain_specific suggestions");
+const { getPrdecessorList } = require("../../utils/predecessor_suggestion");
+const { findTraceLearningById } = require("../../dbFunctions/learningresource");
 const mongoose = require('mongoose');
 
 module.exports = async (req, res) => {
@@ -17,24 +20,21 @@ module.exports = async (req, res) => {
         let learnings = await findTraceLearningById(user_id);
 
         // Find liked Domains
+
+        //Finding websites that can be suggested
         let possible_websites = await generatePossibleResources(subtopic);
         possible_domains = possible_websites.map(a => a.domain_name);
 
+        //Find Websites that he has already visited
         visited_websites = learnings.map(a => a.website)
         visited_domains = convertIdToDomainArray(visited_websites)
 
         common_domains = [...new Set([...visited_domains, ...possible_domains])]
+        
+        final_suggestions = []
 
         if(common_domains.length > 0){
             total_time_array = []
-
-            const arrSum = arr => arr.reduce((a,b) => a + b, 0)
-
-            function softmax(arr) {
-                return arr.map(function(value,index) { 
-                return Math.exp(value) / arr.map( function(y){ return Math.exp(y) } ).reduce( function(a,b){ return a+b })
-                })
-            }
 
             time_array = common_domains
                         .map(element => {
@@ -45,7 +45,7 @@ module.exports = async (req, res) => {
                         });
             
             softmax_array = softmax(time_array);
-            final_suggestions = []
+ 
             for(i = 0; i < softmax_array.length; i++){
                 // SETTING A HARD CODED VALUE HERE (0.4)
                 if(softmax_array[i] >= 0.4 ){
@@ -56,7 +56,12 @@ module.exports = async (req, res) => {
 
         if(final_suggestions > 0){
             let suggestions = generateSuggestionsFromCommonDomains(final_suggestions, subtopic);
-            return res.json({ showMessage:false, selectedDomains: true, suggestions:suggestions });
+            return res.json({ 
+                            showMessage:false,
+                            goBack: false, 
+                            selectedDomains: true, 
+                            suggestions: suggestions 
+                        });
         }
         else{
             let learning_after_question_start = learnings.filter(
@@ -72,6 +77,16 @@ module.exports = async (req, res) => {
             suggestions = suggestions.map((ele)=>{
                 return ele.url;
             });
+
+            if (suggestions.length < 3){
+                predecessor_list = getPrdecessorList(subtopic);
+                return res.json({
+                    showMessage: false,
+                    goBack: true,
+                    predecessor_list: predecessor_list
+                })
+            }
+
             random_list = [];
             vals = [];
             max = suggestions.length;

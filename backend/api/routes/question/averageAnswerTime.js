@@ -21,10 +21,14 @@ module.exports = async (req, res) => {
             res.json({"fluke_message": true,
                       "violation_level": 2});
         }
+        if(time_taken > (question.avg_time) * 3){
+            res.json({"fluke_message": true,
+                      "violation_level": 1});
+        }
         else{
             updation = UpdateQuestionAnswerTime(question, time_taken);
             res.json({"fluke_message": false,
-                      "violation_level": 1});
+                      "violation_level": 0});
         }
 
     } catch (err) {
