@@ -386,6 +386,7 @@ const ViewQuestion = props => {
               showFlukeMessage={showFlukeMessage}
               violationLevelArray={violationLevelArray}
               setVLA={setVLA}
+              subtopics_list={subtopics_list}
             />
           </Col>
         </Row>
@@ -421,7 +422,7 @@ const ViewQuestion = props => {
           style={{
             position: "absolute",
             borderRadius: "5px",
-            left: "10vw",
+            left: "5vw",
             top: "15vh",
             backgroundColor: "#2b2b2b",
             fontSize: "14px",

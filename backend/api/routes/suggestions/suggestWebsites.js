@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 
 module.exports = async (req, res) => {
   try {
+    console.log("MADE AS");
     user_id = req.body.userId;
     const { subtopic, timestamp, question_start_timestamp } = req.body;
     // question_start_timestamp = new Date(timestamp);

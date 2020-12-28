@@ -45,7 +45,7 @@ router.post("/question/averageAnswerTime", Auth, Question.averageAnswerTime);
 
 router.post("/student-response", Auth, StudentResponse.Response); //not used rn
 
-router.get(
+router.post(
   "/suggestions/suggestionBySubTopic",
   Auth,
   Suggestions.suggestWebsites

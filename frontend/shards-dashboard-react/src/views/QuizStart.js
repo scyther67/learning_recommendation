@@ -6,7 +6,7 @@ import { NavLink as RouteNavLink, useHistory } from "react-router-dom";
 
 const buttonStyles = {
   fontSize: "20px",
-  marginTop: "5vh",
+  marginTop: "4vh",
   borderRadius: "10px",
   padding: "15px 25px"
 };
@@ -60,8 +60,8 @@ const QuizStart = props => {
                   marginLeft: "2vw",
                   marginRight: "2vw",
                   fontSize: "16px",
-                  maxHeight: "60vh"
-                  // overflow: "scroll"
+                  maxHeight: "55vh",
+                  overflow: "scroll"
                 }}
               >
                 <ol>

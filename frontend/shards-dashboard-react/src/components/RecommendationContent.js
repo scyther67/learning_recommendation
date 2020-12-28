@@ -5,7 +5,11 @@ const RecommendationContent = props => {
   return (
     <React.Fragment>
       {/* <Typography>{props.showMessage}</Typography> */}
-      {props.showMessage ? (
+      {props.showFlukeMsg ? (
+        <React.Fragment>
+          Are you fluking your answers by any chance ?
+        </React.Fragment>
+      ) : props.showMessage ? (
         <Typography>
           {
             "Stuck at this question ? We suggest you to browse the web in order to learn some exciting concepts that will help you to answer the next question."
@@ -38,11 +42,6 @@ const RecommendationContent = props => {
           </ul>
         </React.Fragment>
       )}
-      {props.showFlukeMsg ? (
-        <React.Fragment>
-          Are you fluking your answers by any chance ?
-        </React.Fragment>
-      ) : null}
     </React.Fragment>
   );
 };

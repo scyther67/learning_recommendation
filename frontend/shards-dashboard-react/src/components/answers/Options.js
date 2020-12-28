@@ -106,10 +106,10 @@ function Options(props) {
         try {
           if (props.NR - 1 == 0) {
             const res = await axios.post(
-              "http://localhost:5000/api/suggestions",
+              "http://localhost:5000/api/suggestions/suggestionBySubTopic",
               {
                 // subtopic: subtopics_list[props.subtopic_index],
-                subtopic: "N/A",
+                subtopic: props.subtopics_list[props.subtopic_arr[0]],
                 question_start_timestamp: localStorage.getItem("start_time")
               },
               config
@@ -121,10 +121,10 @@ function Options(props) {
             }
           } else {
             const res = await axios.post(
-              "http://localhost:5000/api/suggestions",
+              "http://localhost:5000/api/suggestions/suggestionBySubTopic",
               {
                 // subtopic: subtopics_list[props.subtopic_index],
-                subtopic: "N/A",
+                subtopic: props.subtopics_list[props.subtopic_arr[0]],
                 question_start_timestamp:
                   props.timestamps[props.NR - 2]["end_time"]
               },
@@ -151,29 +151,40 @@ function Options(props) {
           Authorization: localStorage.getItem("user_token")
         }
       };
-      const response = await axios.post(
-        "SOME Endpoint",
-        {
-          question_start_timestamp:
-            props.timestamps[props.NR - 2]["end_time"] ||
-            localStorage.getItem("start_time"),
-          question_end_timestamp: props.timestamps[props.NR - 1]["tp"]
-        },
-        config
-      );
-      var newVLA = props.violationLevelArray;
-      newVLA.push(response.violation_level);
-      props.setVLA(newVLA);
+      if (props.NR >= 2) {
+        const response = await axios.post(
+          "http://localhost:5000/api/question/averageAnswerTime",
+          {
+            question_response: {
+              start_time:
+                props.NR - 2 >= 0
+                  ? props.timestamps[props.NR - 2]["start_time"]
+                  : localStorage.getItem("start_time"),
 
-      //Check for past violation levels
-      if (newVLA.length >= 2) {
-        if (newVLA[newVLA.length - 1] >= 2 && newVLA[newVLA.length - 2] >= 2) {
-          props.setFlukeMsg(true);
+              end_time: props.timestamps[props.NR - 2]["end_time"],
+              question_id: [props.NR - 2].question_id
+            }
+          },
+          config
+        );
+        console.log("RESPONSE", response.data);
+        var newVLA = props.violationLevelArray;
+        newVLA.push(response.violation_level);
+        props.setVLA(newVLA);
+
+        //Check for past violation levels
+        if (newVLA.length >= 2) {
+          if (
+            newVLA[newVLA.length - 1] >= 2 &&
+            newVLA[newVLA.length - 2] >= 2
+          ) {
+            props.setFlukeMsg(true);
+            props.changeHelp(true);
+          }
         }
-      }
 
-      //Make Hint Visible
-      props.changeHelp(true);
+        //Make Hint Visible
+      }
 
       //Setting TS for current question
       props.setTimestamp({

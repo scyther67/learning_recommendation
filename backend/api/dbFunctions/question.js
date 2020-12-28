@@ -36,6 +36,6 @@ module.exports = {
     question.avg_time =
       (time_taken + question.avg_time * attempts) / (attempts + 1);
     question.number_of_attempts += 1;
-    return question.save();
+    return 1;
   },
 };
