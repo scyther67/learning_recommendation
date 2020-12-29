@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const TraceLearning = require('../models/tracelearning');
+const User = require('../models/user');
 
 
 module.exports = {
@@ -29,5 +30,18 @@ module.exports = {
         return TraceLearning.find({
             student_id: id
         });
+    },
+
+    updateUserDomainDict: async(id, domain_name, total_time) => {
+        return User.find({
+            _id: id
+        }).then((user) => {
+            if(Object.keys(user.domain_time_dict).includes(domain_name)){
+                user.domain_time_dict[domain_name] += total_time;
+            }else{
+                user.domain_time_dict[domain_name] += total_time
+            }
+            user.save();
+        })
     }
 }

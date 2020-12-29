@@ -35,6 +35,18 @@ module.exports = {
       }
     );
   },
+  getDomainTimeDict: async (user_id) => {
+    return user_id.find({
+        _id: user_id
+    },{
+        _id:0,
+        email:0,
+        name:0,
+        password:0,
+        isAdmin:0,
+        __v:0
+    })
+  },
   convertIdToDomainArray: async (id_list) => {
     return WebResource.find(
       {

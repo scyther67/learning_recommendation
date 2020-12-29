@@ -1,4 +1,4 @@
-const { findTraceLearning, createTraceLearning, appendTraceLearning } = require("../../dbFunctions/learningresource");
+const { findTraceLearning, createTraceLearning, appendTraceLearning, updateUserDomainDict } = require("../../dbFunctions/learningresource");
 const { findExistingResource, createWebsite, understandWebsiteContent } = require("../../dbFunctions/websiteInfo");
 const {Success, ServerError} = require('../../responses')
 module.exports = async (req, res) => {
@@ -30,6 +30,8 @@ module.exports = async (req, res) => {
 
 
         let finallearning = await appendTraceLearning(tracelearning, singleresource);
+
+        let user_domain_dict_updated = await updateUserDomainDict(req.body.userId, domain_name, req.body.totalTime)
         
         res.json({ ...Success });
         }
