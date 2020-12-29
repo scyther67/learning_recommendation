@@ -12,14 +12,14 @@ import { makeStyles } from "@material-ui/core/styles";
 import { NavLink as RouteNavLink, useHistory } from "react-router-dom";
 import { NavItem, NavLink } from "shards-react";
 import axios from "axios";
+import coding from "../images/coding.png";
 
 const useStyles = makeStyles(theme => ({
   root: {
     height: "100vh"
   },
   image: {
-    backgroundImage:
-      "url(https://images.unsplash.com/photo-1508793382608-aed8824a0743?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=933&q=80)",
+    backgroundImage: `url(${coding})`,
     backgroundRepeat: "no-repeat",
     backgroundColor:
       theme.palette.type === "light"
@@ -56,7 +56,7 @@ export default function SignInSide() {
 
   useEffect(() => {
     if (localStorage.getItem("user_token")) {
-      history.push("/dashboard");
+      history.push("/quiz");
     }
   });
 
@@ -83,8 +83,9 @@ export default function SignInSide() {
         const user = {
           token: res.data.token
         };
-        console.log(res);
+        console.log("Here", res.data.name);
         localStorage.setItem("user_token", user.token);
+        localStorage.setItem("user_name", res.data.name);
         // localStorage.setItem("user_name", user.username);
         if (res.data.code == 200) {
           setTimeout(() => {

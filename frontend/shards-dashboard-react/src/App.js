@@ -6,6 +6,7 @@ import routes from "./routes";
 import QuestionLoader from "./components/QuestionLoader";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./shards-dashboard/styles/shards-dashboards.1.1.0.min.css";
+import "./assets/fonts.css";
 
 import Auth from "./AuthContext";
 

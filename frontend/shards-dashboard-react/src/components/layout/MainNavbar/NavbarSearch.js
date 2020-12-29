@@ -11,14 +11,16 @@ export default () => (
   <Form className="main-navbar__search w-100 d-none d-md-flex d-lg-flex">
     <InputGroup seamless className="ml-3">
       <InputGroupAddon type="prepend">
-        <InputGroupText>
+        {/* <InputGroupText>
           <i className="material-icons">search</i>
-        </InputGroupText>
+        </InputGroupText> */}
       </InputGroupAddon>
-      <FormInput
+      <span style={{ width: "70vw" }}></span>
+      {/* <FormInput
+        disabled
         className="navbar-search"
-        placeholder="Search for something..."
-      />
+        // placeholder="Search for something..."
+      /> */}
     </InputGroup>
   </Form>
 );
