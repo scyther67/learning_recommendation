@@ -90,10 +90,14 @@ const ViewQuestion = props => {
   const [btn4, setBtn4] = useState("default");
   const [updateContent, setUpdate] = useState(0);
   const [subtopic_index, setIndex] = useState(0);
-  const [showMessage, setShowMessage] = useState(null);
   const [showFlukeMessage, setFlukeMsg] = useState(false);
   const [violationLevelArray, setVLA] = useState([]);
-  const [weblist, setWeblist] = useState([]);
+  const [showMessage, setShowMessage] = useState(null);
+  const [suggestions, setSuggestions] = useState([]);
+  const [goBack, setGoBack] = useState(null);
+  const [selectedDomains, setSelectedDomains] = useState(null);
+  const [predeccesorList, setPredeccesorList] = useState([]);
+
   const [subtopic_arr, setSubArr] = useState([
     1,
     1,
@@ -217,21 +221,23 @@ const ViewQuestion = props => {
           modified_tp["end_time"] = timestamps[nr - 1]["tp"];
         }
         delete modified_tp.tp;
-        console.log(modified_tp);
+        console.log("Next Question on", subtopics_list[subtopic_arr[0]]);
+        console.log("Q", data[nr - 1]);
         const res = await axios.post(
           "http://localhost:5000/api/question/reqQuestion",
           {
-            question_no: nr,
+            question_no: subtopic_arr[0],
             subtopic_number: subtopic_arr[0],
             question_response: {
               ...modified_tp,
-              student_response: responses[nr - 1]
+              student_response: responses[nr - 1],
+              question_id: data[nr - 1]._id
             },
             student_response_id: student_response_id
           },
           config
         );
-        // console.log(res.data);
+        console.log(res.data);
         //add question to data array
         let newData = data;
         newData.push(res.data.random_question);
@@ -379,7 +385,10 @@ const ViewQuestion = props => {
               subtopic_index={subtopic_index}
               setIndex={setIndex}
               setShowMessage={setShowMessage}
-              setWeblist={setWeblist}
+              setGoBack={setGoBack}
+              setSuggestions={setSuggestions}
+              setSelectedDomains={setSelectedDomains}
+              setPredeccesorList={setPredeccesorList}
               subtopic_arr={subtopic_arr}
               setSubArr={setSubArr}
               setFlukeMsg={setFlukeMsg}
@@ -468,10 +477,11 @@ const ViewQuestion = props => {
               </Typography>
               <br />
               <RecommendationContent
-                updateContent={updateContent}
                 showMessage={showMessage}
-                weblist={weblist}
-                showFlukeMessage={showFlukeMessage}
+                goBack={goBack}
+                selectedDomains={selectedDomains}
+                suggestions={suggestions}
+                predeccesorList={predeccesorList}
               />
             </React.Fragment>
           }

@@ -116,8 +116,11 @@ function Options(props) {
             );
 
             props.setShowMessage(res.data.showMessage);
-            if (!res.data.showMessage) {
-              props.setWeblist(res.data.suggestions);
+            props.setGoBack(res.data.goBack);
+            props.setSelectedDomains(res.data.selectedDomains);
+            props.setSuggestions(res.data.suggestions);
+            if (res.data) {
+              console.log(res.data);
             }
           } else {
             const res = await axios.post(
@@ -132,9 +135,14 @@ function Options(props) {
             );
 
             props.setShowMessage(res.data.showMessage);
-            if (!res.data.showMessage) {
-              props.setWeblist(res.data.suggestions);
-            }
+            props.setGoBack(res.data.goBack);
+            props.setSelectedDomains(res.data.selectedDomains);
+            props.setSuggestions(res.data.suggestions);
+
+            // props.setShowMessage(res.data.showMessage);
+            // if (!res.data.showMessage) {
+            //   props.setWeblist(res.data.suggestions);
+            // }
           }
         } catch (error) {
           console.log("ERROR", error);
@@ -146,45 +154,45 @@ function Options(props) {
 
       //Show Avg Time Message by setting Violation Level Array
       //Make Avg Time API req
-      const config = {
-        headers: {
-          Authorization: localStorage.getItem("user_token")
-        }
-      };
-      if (props.NR >= 2) {
-        const response = await axios.post(
-          "http://localhost:5000/api/question/averageAnswerTime",
-          {
-            question_response: {
-              start_time:
-                props.NR - 2 >= 0
-                  ? props.timestamps[props.NR - 2]["start_time"]
-                  : localStorage.getItem("start_time"),
+      // const config = {
+      //   headers: {
+      //     Authorization: localStorage.getItem("user_token")
+      //   }
+      // };
+      // if (props.NR >= 2) {
+      //   const response = await axios.post(
+      //     "http://localhost:5000/api/question/averageAnswerTime",
+      //     {
+      //       question_response: {
+      //         start_time:
+      //           props.NR - 2 >= 0
+      //             ? props.timestamps[props.NR - 2]["start_time"]
+      //             : localStorage.getItem("start_time"),
 
-              end_time: props.timestamps[props.NR - 2]["end_time"],
-              question_id: [props.NR - 2].question_id
-            }
-          },
-          config
-        );
-        console.log("RESPONSE", response.data);
-        var newVLA = props.violationLevelArray;
-        newVLA.push(response.violation_level);
-        props.setVLA(newVLA);
+      //         end_time: props.timestamps[props.NR - 2]["end_time"],
+      //         question_id: [props.NR - 2].question_id
+      //       }
+      //     },
+      //     config
+      //   );
+      //   console.log("RESPONSE", response.data);
+      //   var newVLA = props.violationLevelArray;
+      //   newVLA.push(response.violation_level);
+      //   props.setVLA(newVLA);
 
-        //Check for past violation levels
-        if (newVLA.length >= 2) {
-          if (
-            newVLA[newVLA.length - 1] >= 2 &&
-            newVLA[newVLA.length - 2] >= 2
-          ) {
-            props.setFlukeMsg(true);
-            props.changeHelp(true);
-          }
-        }
+      //   //Check for past violation levels
+      //   if (newVLA.length >= 2) {
+      //     if (
+      //       newVLA[newVLA.length - 1] >= 2 &&
+      //       newVLA[newVLA.length - 2] >= 2
+      //     ) {
+      //       props.setFlukeMsg(true);
+      //       props.changeHelp(true);
+      //     }
+      //   }
 
-        //Make Hint Visible
-      }
+      //   //Make Hint Visible
+      // }
 
       //Setting TS for current question
       props.setTimestamp({
