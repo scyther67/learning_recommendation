@@ -5,7 +5,22 @@ const User = new mongoose.Schema({
     name: { type: String },
     password: { type: String },
     isAdmin: { type: Boolean, default:false},
-    domain_time_dict: { type: Object }
+    domain_time_dict: { type: Object },
+    subtopicTimeStamps: {
+        type:Array,
+        default:[
+            Date.now(), 
+            Date.now(), 
+            Date.now(), 
+            Date.now(), 
+            Date.now(), 
+            Date.now(), 
+            Date.now(), 
+            Date.now(), 
+            Date.now(), 
+            Date.now()
+        ]
+    }
 });
 
 module.exports = mongoose.model('user', User);

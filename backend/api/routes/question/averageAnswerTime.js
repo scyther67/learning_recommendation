@@ -1,14 +1,13 @@
-const { UpdateQuestionAnswerTime } = require("../../dbFunctions/question");
+const { UpdateQuestionAnswerTime, findByQuestionId } = require("../../dbFunctions/question");
 const { ServerError } = require("../../responses");
-const Question = require("../../models/question");
 
 module.exports = async (req, res) => {
   try {
     // Requires the question_response as sent everywhere else
-    const { start_time, end_time, question_id } = req.body;
+    const { question_start_timestamp, question_end_timestamp, question_id } = req.body;
 
-    question = Question.findById(question_id);
-    time_taken = Math.abs(end_time - start_time);
+    question = await findByQuestionId(question_id);
+    time_taken = Math.abs(question_end_timestamp - question_start_timestamp);
 
     // violation_level is the level of fluking:
     // If he spent less than 5 seconds on the question, level is 3
@@ -22,7 +21,7 @@ module.exports = async (req, res) => {
     } else if (time_taken > question.avg_time * 3) {
       res.json({ fluke_message: true, violation_level: 1 });
     } else {
-      updation = UpdateQuestionAnswerTime(question, time_taken);
+      updation = await UpdateQuestionAnswerTime(question, time_taken);
       res.json({ fluke_message: false, violation_level: 0 });
     }
 
