@@ -13,6 +13,8 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import RecommendationContent from "../components/RecommendationContent";
+import FlukeMessageComponent from "../components/FlukeMessageComponent";
+import AnnouncementIcon from "@material-ui/icons/Announcement";
 import "../assets/prism.css";
 
 const Prism = require("prismjs");
@@ -66,6 +68,14 @@ const cornerBtn = {
   color: "#008080"
 };
 
+const FlukeIcon = {
+  position: "absolute",
+  left: "40px",
+  top: "5vh",
+  fontSize: "45px",
+  color: "orange"
+};
+
 const ViewQuestion = props => {
   const classes = textStyles();
   let history = useHistory();
@@ -99,6 +109,8 @@ const ViewQuestion = props => {
   const [predeccesorList, setPredeccesorList] = useState([]);
 
   const [subtopic_arr, setSubArr] = useState([
+    0,
+    0,
     1,
     1,
     2,
@@ -116,9 +128,7 @@ const ViewQuestion = props => {
     8,
     8,
     9,
-    9,
-    10,
-    10
+    9
   ]);
   const subtopics_list = [
     "SELECT",
@@ -152,10 +162,10 @@ const ViewQuestion = props => {
           subtopic_number = localStorage.getItem("subtopic_index");
           setIndex(subtopic_number);
         }
-        console.log("Subtopic Number", subtopic_number);
+        console.log("Subtopic Number", subtopic_arr[0]);
         const res = await axios.post(
           "http://localhost:5000/api/question/reqQuestion",
-          { question_no: 0, subtopic_number: subtopic_number },
+          { question_no: subtopic_arr[0], subtopic_number: subtopic_arr[0] },
           config
         );
         // console.log(res.data);
@@ -201,7 +211,9 @@ const ViewQuestion = props => {
   const nextQuestion = async e => {
     if (nr != total) {
       //axios request to get next question
+
       changeHelp(false);
+
       setLoader(true);
       try {
         const config = {
@@ -378,8 +390,6 @@ const ViewQuestion = props => {
               btn2={btn2}
               btn3={btn3}
               btn4={btn4}
-              updateContent={updateContent}
-              setUpdate={setUpdate}
               timestamps={timestamps}
               NR={nr}
               subtopic_index={subtopic_index}
@@ -432,7 +442,7 @@ const ViewQuestion = props => {
             position: "absolute",
             borderRadius: "5px",
             left: "5vw",
-            top: "15vh",
+            top: "20vh",
             backgroundColor: "#2b2b2b",
             fontSize: "14px",
             height: "5vh"
@@ -487,6 +497,26 @@ const ViewQuestion = props => {
           }
         >
           <HelpOutlineIcon style={cornerBtn}>Hint</HelpOutlineIcon>
+        </HtmlTooltip>
+      ) : null}
+      {true ? (
+        <HtmlTooltip
+          interactive
+          leaveDelay={500}
+          placement="bottom-start"
+          classes={{ tooltip: classes.text }}
+          arrow
+          title={
+            <React.Fragment>
+              <Typography variant="h6" color="inherit">
+                We noticed something odd!
+              </Typography>
+              <br />
+              <FlukeMessageComponent />
+            </React.Fragment>
+          }
+        >
+          <AnnouncementIcon style={FlukeIcon}>Hint</AnnouncementIcon>
         </HtmlTooltip>
       ) : null}
     </React.Fragment>

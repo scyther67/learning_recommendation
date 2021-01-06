@@ -76,11 +76,6 @@ function Options(props) {
           setBtn4("primary");
         }
 
-        var copy = props.subtopic_arr;
-        copy.shift();
-        props.setSubArr(copy);
-        props.setIndex(props.subtopic_index + 1);
-        localStorage.setItem("subtopic_index", copy[0]);
         updatedClassNames[answer] = "right";
       } else {
         if (answer == 0) {
@@ -119,6 +114,7 @@ function Options(props) {
             props.setGoBack(res.data.goBack);
             props.setSelectedDomains(res.data.selectedDomains);
             props.setSuggestions(res.data.suggestions);
+
             if (res.data) {
               console.log(res.data);
             }
@@ -126,7 +122,6 @@ function Options(props) {
             const res = await axios.post(
               "http://localhost:5000/api/suggestions/suggestionBySubTopic",
               {
-                // subtopic: subtopics_list[props.subtopic_index],
                 subtopic: props.subtopics_list[props.subtopic_arr[0]],
                 question_start_timestamp:
                   props.timestamps[props.NR - 2]["end_time"]
@@ -138,17 +133,31 @@ function Options(props) {
             props.setGoBack(res.data.goBack);
             props.setSelectedDomains(res.data.selectedDomains);
             props.setSuggestions(res.data.suggestions);
-
-            // props.setShowMessage(res.data.showMessage);
-            // if (!res.data.showMessage) {
-            //   props.setWeblist(res.data.suggestions);
-            // }
           }
         } catch (error) {
           console.log("ERROR", error);
         }
+        var copy = props.subtopic_arr;
+        //API for Subtopic Switch
+        // if (copy[1] > copy[0]) {
+        //   const config = {
+        //     headers: {
+        //       Authorization: localStorage.getItem("user_token")
+        //     }
+        //   };
+        //   var resp = await axios.post(
+        //     "http://localhost:5000/api/user/updateSubtopicTimestamp",
+        //     {
+        //       subtopic_number: copy[1]
+        //     },
+        //     config
+        //   );
+        // }
+        copy.shift();
+        props.setSubArr(copy);
+        props.setIndex(props.subtopic_index + 1);
+        localStorage.setItem("subtopic_index", copy[0]);
 
-        props.setUpdate(props.updateContent + 1);
         props.changeHelp(true);
       }
 
@@ -170,7 +179,7 @@ function Options(props) {
       //             : localStorage.getItem("start_time"),
 
       //         end_time: props.timestamps[props.NR - 2]["end_time"],
-      //         question_id: [props.NR - 2].question_id
+      //         question_id: data[props.NR - 2].question_id
       //       }
       //     },
       //     config
