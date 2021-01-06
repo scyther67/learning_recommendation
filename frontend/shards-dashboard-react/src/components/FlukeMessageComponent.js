@@ -5,9 +5,7 @@ function FlukeMessageComponent(props) {
   return (
     <div>
       <Typography>
-        {
-          "Wow! That's a long streak of answers in a quick span of time. We think we're witnessing the birth of the Flash here. "
-        }
+        {"Wow! That's a long streak of answers in a quick span of time."}
       </Typography>
       <br />
       <Typography>

@@ -114,25 +114,45 @@ function Options(props) {
             props.setGoBack(res.data.goBack);
             props.setSelectedDomains(res.data.selectedDomains);
             props.setSuggestions(res.data.suggestions);
-
-            if (res.data) {
-              console.log(res.data);
-            }
           } else {
             const res = await axios.post(
               "http://localhost:5000/api/suggestions/suggestionBySubTopic",
               {
                 subtopic: props.subtopics_list[props.subtopic_arr[0]],
                 question_start_timestamp:
-                  props.timestamps[props.NR - 2]["end_time"]
+                  props.timestamps[props.NR - 2]["end_time"],
+                question_end_timestamp:
+                  props.timestamps[props.NR - 2]["end_time"],
+                question_id: props.data[props.NR - 2].question_id
               },
               config
             );
+            // Update Violation Levels
+            var newVLA = props.violationLevelArray;
+            newVLA.push(res.data.violation_message);
+            props.setVLA(newVLA);
 
-            props.setShowMessage(res.data.showMessage);
+            //Check for past violation levels
+            if (newVLA.length >= 2) {
+              if (
+                newVLA[newVLA.length - 1] >= 2 &&
+                newVLA[newVLA.length - 2] >= 2
+              ) {
+                props.setFlukeMsg(true);
+              }
+            }
+
+            props.setShowMessage(res.data.showBrowseMessage);
             props.setGoBack(res.data.goBack);
-            props.setSelectedDomains(res.data.selectedDomains);
-            props.setSuggestions(res.data.suggestions);
+            props.setSelectedDomains(res.data.domainSuggestionsBool);
+            if (res.data.domainSuggestionsBool) {
+              var randomSuggestions = res.data.suggestions;
+              var domainSuggestions = res.data.domainSuggestions;
+              var allSuggestions = randomSuggestions.append(domainSuggestions);
+              props.setSuggestions(allSuggestions);
+            } else {
+              props.setSuggestions(res.data.suggestions);
+            }
           }
         } catch (error) {
           console.log("ERROR", error);
