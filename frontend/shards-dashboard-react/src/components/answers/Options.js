@@ -134,6 +134,7 @@ function Options(props) {
 
             //Check for past violation levels
             if (newVLA.length >= 2) {
+              console.log(newVLA);
               if (
                 newVLA[newVLA.length - 1] >= 2 &&
                 newVLA[newVLA.length - 2] >= 2
@@ -247,7 +248,7 @@ function Options(props) {
                 style={cardStyles}
                 onClick={checkAnswer}
                 data-id="0"
-                outline
+                outline="true"
                 variant="contained"
                 color={btn1}
               >

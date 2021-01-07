@@ -499,7 +499,7 @@ const ViewQuestion = props => {
           <HelpOutlineIcon style={cornerBtn}>Hint</HelpOutlineIcon>
         </HtmlTooltip>
       ) : null}
-      {true ? (
+      {showFlukeMessage ? (
         <HtmlTooltip
           interactive
           leaveDelay={500}
