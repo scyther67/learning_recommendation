@@ -8,8 +8,8 @@ const { getSubtopicTimeStamp } = require("../../dbFunctions/user");
 module.exports = async (req, res) => {
      try {
       const { subtopic, userId, question_start_timestamp, question_end_timestamp, question_id } = req.body;
-
-      const [fluke_message, violation_message] = await getAverageAnswerTime(
+      
+      const [fluke_message, violation_level] = await getAverageAnswerTime(
         question_start_timestamp, 
         question_end_timestamp, 
         question_id);
@@ -22,7 +22,7 @@ module.exports = async (req, res) => {
       let learning_after_subtopic_start = await satisfactoryBrowsingCheck(learnings, subtopic_start_timestamp);
 
       if (learning_after_subtopic_start.length == 0) {
-        return res.json({ showBrowseMessage: true, fluke_message, violation_message });
+        return res.json({ showBrowseMessage: true, fluke_message, violation_level });
       }
       
       
@@ -47,7 +47,7 @@ module.exports = async (req, res) => {
 
       return res.json({
         fluke_message, 
-        violation_message,
+        violation_level,
         showBrowseMessage: false,
         goBack,
         predecessor_list,

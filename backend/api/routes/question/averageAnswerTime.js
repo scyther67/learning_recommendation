@@ -1,4 +1,4 @@
-const { UpdateQuestionAnswerTime, findByQuestionId } = require("../../dbFunctions/question");
+const { UpdateQuestionAnswerTime, findQuestionById } = require("../../dbFunctions/question");
 const { ServerError } = require("../../responses");
 
 module.exports = async (req, res) => {
@@ -6,7 +6,7 @@ module.exports = async (req, res) => {
     // Requires the question_response as sent everywhere else
     const { question_start_timestamp, question_end_timestamp, question_id } = req.body;
 
-    question = await findByQuestionId(question_id);
+    question = await findQuestionById(question_id);
     time_taken = Math.abs(question_end_timestamp - question_start_timestamp);
 
     // violation_level is the level of fluking:
@@ -17,6 +17,7 @@ module.exports = async (req, res) => {
     if (time_taken < 5000) {
       res.json({ fluke_message: true, violation_level: 3 });
     } else if (time_taken < question.avg_time / 2) {
+      updation = await UpdateQuestionAnswerTime(question, time_taken);
       res.json({ fluke_message: true, violation_level: 2 });
     } else if (time_taken > question.avg_time * 3) {
       res.json({ fluke_message: true, violation_level: 1 });

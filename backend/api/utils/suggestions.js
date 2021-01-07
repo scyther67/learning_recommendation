@@ -1,5 +1,5 @@
 const { findUnusedResources } = require("../dbFunctions/suggestions");
-
+const { findQuestionById, UpdateQuestionAnswerTime } = require("../dbFunctions/question");
 module.exports = {
     arrSum: (arr) => {
         arr.reduce((a,b) => a + b, 0)
@@ -44,10 +44,12 @@ module.exports = {
         }
     },
     getAverageAnswerTime : async(question_start_timestamp, question_end_timestamp, question_id) =>{
-
-
-        question = await findByQuestionId(question_id);
+      
+        question_start_timestamp = new Date(question_start_timestamp).getTime();
+        question_end_timestamp = new Date(question_end_timestamp).getTime();
+        question = await findQuestionById(question_id);
         time_taken = Math.abs(question_end_timestamp - question_start_timestamp);
+        
         let fluke_message = false, violation_level = 0; 
         // violation_level is the level of fluking:
         // If he spent less than 5 seconds on the question, level is 3
@@ -56,8 +58,9 @@ module.exports = {
         
         if (time_taken < 5000) {
           fluke_message = true;
-          violation_level- 3 ;
+          violation_level = 3 ;
         } else if (time_taken < question.avg_time / 2) {
+          updation = await UpdateQuestionAnswerTime(question, time_taken);
           fluke_message = true; 
           violation_level = 2;
         } else if (time_taken > question.avg_time * 3) {
@@ -66,9 +69,9 @@ module.exports = {
         } else {
           updation = await UpdateQuestionAnswerTime(question, time_taken);
           fluke_message = false;
-          violation_level: 0;
+          violation_level = 0;
         }
-
+        return [fluke_message, violation_level];
         // if (time_taken < 5000) {
         //   res.json({ fluke_message: true, violation_level: 3 });
         // } else if (time_taken < question.avg_time / 2) {

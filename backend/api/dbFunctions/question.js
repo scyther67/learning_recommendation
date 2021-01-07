@@ -14,8 +14,11 @@ module.exports = {
     });
     return newquestion.save();
   },
-  findByQuestionId: async (questionid) => {
-    return Question.findById({ questionid });
+  findQuestionById: async(_id)=>{
+    return Question.findById(_id);
+  },
+  findByQuestionId: async (questionid) => {//NOT SAME AS FIND QUESTION BY ID
+    return Question.findOne({ questionid });
   },
   findRandomQuestionByTopic: async (subtopic) => {
     const all_questions = await Question.find({ subtopic });
