@@ -25,6 +25,12 @@ router.post(
   User.ConvertToAdmin
 );
 
+router.post(
+  "/user/updateSubtopicTimeStamp",
+  Auth,
+  User.UpdateSubtopicTimeStamp
+);
+
 router.post("/learning/visitedResource", Auth, Learning.visitedResource);
 
 // router.post("/learning/visitedResource", Learning.visitedResource);

@@ -62,9 +62,8 @@ function Options(props) {
       let all_answers = [];
       let answer = Number(elem.dataset.id);
       all_answers.push(answer);
-      let key1 = "tp";
-      let key2 = "user_response";
-
+      var endTimeStamp = Date.now();
+      props.setEndTimeStamp(endTimeStamp);
       if (answer === correct) {
         if (answer == 0) {
           setBtn1("primary");
@@ -76,7 +75,28 @@ function Options(props) {
           setBtn4("primary");
         }
 
-        updatedClassNames[answer] = "right";
+        var copy = props.subtopic_arr;
+        // API for Subtopic Switch
+        if (copy[1] > copy[0]) {
+          console.log("Change ST");
+          const config = {
+            headers: {
+              Authorization: localStorage.getItem("user_token")
+            }
+          };
+          var resp = await axios.post(
+            "http://localhost:5000/api/user/updateSubtopicTimeStamp",
+            {
+              subtopic_no: copy[1]
+            },
+            config
+          );
+        }
+        copy.shift();
+
+        props.setSubArr(copy);
+
+        localStorage.setItem("subtopic_arr", JSON.stringify(copy));
       } else {
         if (answer == 0) {
           setBtn1("secondary");
@@ -100,46 +120,66 @@ function Options(props) {
         };
         try {
           if (props.NR - 1 == 0) {
+            console.log(
+              "TIME TAKEN",
+              endTimeStamp - Number(localStorage.getItem("start_time"))
+            );
+
             const res = await axios.post(
               "http://localhost:5000/api/suggestions/suggestionBySubTopic",
               {
-                // subtopic: subtopics_list[props.subtopic_index],
-                subtopic: props.subtopics_list[props.subtopic_arr[0]],
-                question_start_timestamp: localStorage.getItem("start_time")
+                subtopic: props.subtopic_arr[0],
+                question_start_timestamp: Number(
+                  localStorage.getItem("start_time")
+                ),
+                question_end_timestamp: endTimeStamp,
+                question_id: props.data[props.NR - 1]._id
+              },
+              config
+            );
+            console.log("RES_DATA", res.data);
+            props.setShowMessage(res.data.showBrowseMessage);
+            props.setGoBack(res.data.goBack);
+            props.setSelectedDomains(res.data.domainSuggestionsBool);
+            if (res.data.domainSuggestionsBool) {
+              var randomSuggestions = res.data.suggestions;
+              var domainSuggestions = res.data.domainSuggestions;
+              var allSuggestions = randomSuggestions.append(domainSuggestions);
+              props.setSuggestions(allSuggestions);
+            } else if (res.data.domainSuggestionsBool == false) {
+              props.setSuggestions(res.data.suggestions);
+            }
+            if (res.data.predecessor_list) {
+              props.setPredecessorList(res.data.predecessor_list);
+            }
+          } else {
+            console.log("TIME TAKEN", endTimeStamp - props.startTimeStamp);
+            const res = await axios.post(
+              "http://localhost:5000/api/suggestions/suggestionBySubTopic",
+              {
+                subtopic: props.subtopic_arr[0],
+                question_start_timestamp: props.startTimeStamp,
+                question_end_timestamp: props.endTimeStamp,
+                question_id: props.data[props.NR - 1]._id
               },
               config
             );
 
-            props.setShowMessage(res.data.showMessage);
-            props.setGoBack(res.data.goBack);
-            props.setSelectedDomains(res.data.selectedDomains);
-            props.setSuggestions(res.data.suggestions);
-          } else {
-            const res = await axios.post(
-              "http://localhost:5000/api/suggestions/suggestionBySubTopic",
-              {
-                subtopic: props.subtopics_list[props.subtopic_arr[0]],
-                question_start_timestamp:
-                  props.timestamps[props.NR - 2]["end_time"],
-                question_end_timestamp:
-                  props.timestamps[props.NR - 2]["end_time"],
-                question_id: props.data[props.NR - 2].question_id
-              },
-              config
-            );
             // Update Violation Levels
             var newVLA = props.violationLevelArray;
-            newVLA.push(res.data.violation_message);
+            newVLA.push(res.data.violation_level);
             props.setVLA(newVLA);
 
             //Check for past violation levels
-            if (newVLA.length >= 2) {
-              console.log(newVLA);
-              if (
-                newVLA[newVLA.length - 1] >= 2 &&
-                newVLA[newVLA.length - 2] >= 2
-              ) {
-                props.setFlukeMsg(true);
+            if (res.data.violation_level) {
+              if (newVLA.length >= 2) {
+                console.log(newVLA);
+                if (
+                  newVLA[newVLA.length - 1] >= 2 &&
+                  newVLA[newVLA.length - 2] >= 2
+                ) {
+                  props.setFlukeMsg(true);
+                }
               }
             }
 
@@ -151,33 +191,16 @@ function Options(props) {
               var domainSuggestions = res.data.domainSuggestions;
               var allSuggestions = randomSuggestions.append(domainSuggestions);
               props.setSuggestions(allSuggestions);
-            } else {
+            } else if (res.data.domainSuggestionsBool == false) {
               props.setSuggestions(res.data.suggestions);
+            }
+            if (res.data.predecessor_list) {
+              props.setPredecessorList(res.data.predecessor_list);
             }
           }
         } catch (error) {
           console.log("ERROR", error);
         }
-        var copy = props.subtopic_arr;
-        //API for Subtopic Switch
-        // if (copy[1] > copy[0]) {
-        //   const config = {
-        //     headers: {
-        //       Authorization: localStorage.getItem("user_token")
-        //     }
-        //   };
-        //   var resp = await axios.post(
-        //     "http://localhost:5000/api/user/updateSubtopicTimestamp",
-        //     {
-        //       subtopic_number: copy[1]
-        //     },
-        //     config
-        //   );
-        // }
-        copy.shift();
-        props.setSubArr(copy);
-        props.setIndex(props.subtopic_index + 1);
-        localStorage.setItem("subtopic_index", copy[0]);
 
         props.changeHelp(true);
       }
@@ -224,13 +247,6 @@ function Options(props) {
       //   //Make Hint Visible
       // }
 
-      //Setting TS for current question
-      props.setTimestamp({
-        [key1]: Date.now(),
-        [key2]: answer,
-        question_id: props.QId,
-        incorrect_attempts: WA
-      });
       setWA([]);
       //Show Next Question Button
       props.showButton();

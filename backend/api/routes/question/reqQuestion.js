@@ -23,7 +23,7 @@ module.exports = async (req, res) => {
       "SET OPERATORS",
       "AGGREGATION",
     ];
-    let { question_response, question_no } = req.body;
+    let { question_response, subtopic_no } = req.body;
 
     if (question_response != null) {
       const {
@@ -50,6 +50,23 @@ module.exports = async (req, res) => {
           });
       }
     }
+    // if (subtopic_no == 0 && student_response_id == null){
+    //     student_response = await createStudentResponse(req.body.userId, []);
+    //     student_response_id = student_response._id;
+    // }
+    // else {
+    //     student_response = await findStudentResponseById(student_response_id);
+    //     if (req.body.userId != student_response.student_id) return res.json({ ...AuthError,msg:"Test doesn't belong to this user" });
+    //     const { question_response } = req.body;
+    //     const new_student_response = await appendQuestionResponse(student_response, question_response);
+    //     if (new_student_response == null) return res.json({ ...ServerError, msg: "Could not add question response" });
+    // }
+
+    const topic = topics[subtopic_no];
+    const random_question = await findRandomQuestionByTopic(topic);
+
+    return res.json({ ...Success, random_question });
+  } catch (err) {
     // if (question_no == 0 && student_response_id == null){
     //     student_response = await createStudentResponse(req.body.userId, []);
     //     student_response_id = student_response._id;
@@ -62,12 +79,6 @@ module.exports = async (req, res) => {
     //     if (new_student_response == null) return res.json({ ...ServerError, msg: "Could not add question response" });
     // }
 
-    const topic = topics[question_no];
-
-    const random_question = await findRandomQuestionByTopic(topic);
-
-    return res.json({ ...Success, random_question });
-  } catch (err) {
     console.log(err);
     res.json({ ...ServerError });
   }

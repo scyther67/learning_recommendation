@@ -5,7 +5,6 @@ const xlsxFile = require("read-excel-file/node");
 module.exports = async (req, res) => {
   try {
     var question_data = {};
-    console.log("Working");
     xlsxFile("./api/utils/question_images_temp/" + req.body.excelfile).then(
       (rows) => {
         rows.forEach(async (cols) => {
@@ -17,7 +16,7 @@ module.exports = async (req, res) => {
             const question_footer = cols[2];
             const questionImageURL = cols[10];
             const alternatives = [];
-            console.log(questionImageURL);
+
             for (var i = 3; i < 7; i++) {
               alternatives.push({
                 text: cols[i],

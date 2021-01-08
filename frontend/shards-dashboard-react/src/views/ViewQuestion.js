@@ -87,7 +87,8 @@ const ViewQuestion = props => {
   const [question, setQuestion] = useState({});
   const [answers, setAnswer] = useState([]);
   const [correct, setCorrect] = useState("");
-  const [timestamps, setTS] = useState([]);
+  const [startTimeStamp, setStartTimeStamp] = useState(null);
+  const [endTimeStamp, setEndTimeStamp] = useState(null);
   const [responses, setRP] = useState([]);
   const [QId, setQid] = useState(0);
   const [student_response_id, setSRId] = useState("");
@@ -157,36 +158,27 @@ const ViewQuestion = props => {
             Authorization: localStorage.getItem("user_token")
           }
         };
-        var subtopic_number = subtopic_index;
-        if (localStorage.getItem("subtopic_index")) {
-          subtopic_number = localStorage.getItem("subtopic_index");
-          setIndex(subtopic_number);
+        var subtopic_number = subtopic_arr[0];
+        var stored_subtopic_arr = subtopic_arr;
+        if (localStorage.getItem("subtopic_arr")) {
+          stored_subtopic_arr = localStorage.getItem("subtopic_arr");
+          console.log("SUB ARRAY", JSON.parse(stored_subtopic_arr));
+          subtopic_number = JSON.parse(stored_subtopic_arr)[0];
+          setSubArr(JSON.parse(stored_subtopic_arr));
         }
-        console.log("Subtopic Number", subtopic_arr[0]);
+
         const res = await axios.post(
           "http://localhost:5000/api/question/reqQuestion",
-          { question_no: subtopic_arr[0], subtopic_number: subtopic_arr[0] },
+          { subtopic_no: subtopic_number },
           config
         );
-        // console.log(res.data);
+        console.log(res.data);
         //add question to data array
         let newData = data;
         setSRId(res.data.student_response_id);
         newData.push(res.data.random_question);
         // console.log(newData);
         setData(newData);
-        var copy = subtopic_arr;
-        if (localStorage.getItem("subtopic_index")) {
-          for (let index = 0; index < subtopic_arr.length; ) {
-            if (copy[index] != localStorage.getItem("subtopic_index")) {
-              copy.shift();
-            } else {
-              break;
-            }
-          }
-          console.log("Sub Array", copy);
-          setSubArr(copy);
-        }
       } catch (error) {
         console.log(error);
       }
@@ -211,9 +203,9 @@ const ViewQuestion = props => {
   const nextQuestion = async e => {
     if (nr != total) {
       //axios request to get next question
-
+      setFlukeMsg(false);
       changeHelp(false);
-
+      setStartTimeStamp(Date.now());
       setLoader(true);
       try {
         const config = {
@@ -221,27 +213,16 @@ const ViewQuestion = props => {
             Authorization: localStorage.getItem("user_token")
           }
         };
-        //editing timestamps
-        let modified_tp = timestamps[nr - 1];
-        if (nr - 1 == 0) {
-          let start_time = localStorage.getItem("start_time");
-          modified_tp["start_time"] = Number(start_time);
-          modified_tp["end_time"] = modified_tp["tp"];
-        } else {
-          console.log("NR", nr);
-          modified_tp["start_time"] = timestamps[nr - 2]["end_time"];
-          modified_tp["end_time"] = timestamps[nr - 1]["tp"];
-        }
-        delete modified_tp.tp;
-        console.log("Next Question on", subtopics_list[subtopic_arr[0]]);
-        console.log("Q", data[nr - 1]);
+        console.log("Question On", subtopics_list[subtopic_arr[0]]);
         const res = await axios.post(
           "http://localhost:5000/api/question/reqQuestion",
           {
             question_no: subtopic_arr[0],
-            subtopic_number: subtopic_arr[0],
+            subtopic_no: subtopic_arr[0],
             question_response: {
-              ...modified_tp,
+              question_start_timestamp:
+                props.startTimeStamp || localStorage.getItem("start_time"),
+              question_end_timestamp: props.endTimeStamp,
               student_response: responses[nr - 1],
               question_id: data[nr - 1]._id
             },
@@ -258,6 +239,7 @@ const ViewQuestion = props => {
       } catch (error) {
         console.log(error);
       }
+      setPredeccesorList([]);
       pushData(nr);
       setShowButton(false);
       setQA(false);
@@ -275,23 +257,12 @@ const ViewQuestion = props => {
           }
         };
 
-        //editing timestamps
-        let modified_tp = timestamps[nr - 1];
-        if (nr - 1 == 0) {
-          let start_time = localStorage.getItem("start_time");
-          modified_tp["start_time"] = Number(start_time);
-          modified_tp["end_time"] = modified_tp["tp"];
-        } else {
-          modified_tp["start_time"] = timestamps[nr - 2]["tp"];
-          modified_tp["end_time"] = modified_tp["tp"];
-        }
-        delete modified_tp.tp;
-        console.log(modified_tp);
         const res = await axios.post(
           "http://localhost:5000/api/question/reqQuestion",
           {
             question_response: {
-              ...modified_tp,
+              question_start_timestamp: props.startTimeStamp,
+              question_end_timestamp: props.endTimeStamp,
               student_response: responses[nr - 1]
             },
             student_response_id: student_response_id
@@ -320,11 +291,13 @@ const ViewQuestion = props => {
     // console.log(newrp);
   };
 
-  const setTimestamp = ts => {
-    let newtp = timestamps;
-    newtp.push(ts);
-    setTS(newtp);
-    console.log(newtp);
+  const setTimestamp = (start_ts, end_ts) => {
+    if (start_ts) {
+      setStartTimeStamp(start_ts);
+    }
+    if (end_ts) {
+      setEndTimeStamp(end_ts);
+    }
   };
 
   const pushData = nr => {
@@ -377,7 +350,9 @@ const ViewQuestion = props => {
               correct={correct}
               showButton={handleShowButton}
               isAnswered={questionAnswered}
-              setTimestamp={setTimestamp}
+              startTimeStamp={startTimeStamp}
+              endTimeStamp={endTimeStamp}
+              setEndTimeStamp={setEndTimeStamp}
               questionNumber={nr}
               setRP={setResponse}
               QId={QId}
@@ -390,7 +365,6 @@ const ViewQuestion = props => {
               btn2={btn2}
               btn3={btn3}
               btn4={btn4}
-              timestamps={timestamps}
               NR={nr}
               subtopic_index={subtopic_index}
               setIndex={setIndex}
@@ -406,6 +380,7 @@ const ViewQuestion = props => {
               violationLevelArray={violationLevelArray}
               setVLA={setVLA}
               subtopics_list={subtopics_list}
+              data={data}
             />
           </Col>
         </Row>

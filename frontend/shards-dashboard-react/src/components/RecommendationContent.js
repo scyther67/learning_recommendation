@@ -12,7 +12,6 @@ const RecommendationContent = props => {
     selectedDomains,
     suggestions,
     predecessorList,
-
     setSubArray,
     nr,
     timestamps,
@@ -34,63 +33,66 @@ const RecommendationContent = props => {
   } = props;
 
   const addPredeccesor = async () => {
-    var copy = subtopic_arr;
-    copy.unshift(predecessorList[0], predecessorList[1]);
-    setSubArray(copy);
-    if (nr != total) {
-      //axios request to get next question
+    if (predecessorList.length > 0) {
+      var copy = subtopic_arr;
+      copy.unshift(predecessorList[0], predecessorList[1]);
+      setSubArray(copy);
+      if (nr != total) {
+        //axios request to get next question
 
-      changeHelp(false);
+        changeHelp(false);
 
-      setLoader(true);
-      try {
-        const config = {
-          headers: {
-            Authorization: localStorage.getItem("user_token")
+        setLoader(true);
+        try {
+          const config = {
+            headers: {
+              Authorization: localStorage.getItem("user_token")
+            }
+          };
+          //editing timestamps
+          let modified_tp = timestamps[nr - 1];
+          if (nr - 1 == 0) {
+            let start_time = localStorage.getItem("start_time");
+            modified_tp["start_time"] = Number(start_time);
+            modified_tp["end_time"] = modified_tp["tp"];
+          } else {
+            modified_tp["start_time"] = timestamps[nr - 2]["end_time"];
+            modified_tp["end_time"] = timestamps[nr - 1]["tp"];
           }
-        };
-        //editing timestamps
-        let modified_tp = timestamps[nr - 1];
-        if (nr - 1 == 0) {
-          let start_time = localStorage.getItem("start_time");
-          modified_tp["start_time"] = Number(start_time);
-          modified_tp["end_time"] = modified_tp["tp"];
-        } else {
-          modified_tp["start_time"] = timestamps[nr - 2]["end_time"];
-          modified_tp["end_time"] = timestamps[nr - 1]["tp"];
-        }
-        delete modified_tp.tp;
+          delete modified_tp.tp;
 
-        const res = await axios.post(
-          "http://localhost:5000/api/question/reqQuestion",
-          {
-            question_no: subtopic_arr[0],
-            subtopic_number: subtopic_arr[0],
-            question_response: {
-              ...modified_tp,
-              student_response: responses[nr - 1],
-              question_id: data[nr - 1]._id
+          const res = await axios.post(
+            "http://localhost:5000/api/question/reqQuestion",
+            {
+              question_no: subtopic_arr[0],
+              subtopic_number: subtopic_arr[0],
+              question_response: {
+                ...modified_tp,
+                student_response: responses[nr - 1],
+                question_id: data[nr - 1]._id
+              },
+              student_response_id: student_response_id
             },
-            student_response_id: student_response_id
-          },
-          config
-        );
-        console.log(res.data);
-        //add question to data array
-        let newData = data;
-        newData.push(res.data.random_question);
-        setData(newData);
-        setLoader(false);
-      } catch (error) {
-        console.log(error);
+            config
+          );
+          console.log(res.data);
+          //add question to data array
+          let newData = data;
+          newData.push(res.data.random_question);
+          setData(newData);
+          setLoader(false);
+        } catch (error) {
+          console.log(error);
+        }
+        pushData(nr);
+        setShowButton(false);
+        setQA(false);
+        props.setPredeccesorList([]);
+        setBtn1("default");
+        setBtn2("default");
+        setBtn3("default");
+        setBtn4("default");
       }
-      pushData(nr);
-      setShowButton(false);
-      setQA(false);
-      setBtn1("default");
-      setBtn2("default");
-      setBtn3("default");
-      setBtn4("default");
     }
   };
 
@@ -107,7 +109,7 @@ const RecommendationContent = props => {
       </React.Fragment>
     );
   } else {
-    if (goBack) {
+    if (goBack && predecessorList.length > 0) {
       return (
         <ThemeProvider theme={theme}>
           <React.Fragment>
@@ -132,7 +134,7 @@ const RecommendationContent = props => {
         </ThemeProvider>
       );
     } else {
-      if (selectedDomains && suggestions) {
+      if (selectedDomains && suggestions.length > 0) {
         return (
           <React.Fragment>
             {/* <Typography>{"Having some trouble ?"}</Typography> */}
@@ -161,7 +163,7 @@ const RecommendationContent = props => {
             </ul>
           </React.Fragment>
         );
-      } else {
+      } else if (suggestions.length > 0) {
         return (
           <React.Fragment>
             {/* <Typography>{"Having some trouble ?"}</Typography> */}
