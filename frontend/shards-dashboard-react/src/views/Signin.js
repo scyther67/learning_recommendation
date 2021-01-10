@@ -53,6 +53,7 @@ export default function SignInSide() {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
   const [error, setError] = useState(false);
+  const [helperText, setHelperText] = useState("");
 
   useEffect(() => {
     if (localStorage.getItem("user_token")) {
@@ -79,22 +80,29 @@ export default function SignInSide() {
         "http://localhost:5000/api/auth/login",
         form
       );
-      if (res.data.token) {
-        const user = {
-          token: res.data.token
-        };
-        console.log("Here", res.data.name);
-        localStorage.setItem("user_token", user.token);
-        localStorage.setItem("user_name", res.data.name);
-        // localStorage.setItem("user_name", user.username);
-        if (res.data.code == 200) {
-          setTimeout(() => {
-            history.push("/quiz");
-          }, 1000);
-        }
-      } else {
-        console.log("Error");
+      if (res.data.message) {
         setError(true);
+        setHelperText("Incorrect Credentials");
+      } else {
+        if (res.data.token) {
+          const user = {
+            token: res.data.token
+          };
+          console.log("Here", res.data.name);
+          localStorage.setItem("user_token", user.token);
+          localStorage.setItem("user_name", res.data.name);
+
+          if (res.data.code == 200) {
+            setError(false);
+            setHelperText("");
+            setTimeout(() => {
+              history.push("/quiz");
+            }, 1000);
+          }
+        } else {
+          console.log("Error");
+          setError(true);
+        }
       }
     } catch (error) {
       console.log(error);
@@ -130,6 +138,7 @@ export default function SignInSide() {
               autoFocus
               onChange={onChangeEmail}
               error={error}
+              helperText={helperText}
             />
             <TextField
               variant="outlined"
