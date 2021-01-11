@@ -21,8 +21,8 @@ module.exports = async (req, res) => {
 
     domain_name = url.split("/").slice(0, 3).join("/");
     // console.log("URL", url);
-    console.log("TOTAL_TIME", totalTime);
-    console.log("DN", domain_name);
+    // console.log("TOTAL_TIME", totalTime);
+    // console.log("DN", domain_name);
 
     if (!website) {
       parameterless_url = url.split("?")[0];

@@ -1,8 +1,7 @@
 const { findUnusedResources } = require("../dbFunctions/suggestions");
-const {
-  findQuestionById,
-  UpdateQuestionAnswerTime,
-} = require("../dbFunctions/question");
+const { findQuestionById, UpdateQuestionAnswerTime} = require("../dbFunctions/question");
+const { subtopic_list } = require("../utils/subtopic_list");
+const mongoose = require('mongoose');
 module.exports = {
   arrSum: (arr) => {
     arr.reduce((a, b) => a + b, 0);
@@ -23,40 +22,39 @@ module.exports = {
     });
   },
   satisfactoryBrowsingCheck: async (learnings, subtopic_start_timestamp) => {
-    // let learning_after_question_start = learnings.filter((learning) =>
-    //     learning.intervals[learning.intervals.length - 1].startTimeStamp >
-    //     subtopic_start_timestamp
-    // ); //change this logic to include atleast one greater than 5 seconds
     let learning_after_question_start = learnings.filter((learning) => {
-      return learning.intervals.some((interval) => {
-        interval.endTimeStamp - interval.startTimeStamp >= 5000 &&
-          interval.startTimeStamp > subtopic_start_timestamp;
+      
+      let a =  learning.intervals.some((interval) => {
+        return interval.endTimeStamp - interval.startTimeStamp >= 5000 &&
+          interval.startTimeStamp.getTime() > subtopic_start_timestamp;
       });
+      return a;
     });
     return learning_after_question_start;
   },
-  getGeneralSuggestions: async (learning_after_question_start) => {
+  getGeneralSuggestions: async (learning_after_question_start, subtopic_no) => {
+    // console.log("LAQS:",learning_after_question_start);
     let websites = learning_after_question_start.map((a) =>
       mongoose.Types.ObjectId(a.website._id)
     );
-
-    let suggestions = await findUnusedResources(websites, subtopic);
+    // console.log("websites:",websites);
+    let suggestions = await findUnusedResources(websites, subtopic_list[subtopic_no]);
+    console.log(suggestions);
     return (suggestions = suggestions.map((ele) => {
       return ele.url;
     }));
   },
   randomizeSuggestions: async (suggestions) => {
-    random_list = [];
-    vals = [];
-    max = suggestions.length;
-    for (i = 0; i < 3; i++) {
-      let rand = Math.floor(Math.random() * Math.floor(max));
-      while (rand in vals) {
-        rand = Math.floor(Math.random() * Math.floor(max));
-      }
-      random_list.push(suggestions[rand]);
-      vals.push[rand];
+    let len = suggestions.length;
+    let n = len>3? 3:len;
+    let result = new Array(n), taken = new Array(len);
+    
+    while (n--) {
+        let x = Math.floor(Math.random() * len);
+        result[n] = suggestions[x in taken ? taken[x] : x];
+        taken[x] = --len in taken ? taken[len] : len;
     }
+    return result;
   },
   getAverageAnswerTime: async (
     question_start_timestamp,

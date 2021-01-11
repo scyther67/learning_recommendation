@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 // const User = require('../models/user')
 const WebResource = require("../models/web_resources");
 const TraceLearning = require("../models/tracelearning");
+const User = require("../models/user");
 
 module.exports = {
 	findUnusedResources: async (websites, subtopic) => {
@@ -36,7 +37,7 @@ module.exports = {
 	  );
 	},
 	getDomainTimeDict: async (user_id) => {
-	  return user_id.find({
+	  return User.find({
 	      _id: user_id
 	  },{
 	      _id:0,
