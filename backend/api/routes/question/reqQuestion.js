@@ -5,7 +5,7 @@ module.exports = async (req, res) => {
     try {
         const topics = ["SELECT", "UPDATE", "GROUP BY", "CREATE", "INSERT", "DELETE", "JOINS",
             "PREDICATE", "SET OPERATORS", "AGGREGATION"];
-        let { question_response, question_no } = req.body;
+        let { question_response, subtopic_no } = req.body;
         
         if(question_response != null){
             const { user_response, start_time, end_time, question_ref } = question_response;
@@ -16,7 +16,7 @@ module.exports = async (req, res) => {
                 if(new_student_response == null) return res.json({...ServerError, msg:"Could not add question response"});
             }
         }
-        // if (question_no == 0 && student_response_id == null){
+        // if (subtopic_no == 0 && student_response_id == null){
         //     student_response = await createStudentResponse(req.body.userId, []);
         //     student_response_id = student_response._id;
         // }
@@ -28,7 +28,7 @@ module.exports = async (req, res) => {
         //     if (new_student_response == null) return res.json({ ...ServerError, msg: "Could not add question response" });
         // }
 
-        const topic = topics[question_no];
+        const topic = topics[subtopic_no];
         const random_question = await findRandomQuestionByTopic(topic);
         
         return res.json({ ...Success, random_question });

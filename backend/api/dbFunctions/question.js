@@ -1,17 +1,8 @@
 const mongoose = require("mongoose");
 const Question = require("../models/question");
-const Test = require("../models/studentresponse");
 
 module.exports = {
-  addQuestion: async (
-    question_header,
-    question_query,
-    question_footer,
-    alternatives,
-    subtopic,
-    correct,
-    questionid
-  ) => {
+  addQuestion: async (question_header,question_query,question_footer,alternatives,subtopic,correct,questionid) => {
     const newquestion = new Question({
       question_header,
       question_query,
@@ -23,7 +14,10 @@ module.exports = {
     });
     return newquestion.save();
   },
-  findByQuestionId: async (questionid) => {
+  findQuestionById: async(_id)=>{
+    return Question.findById(_id);
+  },
+  findByQuestionId: async (questionid) => {//NOT SAME AS FIND QUESTION BY ID
     return Question.findOne({ questionid });
   },
   findRandomQuestionByTopic: async (subtopic) => {
@@ -33,9 +27,8 @@ module.exports = {
 
   UpdateQuestionAnswerTime: async (question, time_taken) => {
     attempts = question.number_of_attempts;
-    question.avg_time =
-      (time_taken + question.avg_time * attempts) / (attempts + 1);
+    question.avg_time = (time_taken + question.avg_time * attempts) / (attempts + 1);
     question.number_of_attempts += 1;
-    return 1;
+    return question.save();
   },
 };

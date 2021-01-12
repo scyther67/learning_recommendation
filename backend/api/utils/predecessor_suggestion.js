@@ -1,21 +1,18 @@
 const predecessor_dict = {
-  SELECT: [],
-  UPDATE: [],
-  "GROUP BY": [],
-  CREATE: [],
-  INSERT: [],
-  DELETE: [],
-  JOINS: [],
-  PREDICATE: [],
-  "SET OPERATORS": [],
-  AGGREGATION: [],
-  FROM: [],
-  WHERE: [],
-  JOIN: [],
+  SELECT: [0],
+  UPDATE: [1],
+  "GROUP BY": [0, 2],
+  CREATE: [3],
+  INSERT: [4],
+  DELETE: [5],
+  JOINS: [0, 6],
+  PREDICATE: [0, 7],
+  "SET OPERATORS": [0, 8],
+  AGGREGATION: [2, 9],
 };
 
 module.exports = {
-  getPrdecessorList: (subtopic) => {
+  getPredecessorList: (subtopic) => {
     return predecessor_dict[subtopic];
   },
 };

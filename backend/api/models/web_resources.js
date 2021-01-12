@@ -31,9 +31,6 @@ const WebResource = new mongoose.Schema({
                             "SET OPERATORS", 
                             "AGGREGATION",
                             "N/A",
-                            "FROM",
-                            "WHERE",
-                            "JOIN"
                         ]
     }
 })

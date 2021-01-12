@@ -63,11 +63,11 @@ const Question = new mongoose.Schema({
   },
   avg_time: {
     type: Number,
-    default: 0,
+    default: 30000,
   },
   number_of_attempts: {
     type: Number,
-    default: 0,
+    default: 1,
   },
 });
 
