@@ -150,12 +150,36 @@ const ViewQuestion = props => {
     }
 
     if (JSON.parse(localStorage.getItem("subtopic_arr")).length == 0) {
-      console.log("HERERERERE");
       history.push("/study-complete");
     }
-    //request first question
-    // console.log("Here", props);
+    async function updateSubtopicTimeStamp() {
+      if (
+        JSON.parse(localStorage.getItem("subtopic_arr"))[0] ==
+        JSON.parse(localStorage.getItem("subtopic_arr"))[1]
+      ) {
+        try {
+          const config = {
+            headers: {
+              Authorization: localStorage.getItem("user_token")
+            }
+          };
+          var response = await axios.post(
+            "http://localhost:5000/api/updateSubtopicTimeStamp",
+            {
+              subtopic_no: JSON.parse(localStorage.getItem("subtopic_arr"))[0]
+            },
+            config
+          );
+        } catch (error) {
+          console.log(error);
+        }
+      }
+      //
+    }
+    updateSubtopicTimeStamp();
     Prism.highlightAll();
+
+    //request first question
     async function fetchData() {
       try {
         const config = {
