@@ -1,4 +1,4 @@
-const { createStudentResonse } = require("../../dbFunctions/student_response");
+const { createStudentResponse } = require("../../dbFunctions/student_response");
 const { Success, ServerError } = require("../../responses");
 
 module.exports = async (req, res) => {

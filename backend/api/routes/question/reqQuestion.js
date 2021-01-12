@@ -1,48 +1,21 @@
-const {
-  Success,
-  ServerError,
-  ValidationError,
-  AuthError,
-} = require("../../responses");
+const {Success, ServerError, ValidationError, AuthError} = require("../../responses");
 const { addStudentResponse } = require("../../dbFunctions/student_response");
-const {
-  findRandomQuestionByTopic,
-  findByQuestionId,
-} = require("../../dbFunctions/question");
+const { findRandomQuestionByTopic, findByQuestionId} = require("../../dbFunctions/question");
+const { subtopic_list } =require("../../utils/subtopic_list");
+
 module.exports = async (req, res) => {
   try {
     const topics = [
-      "SELECT",
-      "UPDATE",
-      "GROUP BY",
-      "CREATE",
-      "INSERT",
-      "DELETE",
-      "JOINS",
-      "PREDICATE",
-      "SET OPERATORS",
-      "AGGREGATION",
+      ...subtopic_list
     ];
     let { question_response, subtopic_no } = req.body;
 
     if (question_response != null) {
-      const {
-        user_response,
-        start_time,
-        end_time,
-        question_ref,
-      } = question_response;
+      const { user_response, start_time, end_time, question_ref} = question_response;
       if (question_ref != null) {
         const question = await findByQuestionId(question_ref);
         const answer_correct = question.correct == user_response;
-        const new_student_response = await addStudentResponse(
-          user_response,
-          start_time,
-          end_time,
-          question_ref,
-          answer_correct,
-          req.body.userId
-        );
+        const new_student_response = await addStudentResponse( user_response, start_time, end_time, question_ref, answer_correct, req.body.userId);
         if (new_student_response == null)
           return res.json({
             ...ServerError,
@@ -64,7 +37,6 @@ module.exports = async (req, res) => {
 
     const topic = topics[subtopic_no];
     const random_question = await findRandomQuestionByTopic(topic);
-
     return res.json({ ...Success, random_question });
   } catch (err) {
     // if (question_no == 0 && student_response_id == null){

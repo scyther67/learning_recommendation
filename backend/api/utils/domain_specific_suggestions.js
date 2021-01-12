@@ -18,7 +18,7 @@ module.exports = {
     //   });
 
       visited_domain_dict = await getDomainTimeDict(user_id);
-      visited_domain_dict = visited_domains.map((a) => {
+      visited_domain_dict = visited_domain_dict.map((a) => {
           a.domain_time_dict;
       });
 
