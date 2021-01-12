@@ -25,29 +25,33 @@ module.exports = {
       
       visited_domain_dict = visited_domain_dict[0]['domain_time_dict'];
       
-
       time_distribution = Object.values(visited_domain_dict);
-
-      time_distribution_dist = distribution(time_distribution);
-
       visited_domains = Object.keys(visited_domain_dict);
-      console.log('visited_domains', visited_domains);
+
+      let visited_domain_tup = []
+      for(i=0; i < time_distribution.length; i++){
+        visited_domain_tup.push([visited_domains[i], time_distribution[i]]);
+      }
+
+
+      considered_visited_domain_tup = visited_domain_tup.filter(value => possible_domains.includes(value[0]));
+      
+      time_distribution_dist = distribution(considered_visited_domain_tup);
+
       most_visited_domains = [];
 
-      console.log('possible_domains', possible_domains);
 
       for(i = 0; i < time_distribution_dist.length; i++){
           // SETTING A HARD CODED VALUE HERE (0.3)
-          if(time_distribution_dist[i] > 0.15){
-            most_visited_domains.push((time_distribution_dist[i], visited_domains[i]));
+          if(time_distribution_dist[i] > 0.35){
+            most_visited_domains.push((time_distribution_dist[i], considered_visited_domain_tup[i][0]));
           }
       }
 
       most_visited_domains = most_visited_domains.sort(x => x[0]);
 
-      final_suggestion_domains = most_visited_domains.filter(value => possible_domains.includes(value));
 
-
+      
     //   common_domains = [...new Set([...visited_domains, ...possible_domains])];
     //   console.log("COMMON DOMS", common_domains);
 
@@ -72,6 +76,6 @@ module.exports = {
     //       }
     //     }
     //   }
-      return final_suggestion_domains;
+      return most_visited_domains;
     }
 }

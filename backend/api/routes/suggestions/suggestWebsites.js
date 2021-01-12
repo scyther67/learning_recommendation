@@ -1,5 +1,5 @@
 const { generateSuggestionsFromCommonDomains } = require("../../dbFunctions/suggestions");
-const { satisfactoryBrowsingCheck, getGeneralSuggestions, randomizeSuggestions, getAverageAnswerTime } = require("../../utils/suggestions");
+const { satisfactoryBrowsingCheck, getGeneralSuggestions, randomizeSuggestions, getAverageAnswerTime, getUnusedDomainSpecificSuggestions } = require("../../utils/suggestions");
 const { domainSpecificSuggestions } = require("../../utils/domain_specific_suggestions");
 const { getPredecessorList } = require("../../utils/predecessor_suggestion");
 const { findTraceLearningById } = require("../../dbFunctions/learningresource");
@@ -27,19 +27,16 @@ module.exports = async (req, res) => {
       
 
       // Find liked Domains
-      final_suggestion_domains = await domainSpecificSuggestions(subtopic, userId);
-
-      console.log("final_suggestion_domains", final_suggestion_domains);
+      let final_suggestion_domains = await domainSpecificSuggestions(subtopic, userId);
       
       //if liked Domain exists then make flag true
       if (final_suggestion_domains.length > 0) {
         domainSuggestionsBool = true;
         domainSuggestions = await generateSuggestionsFromCommonDomains(final_suggestion_domains,subtopic);
-        domainSuggestions = domainSuggestions.map(a => a.url).slice(0,3);
+        domainSpecificSuggestions = getUnusedDomainSpecificSuggestions(domainSpecificSuggestions, learning_after_subtopic_start);
       } 
 
     //   get general suggestions
-
 
       let suggestions = await getGeneralSuggestions(learning_after_subtopic_start);
       let random_list = await randomizeSuggestions(suggestions);
