@@ -38,7 +38,7 @@ module.exports = async (req, res) => {
         domainSuggestions = domainSuggestions.map(a => a.url).slice(0,3);
       } 
 
-      get general suggestions
+    //   get general suggestions
 
 
       let suggestions = await getGeneralSuggestions(learning_after_subtopic_start);
