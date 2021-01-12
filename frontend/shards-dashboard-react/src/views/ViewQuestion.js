@@ -107,7 +107,7 @@ const ViewQuestion = props => {
   const [suggestions, setSuggestions] = useState([]);
   const [goBack, setGoBack] = useState(null);
   const [selectedDomains, setSelectedDomains] = useState(null);
-  const [predeccesorList, setPredeccesorList] = useState([]);
+  const [predecessorList, setPredecessorList] = useState([]);
 
   const [subtopic_arr, setSubArr] = useState([
     0,
@@ -164,7 +164,7 @@ const ViewQuestion = props => {
             }
           };
           var response = await axios.post(
-            "http://localhost:5000/api/updateSubtopicTimeStamp",
+            "http://localhost:5000/api/user/updateSubtopicTimeStamp",
             {
               subtopic_no: JSON.parse(localStorage.getItem("subtopic_arr"))[0]
             },
@@ -191,7 +191,6 @@ const ViewQuestion = props => {
         var stored_subtopic_arr = subtopic_arr;
         if (localStorage.getItem("subtopic_arr")) {
           stored_subtopic_arr = localStorage.getItem("subtopic_arr");
-          console.log("SUB ARRAY", JSON.parse(stored_subtopic_arr));
           subtopic_number = JSON.parse(stored_subtopic_arr)[0];
           setSubArr(JSON.parse(stored_subtopic_arr));
         }
@@ -271,7 +270,7 @@ const ViewQuestion = props => {
       } catch (error) {
         console.log(error);
       }
-      setPredeccesorList([]);
+      setPredecessorList([]);
       pushData(nr);
       setShowButton(false);
       setQA(false);
@@ -409,7 +408,7 @@ const ViewQuestion = props => {
               setGoBack={setGoBack}
               setSuggestions={setSuggestions}
               setSelectedDomains={setSelectedDomains}
-              setPredeccesorList={setPredeccesorList}
+              setPredecessorList={setPredecessorList}
               subtopic_arr={subtopic_arr}
               setSubArr={setSubArr}
               setFlukeMsg={setFlukeMsg}
@@ -503,7 +502,7 @@ const ViewQuestion = props => {
                 goBack={goBack}
                 selectedDomains={selectedDomains}
                 suggestions={suggestions}
-                predeccesorList={predeccesorList}
+                predecessorList={predecessorList}
               />
             </React.Fragment>
           }

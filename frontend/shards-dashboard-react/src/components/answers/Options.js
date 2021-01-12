@@ -77,7 +77,7 @@ function Options(props) {
 
         var copy = props.subtopic_arr;
         // API for Subtopic Switch
-        if (copy[1] > copy[0]) {
+        if (copy.length > 1 && copy[1] != copy[0]) {
           console.log("Change ST");
           const config = {
             headers: {
