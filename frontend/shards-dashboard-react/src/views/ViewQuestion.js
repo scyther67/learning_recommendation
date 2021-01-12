@@ -148,6 +148,11 @@ const ViewQuestion = props => {
     if (!localStorage.getItem("user_token")) {
       history.push("/sign-in");
     }
+
+    if (JSON.parse(localStorage.getItem("subtopic_arr")).length == 0) {
+      console.log("HERERERERE");
+      history.push("/study-complete");
+    }
     //request first question
     // console.log("Here", props);
     Prism.highlightAll();
@@ -201,6 +206,9 @@ const ViewQuestion = props => {
   };
 
   const nextQuestion = async e => {
+    if (localStorage.getItem("subtopic_arr").length <= 0) {
+      history.push("/study-complete");
+    }
     if (nr != total) {
       //axios request to get next question
       setFlukeMsg(false);
@@ -327,16 +335,21 @@ const ViewQuestion = props => {
               <Typography variant="h6" style={{ color: "white" }}>
                 {question.question_header}
               </Typography>
-              <pre
-                style={{
-                  fontSize: "20px",
-                  maxWidth: "100%"
-                  // overflowWrap: "break-word",
-                  // whiteSpace: "pre-wrap"
-                }}
-              >
-                <code className="language-sql">{question.question_query}</code>
-              </pre>
+              {question.question_query ? (
+                <pre
+                  style={{
+                    fontSize: "20px",
+                    width: "100%",
+                    height: "20vh",
+                    textAlign: "center"
+                  }}
+                >
+                  <code className="language-sql">
+                    {question.question_query}
+                  </code>
+                </pre>
+              ) : null}
+
               <Typography variant="h6" style={{ color: "white" }}>
                 {question.question_footer}
               </Typography>

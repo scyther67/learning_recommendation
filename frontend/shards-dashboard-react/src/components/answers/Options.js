@@ -153,7 +153,7 @@ function Options(props) {
               props.setPredecessorList(res.data.predecessor_list);
             }
           } else {
-            console.log("TIME TAKEN", endTimeStamp - props.startTimeStamp);
+            // console.log("TIME TAKEN", endTimeStamp - props.startTimeStamp);
             const res = await axios.post(
               "http://localhost:5000/api/suggestions/suggestionBySubTopic",
               {
@@ -164,7 +164,7 @@ function Options(props) {
               },
               config
             );
-
+            console.log("RES_DATA", res.data);
             // Update Violation Levels
             var newVLA = props.violationLevelArray;
             newVLA.push(res.data.violation_level);
@@ -173,7 +173,6 @@ function Options(props) {
             //Check for past violation levels
             if (res.data.violation_level) {
               if (newVLA.length >= 2) {
-                console.log(newVLA);
                 if (
                   newVLA[newVLA.length - 1] >= 2 &&
                   newVLA[newVLA.length - 2] >= 2
