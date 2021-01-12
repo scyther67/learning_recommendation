@@ -42,7 +42,7 @@ module.exports = {
 
 
       for(i = 0; i < time_distribution_dist.length; i++){
-          // SETTING A HARD CODED VALUE HERE (0.3)
+          // SETTING A HARD CODED VALUE HERE (0.35)
           if(time_distribution_dist[i] > 0.35){
             most_visited_domains.push((time_distribution_dist[i], considered_visited_domain_tup[i][0]));
           }
