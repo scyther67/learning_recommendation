@@ -171,7 +171,7 @@ const ViewQuestion = props => {
         var stored_subtopic_arr = subtopic_arr;
         if (localStorage.getItem("subtopic_arr")) {
           stored_subtopic_arr = localStorage.getItem("subtopic_arr");
-          console.log("SUB ARRAY", JSON.parse(stored_subtopic_arr));
+
           subtopic_number = JSON.parse(stored_subtopic_arr)[0];
           setSubArr(JSON.parse(stored_subtopic_arr));
         }
@@ -222,7 +222,7 @@ const ViewQuestion = props => {
             Authorization: localStorage.getItem("user_token")
           }
         };
-        console.log("Question On", subtopics_list[subtopic_arr[0]]);
+
         const res = await axios.post(
           "http://localhost:5000/api/question/reqQuestion",
           {

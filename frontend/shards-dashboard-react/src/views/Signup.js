@@ -71,7 +71,7 @@ export default function SignInSide(props) {
   const [pass, setPass] = useState("");
   const [name, setName] = useState("");
   const [age, setAge] = useState(0);
-  const [SQL, setSQL] = useState(0);
+  const [SQL, setSQL] = useState(3);
   const [field, setField] = useState("");
   const [year, setYear] = useState("");
   const [emailError, setEmailError] = useState(false);
@@ -135,7 +135,11 @@ export default function SignInSide(props) {
       const form = {
         name: name,
         password: pass,
-        email: email
+        email: email,
+        age: age,
+        field_of_study: field,
+        recent_education: year,
+        proficiency: SQL
       };
       const formData = new FormData();
       formData.append("email", email);
@@ -151,7 +155,7 @@ export default function SignInSide(props) {
           "http://localhost:5000/api/auth/register",
           form
         );
-        console.log(res);
+
         if (res.data.token) {
           const user = {
             token: res.data.token,
@@ -208,6 +212,7 @@ export default function SignInSide(props) {
           <form className={classes.form} noValidate>
             <TextField
               variant="outlined"
+              style={{ fontSize: "8px" }}
               margin="normal"
               required
               fullWidth
