@@ -29,8 +29,9 @@ export default class UserActions extends React.Component {
 
   onClickLogout = e => {
     console.log("Logout");
-    localStorage.removeItem("user_name");
-    localStorage.removeItem("user_token");
+    // localStorage.removeItem("user_name");
+    // localStorage.removeItem("user_token");
+    localStorage.clear();
   };
 
   render() {
@@ -39,16 +40,18 @@ export default class UserActions extends React.Component {
         <DropdownToggle caret tag={NavLink} className="text-nowrap px-3">
           <img
             className="user-avatar rounded-circle mr-2"
-            src={require("./../../../../images/avatars/5.png")}
+            src={require("./../../../../images/avatars/6.png")}
             alt="User Avatar"
           />{" "}
-          <span className="d-none d-md-inline-block">Abheet Shaju</span>
+          <span className="d-none d-md-inline-block">
+            {localStorage.getItem("user_name")}
+          </span>
         </DropdownToggle>
         <Collapse tag={DropdownMenu} right small open={this.state.visible}>
-          <DropdownItem tag={Link} to="user-profile">
+          {/* <DropdownItem tag={Link} to="user-profile">
             <i className="material-icons">&#xE7FD;</i> Profile
-          </DropdownItem>
-          <DropdownItem tag={Link} to="edit-user-profile">
+          </DropdownItem> */}
+          {/* <DropdownItem tag={Link} to="edit-user-profile">
             <i className="material-icons">&#xE8B8;</i> Edit Profile
           </DropdownItem>
           <DropdownItem tag={Link} to="file-manager-list">
@@ -56,7 +59,7 @@ export default class UserActions extends React.Component {
           </DropdownItem>
           <DropdownItem tag={Link} to="transaction-history">
             <i className="material-icons">&#xE896;</i> Transactions
-          </DropdownItem>
+          </DropdownItem> */}
           <DropdownItem divider />
           <DropdownItem
             tag={Link}

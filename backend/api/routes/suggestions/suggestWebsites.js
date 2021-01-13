@@ -1,46 +1,78 @@
-const { findUnusedResources } = require('../../dbFunctions/suggestions');
-const { findTraceLearningById } = require("../../dbFunctions/learningresource")
-const mongoose = require('mongoose');
+const { generateSuggestionsFromCommonDomains } = require("../../dbFunctions/suggestions");
+const { satisfactoryBrowsingCheck, getGeneralSuggestions, randomizeSuggestions, getAverageAnswerTime } = require("../../utils/suggestions");
+const { domainSpecificSuggestions } = require("../../utils/domain_specific_suggestions");
+const { getPredecessorList } = require("../../utils/predecessor_suggestion");
+const { findTraceLearningById } = require("../../dbFunctions/learningresource");
+const { getSubtopicTimeStamp, updateSuggestionToUserCollection } = require("../../dbFunctions/user");
+const { ServerError } = require("../../responses");
 
 module.exports = async (req, res) => {
+     try {
+      const { subtopic, userId, question_start_timestamp, question_end_timestamp, question_id, testing_flag } = req.body;
+      
+      const [fluke_message, violation_level] = await getAverageAnswerTime(
+        question_start_timestamp, 
+        question_end_timestamp, 
+        question_id);
+      // subtopic_start_timestamp = new Date(timestamp);
+      let domainSuggestionsBool = false, goBack = false, domainSuggestions, predecessor_list;
 
-    try{
-        user_id = req.body.userId;
-        const { subtopic, timestamp, question_start_timestamp } = req.body; 
-        // question_start_timestamp = new Date(timestamp);
+      const subtopic_start_timestamp = await getSubtopicTimeStamp(subtopic, userId);
+      let learnings = await findTraceLearningById(userId);
+      // console.log("LEARNINGS:"+learnings);
+      // console.log("SSTS:"+subtopic_start_timestamp);
+      let learning_after_subtopic_start = await satisfactoryBrowsingCheck(learnings, subtopic_start_timestamp);
+      // console.log("LASS:"+learning_after_subtopic_start);
+      if (learning_after_subtopic_start.length == 0 && testing_flag!=0 ) {
+        return res.json({ showBrowseMessage: true, fluke_message, violation_level });
+      }
+      
+      
+      // Find liked Domains
+      final_suggestion_domains = await domainSpecificSuggestions(subtopic, userId);
+      
+      //if liked Domain exists then make flag true
+      if (final_suggestion_domains > 0) {
+        domainSuggestionsBool = true;
+        domainSuggestions = generateSuggestionsFromCommonDomains(final_suggestion_domains,subtopic);
+        domainSuggestions = getUnusedDomainSpecificSuggestions(domainSpecificSuggestions, learning_after_subtopic_start);
+      } 
 
-        let learnings = await findTraceLearningById(user_id);
+
+      //get general suggestions
+      let suggestions = await getGeneralSuggestions(learning_after_subtopic_start, subtopic);
+      // console.log("Suggestions:",suggestions);
+      // let random_list = [];
+      let random_list = await randomizeSuggestions(suggestions);
+      // console.log(random_list);
+      if(testing_flag == 0)random_list= [];
+      //logic for goback to predecessor
+      if (random_list.length == 0) {
+        predecessor_list = getPredecessorList(subtopic);
+        // console.log("predecessor",predecessor_list);
+        goBack = true;
+      }
+      else{
         
-        let learning_after_question_start = learnings.filter(
-            (learning)=>(learning.intervals[learning.intervals.length-1].startTimeStamp)>question_start_timestamp);
-            
-        if(learning_after_question_start.length == 0){
-            return res.json({showMessage:true});
-        }
-
-        let websites = learning_after_question_start.map(a => mongoose.Types.ObjectId(a.website._id) );
-
-        let suggestions = await findUnusedResources(websites, subtopic);
-        suggestions = suggestions.map((ele)=>{
-            return ele.url;
-        });
-        random_list = [];
-        vals = [];
-        max = suggestions.length;
-        for(i=0; i<3; i++){
-            let rand = Math.floor(Math.random() * Math.floor(max));
-            while(rand in vals){
-                rand = Math.floor(Math.random() * Math.floor(max));
-            }
-            random_list.push(suggestions[rand]);
-            vals.push[rand];
-        }
-
-        return res.json({ showMessage:false, suggestions:random_list });
+        //append suggestion to user model
+        let update = await updateSuggestionToUserCollection(userId, random_list, domainSuggestions);
+        if(update==null)return res.json({...ServerError});
+      }
+      // console.log(predecessor_list);
+      // console.log("GB:",goBack);
+      // console.log("suggestions:", suggestions);
+      return res.json({
+        fluke_message, 
+        violation_level,
+        showBrowseMessage: false,
+        goBack,
+        predecessor_list,
+        domainSuggestions,
+        domainSuggestionsBool,
+        suggestions: random_list
+      });
+      
+    } catch (err) {
+      console.log(err);
     }
-    
-    catch (err) {
-        console.log(err);
-    }
-
-}
+};
