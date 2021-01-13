@@ -8,7 +8,7 @@ const { ServerError } = require("../../responses");
 
 module.exports = async (req, res) => {
      try {
-      const { subtopic, userId, question_start_timestamp, question_end_timestamp, question_id } = req.body;
+      const { subtopic, userId, question_start_timestamp, question_end_timestamp, question_id, testing_flag } = req.body;
       
       const [fluke_message, violation_level] = await getAverageAnswerTime(
         question_start_timestamp, 
@@ -41,9 +41,10 @@ module.exports = async (req, res) => {
       //get general suggestions
       let suggestions = await getGeneralSuggestions(learning_after_subtopic_start, subtopic);
       // console.log("Suggestions:",suggestions);
-      let random_list = [];
-      // let random_list = await randomizeSuggestions(suggestions);
+      // let random_list = [];
+      let random_list = await randomizeSuggestions(suggestions);
       // console.log(random_list);
+      if(testing_flag == 0)random_list= [];
       //logic for goback to predecessor
       if (random_list.length == 0) {
         predecessor_list = getPredecessorList(subtopic);

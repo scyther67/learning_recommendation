@@ -31,7 +31,7 @@ const User = new mongoose.Schema({
   field_of_study: {type:String},
   recent_education: {
     type:String,
-    enum: ["High School", "Undergraduate", "Post Graduate", "Doctorate"]
+    enum: ["High School", "Under Graduate", "Post Graduate", "Doctorate"]
   },
   proficiency: {
     type:Number,
