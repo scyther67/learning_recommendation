@@ -2,6 +2,7 @@ const { body } = require('express-validator');
 
 module.exports = {
     authRegister: () => {
+        console.log("here");
         return [
             body('email', 'Invalid Email').exists().isEmail(),
             body('name', 'Invalid Name').exists().isAlpha(),

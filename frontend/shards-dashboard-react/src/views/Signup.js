@@ -71,7 +71,7 @@ export default function SignInSide(props) {
   const [pass, setPass] = useState("");
   const [name, setName] = useState("");
   const [age, setAge] = useState(0);
-  const [SQL, setSQL] = useState(0);
+  const [SQL, setSQL] = useState(3);
   const [field, setField] = useState("");
   const [year, setYear] = useState("");
   const [emailError, setEmailError] = useState(false);
@@ -82,6 +82,10 @@ export default function SignInSide(props) {
   const [nameHelperText, setNameHelperText] = useState("");
   const [ageError, setAgeError] = useState(false);
   const [ageHelperText, setAgeHelperText] = useState("");
+  const [yosError, setYosError] = useState(false);
+  const [yosHelperText, setYosHelperText] = useState("");
+  const [fieldError, setFieldError] = useState(false);
+  const [fieldHelperText, setFieldHelperText] = useState("");
   const [checked, setChecked] = useState(false);
   const [agreeHelperText, setAgreeHelperText] = useState("");
   const [open, setOpen] = React.useState(false);
@@ -135,7 +139,11 @@ export default function SignInSide(props) {
       const form = {
         name: name,
         password: pass,
-        email: email
+        email: email,
+        age:age,
+        field_of_study: field,
+        recent_education: year,
+        proficiency: SQL
       };
       const formData = new FormData();
       formData.append("email", email);
@@ -145,7 +153,7 @@ export default function SignInSide(props) {
       formData.append("proficiency", SQL);
       formData.append("field_of_study", field);
       formData.append("recent_education", year);
-
+      console.log(email,name,pass,age,SQL, field, year);
       try {
         const res = await axios.post(
           "http://localhost:5000/api/auth/register",
@@ -176,6 +184,18 @@ export default function SignInSide(props) {
             if (res.data.errors[index].param == "age") {
               setAgeError(true);
               setAgeHelperText(res.data.errors[index].msg);
+            }
+            if (res.data.errors[index].param == "name") {
+              setNameError(true);
+              setNameHelperText(res.data.errors[index].msg);
+            }
+            if (res.data.errors[index].param == "field_of_study") {
+              setFieldError(true);
+              setFieldHelperText(res.data.errors[index].msg);
+            }
+            if (res.data.errors[index].param == "recent_education") {
+              setYosError(true);
+              setYosHelperText(res.data.errors[index].msg);
             }
           }
         }
@@ -270,27 +290,30 @@ export default function SignInSide(props) {
               id="field"
               label="Field"
               name="field"
+              error={fieldError}
+              helperText={fieldHelperText}
               // autoComplete="email"
               autoFocus
               onChange={onChangeField}
             />
             <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel id="demo-simple-select-outlined-label">
-                Year of Study
+                Ongoing/Recent Educational Qualification
               </InputLabel>
               <Select
                 required
+                style = {{width:"38vw"}}
                 labelId="demo-simple-select-outlined-label"
                 id="demo-simple-select-outlined"
                 value={year}
                 onChange={onChangeYear}
-                label="Year of Study"
+                label="Ongoing/Recent Educational Qualification"
               >
                 <MenuItem value="">
                   <em>None</em>
                 </MenuItem>
                 <MenuItem value={"High School"}>High School</MenuItem>
-                <MenuItem value={"Undergraduate"}>Undergraduate</MenuItem>
+                <MenuItem value={"Under Graduate"}>Under Graduate</MenuItem>
                 <MenuItem value={"Post Graduate"}>Post Graduate</MenuItem>
                 <MenuItem value={"Doctorate"}>Doctorate</MenuItem>
               </Select>
