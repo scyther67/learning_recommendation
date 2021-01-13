@@ -49,7 +49,7 @@ module.exports = async (req, res) => {
       //logic for goback to predecessor
       if (random_list.length == 0) {
         predecessor_list = getPredecessorList(subtopic);
-        console.log("predecessor",predecessor_list);
+        // console.log("predecessor",predecessor_list);
         goBack = true;
       }
       else{
