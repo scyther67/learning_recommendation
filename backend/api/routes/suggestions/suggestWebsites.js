@@ -34,9 +34,10 @@ module.exports = async (req, res) => {
       //if liked Domain exists then make flag true
       if (final_suggestion_domains > 0) {
         domainSuggestionsBool = true;
-        // console.log("Found DSS");
         domainSuggestions = generateSuggestionsFromCommonDomains(final_suggestion_domains,subtopic);
+        domainSuggestions = getUnusedDomainSpecificSuggestions(domainSpecificSuggestions, learning_after_subtopic_start);
       } 
+
 
       //get general suggestions
       let suggestions = await getGeneralSuggestions(learning_after_subtopic_start, subtopic);
