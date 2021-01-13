@@ -24,6 +24,8 @@ import PdfViewer from "../components/PdfViewer";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormHelperText from "@material-ui/core/FormHelperText";
+import { NavLink as RouteNavLink } from "react-router-dom";
+import { NavItem, NavLink } from "shards-react";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -40,10 +42,11 @@ const useStyles = makeStyles(theme => ({
     backgroundPosition: "center"
   },
   paper: {
-    margin: theme.spacing(8, 4),
+    margin: theme.spacing(5, 4),
     display: "flex",
     flexDirection: "column",
     alignItems: "center"
+    // border: "5px solid red"
   },
   avatar: {
     margin: theme.spacing(1),
@@ -69,6 +72,7 @@ export default function SignInSide(props) {
   let history = useHistory();
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
+  const [retypePass, setRetypePass] = useState("");
   const [name, setName] = useState("");
   const [age, setAge] = useState(0);
   const [SQL, setSQL] = useState(3);
@@ -78,6 +82,8 @@ export default function SignInSide(props) {
   const [emailHelperText, setEmailHelperText] = useState("");
   const [passError, setPassError] = useState(false);
   const [passHelperText, setPassHelperText] = useState("");
+  const [retypePassError, setRetypePassError] = useState(false);
+  const [retypePassHelperText, setRetypePassHelperText] = useState("");
   const [nameError, setNameError] = useState(false);
   const [nameHelperText, setNameHelperText] = useState("");
   const [ageError, setAgeError] = useState(false);
@@ -98,8 +104,8 @@ export default function SignInSide(props) {
     setOpen(false);
   };
 
-  const onChangeSQL = e => {
-    setSQL(e.target.value);
+  const onChangeSQL = (e, v) => {
+    setSQL(v);
   };
 
   const onChangeAge = e => {
@@ -124,10 +130,28 @@ export default function SignInSide(props) {
 
   const onChangePass = e => {
     setPass(e.target.value);
+    if (e.target.value != retypePass) {
+      setRetypePassError(true);
+      setRetypePassHelperText("Passwords Do Not Match");
+    } else {
+      setRetypePassError(false);
+      setRetypePassHelperText("");
+    }
   };
 
   const onChangeCheck = e => {
     setChecked(e.target.checked);
+  };
+
+  const onChangeRetypePass = e => {
+    setRetypePass(e.target.value);
+    if (e.target.value != pass) {
+      setRetypePassError(true);
+      setRetypePassHelperText("Passwords Do Not Match");
+    } else {
+      setRetypePassError(false);
+      setRetypePassHelperText("");
+    }
   };
 
   function valuetext(value) {
@@ -135,31 +159,47 @@ export default function SignInSide(props) {
   }
 
   const onClickSubmit = async () => {
-    if (checked) {
+    if (checked && age > 0 && pass == retypePass) {
       const form = {
         name: name,
         password: pass,
         email: email,
-        age:age,
+        age: age,
         field_of_study: field,
         recent_education: year,
         proficiency: SQL
       };
-      const formData = new FormData();
-      formData.append("email", email);
-      formData.append("name", name);
-      formData.append("password", pass);
-      formData.append("age", age);
-      formData.append("proficiency", SQL);
-      formData.append("field_of_study", field);
-      formData.append("recent_education", year);
-      console.log(email,name,pass,age,SQL, field, year);
+
+      // const formData = new FormData();
+      // formData.append("email", email);
+      // formData.append("name", name);
+      // formData.append("password", pass);
+      // formData.append("age", age);
+      // formData.append("proficiency", SQL);
+      // formData.append("field_of_study", field);
+      // formData.append("recent_education", year);
+      console.log(email, name, pass, age, SQL, field, year);
       try {
         const res = await axios.post(
           "http://localhost:5000/api/auth/register",
           form
         );
         console.log(res);
+        setAgeError(false);
+        setAgeHelperText("");
+        setNameError(false);
+        setNameHelperText("");
+        setFieldError(false);
+        setFieldHelperText("");
+        setYosError(false);
+        setYosHelperText("");
+        setEmailError(false);
+        setEmailHelperText("");
+        setPassError(false);
+        setPassHelperText("");
+        setRetypePassError(false);
+        setRetypePassHelperText("");
+
         if (res.data.token) {
           const user = {
             token: res.data.token,
@@ -172,6 +212,7 @@ export default function SignInSide(props) {
           }, 2000);
         } else if (res.data.errors) {
           console.log(res.data);
+
           for (let index = 0; index < res.data.errors.length; index++) {
             if (res.data.errors[index].param == "email") {
               setEmailError(true);
@@ -198,12 +239,27 @@ export default function SignInSide(props) {
               setYosHelperText(res.data.errors[index].msg);
             }
           }
+        } else if (res.data.message == "User with given email exists") {
+          if (res.data.message == "User with given email exists") {
+            setEmailError(true);
+            setEmailHelperText(res.data.message);
+          }
         }
       } catch (error) {
         console.log(error);
       }
     } else {
-      setAgreeHelperText("Please Click on I Agree");
+      if (!checked) {
+        setAgreeHelperText("Please Click on I Agree");
+      }
+      if (age <= 0) {
+        setAgeError(true);
+        setAgeHelperText("Please Enter a Proper Age");
+      }
+      if (pass !== retypePass) {
+        setRetypePassError(true);
+        setRetypePassHelperText("Passwords Do Not Match");
+      }
     }
   };
 
@@ -273,6 +329,20 @@ export default function SignInSide(props) {
               margin="normal"
               required
               fullWidth
+              name="retype_password"
+              error={retypePassError}
+              helperText={retypePassHelperText}
+              label="Retype Password"
+              type="password"
+              id="password"
+              autoComplete="current-password"
+              onChange={onChangeRetypePass}
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
               id="age"
               label="Age"
               name="age"
@@ -296,13 +366,17 @@ export default function SignInSide(props) {
               autoFocus
               onChange={onChangeField}
             />
-            <FormControl variant="outlined" className={classes.formControl}>
+            <FormControl
+              variant="outlined"
+              className={classes.formControl}
+              error={yosError}
+            >
               <InputLabel id="demo-simple-select-outlined-label">
                 Ongoing/Recent Educational Qualification
               </InputLabel>
               <Select
                 required
-                style = {{width:"38vw"}}
+                style={{ width: "38vw" }}
                 labelId="demo-simple-select-outlined-label"
                 id="demo-simple-select-outlined"
                 value={year}
@@ -317,6 +391,7 @@ export default function SignInSide(props) {
                 <MenuItem value={"Post Graduate"}>Post Graduate</MenuItem>
                 <MenuItem value={"Doctorate"}>Doctorate</MenuItem>
               </Select>
+              <FormHelperText>{yosHelperText}</FormHelperText>
             </FormControl>
             <Typography
               style={{ marginTop: "15px" }}
@@ -325,6 +400,7 @@ export default function SignInSide(props) {
             >
               Proficiency in SQL
             </Typography>
+
             <Slider
               style={{ width: "30vw" }}
               defaultValue={3}
@@ -421,6 +497,15 @@ export default function SignInSide(props) {
               Register
             </Button>
           </form>
+          <Grid container>
+            <Grid item>
+              <NavLink tag={RouteNavLink} to={"/sign-in"}>
+                {/* <Link href="#" variant="body2"> */}
+                {"Already Have an Account ? Sign In"}
+                {/* </Link> */}
+              </NavLink>
+            </Grid>
+          </Grid>
         </div>
       </Grid>
     </Grid>

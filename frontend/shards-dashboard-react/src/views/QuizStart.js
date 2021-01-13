@@ -67,6 +67,16 @@ const QuizStart = props => {
                 <ol>
                   <li style={{ marginBottom: "10px" }}>
                     {
+                      "For NEW Users: After a user has created his/her account, he/she is required to download our browser extension from {LINK TO EXTENSION}. After downloading the extension, the user needs to Login to the extension using the same username and password as set during the account creation in the testing platform. Please note that a user is COMPULSORILY required to be logged in to the browser extension before beginning his/her test. Only when a user does so will his/her data collection process commence. Failure to do so will result in data loss and disqualification of the candidate"
+                    }
+                  </li>
+                  <li style={{ marginBottom: "10px" }}>
+                    {
+                      "For EXISTING Users: In case a user has already created an account and wishes to revisit the platform, he needs to login to the testing platform AS WELL AS the browser extension in order for the data collection process to commence. Failure to do so will result in data loss and disqualification of the candidate."
+                    }
+                  </li>
+                  <li style={{ marginBottom: "10px" }}>
+                    {
                       "Once a user has completed the login/signup process, they are free to begin the test. Please note that if a user wishes to revise any SQL concept before the commencement of his/her test, they can do so after completing the Login process. However, it would be advisable to begin the test with the existing knowledge of SQL a candidate possesses."
                     }
                   </li>

@@ -18,7 +18,7 @@ function SelectedDomainsComponent(props) {
         }
       </Typography>
       <ul>
-        {props.suggestions.map((item, index) => (
+        {props.selectedSuggestions.map((item, index) => (
           <ListItem
             key={props.selectedSuggestions[index]}
             href={props.selectedSuggestions[index]}

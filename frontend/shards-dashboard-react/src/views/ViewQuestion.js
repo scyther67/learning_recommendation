@@ -118,6 +118,7 @@ const ViewQuestion = props => {
   const [selectedDomains, setSelectedDomains] = useState(null);
   const [predecessorList, setPredecessorList] = useState([]);
   const [selectedSuggestions, setSelectedSuggestions] = useState([]);
+  const [lastAskedSubtopic, setLastAskedSubtopic] = useState(-1);
   const [subtopic_arr, setSubArr] = useState([
     0,
     0,
@@ -170,12 +171,48 @@ const ViewQuestion = props => {
         var subtopic_number = subtopic_arr[0];
         var stored_subtopic_arr = subtopic_arr;
         if (localStorage.getItem("subtopic_arr")) {
-          stored_subtopic_arr = localStorage.getItem("subtopic_arr");
-          console.log("SUB ARRAY", JSON.parse(stored_subtopic_arr));
-          subtopic_number = JSON.parse(stored_subtopic_arr)[0];
-          setSubArr(JSON.parse(stored_subtopic_arr));
+          stored_subtopic_arr = JSON.parse(
+            localStorage.getItem("subtopic_arr")
+          );
+          if (
+            Number(localStorage.getItem("last_asked_subtopic")) !=
+            stored_subtopic_arr[0]
+          ) {
+            console.log("Change ST", Date.now());
+            const config = {
+              headers: {
+                Authorization: localStorage.getItem("user_token")
+              }
+            };
+            var resp = await axios.post(
+              "http://localhost:5000/api/user/updateSubtopicTimeStamp",
+              {
+                subtopic_no: stored_subtopic_arr[0]
+              },
+              config
+            );
+          }
+          subtopic_number = stored_subtopic_arr[0];
+          setSubArr(stored_subtopic_arr);
+        } else if (stored_subtopic_arr[0] == 0) {
+          const config = {
+            headers: {
+              Authorization: localStorage.getItem("user_token")
+            }
+          };
+          var resp = await axios.post(
+            "http://localhost:5000/api/user/updateSubtopicTimeStamp",
+            {
+              subtopic_no: stored_subtopic_arr[0]
+            },
+            config
+          );
+          localStorage.setItem(
+            "subtopic_arr",
+            JSON.stringify(stored_subtopic_arr)
+          );
         }
-
+        localStorage.setItem("last_asked_subtopic", stored_subtopic_arr[0]);
         const res = await axios.post(
           "http://localhost:5000/api/question/reqQuestion",
           { subtopic_no: subtopic_number },
@@ -222,7 +259,8 @@ const ViewQuestion = props => {
             Authorization: localStorage.getItem("user_token")
           }
         };
-        console.log("Question On", subtopics_list[subtopic_arr[0]]);
+        console.log("Asking Question for ", subtopic_arr[0]);
+        localStorage.setItem("last_asked_subtopic", subtopic_arr[0]);
         const res = await axios.post(
           "http://localhost:5000/api/question/reqQuestion",
           {
@@ -391,6 +429,7 @@ const ViewQuestion = props => {
               subtopics_list={subtopics_list}
               data={data}
               setSelectedSuggestions={setSelectedSuggestions}
+              setLastAskedSubtopic={setLastAskedSubtopic}
             />
           </Col>
         </Row>
@@ -466,7 +505,11 @@ const ViewQuestion = props => {
           classes={{ tooltip: classes.text }}
           arrow
           title={
-            <div style={{ paddingBottom: "2vh" }}>
+            <div
+              style={{
+                paddingBottom: "2vh"
+              }}
+            >
               <Typography variant="h6" color="inherit">
                 Need Help ?
               </Typography>
@@ -498,6 +541,8 @@ const ViewQuestion = props => {
                 endTimeStamp={endTimeStamp}
                 setStartTimeStamp={setStartTimeStamp}
                 setPredecessorList={setPredecessorList}
+                setShowButton={setShowButton}
+                setHelp={setHelp}
               />
             </div>
           }
