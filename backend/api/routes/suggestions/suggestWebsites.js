@@ -34,9 +34,10 @@ module.exports = async (req, res) => {
       //if liked Domain exists then make flag true
       if (final_suggestion_domains > 0) {
         domainSuggestionsBool = true;
-        // console.log("Found DSS");
         domainSuggestions = generateSuggestionsFromCommonDomains(final_suggestion_domains,subtopic);
+        domainSuggestions = getUnusedDomainSpecificSuggestions(domainSpecificSuggestions, learning_after_subtopic_start);
       } 
+
 
       //get general suggestions
       let suggestions = await getGeneralSuggestions(learning_after_subtopic_start, subtopic);
@@ -48,7 +49,7 @@ module.exports = async (req, res) => {
       //logic for goback to predecessor
       if (random_list.length == 0) {
         predecessor_list = getPredecessorList(subtopic);
-        console.log("predecessor",predecessor_list);
+        // console.log("predecessor",predecessor_list);
         goBack = true;
       }
       else{

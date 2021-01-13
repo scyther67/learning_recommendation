@@ -7,19 +7,13 @@ module.exports = {
     arr.reduce((a, b) => a + b, 0);
   },
 
-  softmax: (arr) => {
-    return arr.map(function (value, index) {
-      return (
-        Math.exp(value) /
-        arr
-          .map(function (y) {
-            return Math.exp(y);
-          })
-          .reduce(function (a, b) {
-            return a + b;
-          })
-      );
-    });
+  distribution: (arr) => {
+    let sum = arr.reduce((r, a) => a.map((b, i) => (r[i] || 1) + b), [])[1];
+    let final_dist = []
+    for(i=0; i<arr.length; i++){
+      final_dist.push(arr[i][1] / sum);
+    }
+    return final_dist;
   },
   satisfactoryBrowsingCheck: async (learnings, subtopic_start_timestamp) => {
     let learning_after_question_start = learnings.filter((learning) => {
@@ -44,6 +38,20 @@ module.exports = {
       return ele.url;
     }));
   },
+
+  getUnusedDomainSpecificSuggestions: async(suggested_websites, learning_after_question_start) => {
+    let used_websites = learning_after_question_start.map((a) => mongoose.Types.ObjectId(a.website._id));
+    used_websites = used_websites.map((a) => a.url);
+
+    let final_suggestions = [];
+    for(i=0; i<suggested_websites.length; i++){
+      if(!used_websites.includes(suggested_websites[i])){
+        final_suggestions.push(suggested_websites[i]);
+      }
+    }
+    return final_suggestions;
+  },
+
   randomizeSuggestions: async (suggestions) => {
     let len = suggestions.length;
     let n = len>3? 3:len;
