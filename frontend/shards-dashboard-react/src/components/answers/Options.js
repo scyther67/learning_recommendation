@@ -64,6 +64,7 @@ function Options(props) {
       all_answers.push(answer);
       var endTimeStamp = Date.now();
       props.setEndTimeStamp(endTimeStamp);
+
       if (answer === correct) {
         if (answer == 0) {
           setBtn1("primary");
@@ -76,9 +77,11 @@ function Options(props) {
         }
 
         var copy = props.subtopic_arr;
+        // props.setLastAskedSubtopic(copy[0]);
+
         // API for Subtopic Switch
         if (copy[1] > copy[0]) {
-          console.log("Change ST");
+          console.log("Change ST", Date.now());
           const config = {
             headers: {
               Authorization: localStorage.getItem("user_token")
@@ -133,13 +136,17 @@ function Options(props) {
                   localStorage.getItem("start_time")
                 ),
                 question_end_timestamp: endTimeStamp,
-                question_id: props.data[props.NR - 1]._id
+                question_id: props.data[props.NR - 1]._id,
+                testing_flag: 0
               },
               config
             );
             console.log("RES_DATA", res.data);
             props.setShowMessage(res.data.showBrowseMessage);
             props.setGoBack(res.data.goBack);
+            if (res.data.goBack) {
+              props.showButton(false);
+            }
             props.setSelectedDomains(res.data.domainSuggestionsBool);
             if (res.data.domainSuggestionsBool) {
               props.setSelectedSuggestions(res.data.domainSuggestions);
@@ -151,13 +158,15 @@ function Options(props) {
               props.setPredecessorList(res.data.predecessor_list);
             }
           } else {
+            console.log("TIME TAKEN", endTimeStamp - props.startTimeStamp);
             const res = await axios.post(
               "http://localhost:5000/api/suggestions/suggestionBySubTopic",
               {
                 subtopic: props.subtopic_arr[0],
                 question_start_timestamp: props.startTimeStamp,
                 question_end_timestamp: props.endTimeStamp,
-                question_id: props.data[props.NR - 1]._id
+                question_id: props.data[props.NR - 1]._id,
+                testing_flag: 0
               },
               config
             );

@@ -7,7 +7,6 @@ const {
 const {
   findExistingResource,
   createWebsite,
-  understandWebsiteContent,
 } = require("../../dbFunctions/websiteInfo");
 const { Success, ServerError } = require("../../responses");
 module.exports = async (req, res) => {
@@ -15,7 +14,7 @@ module.exports = async (req, res) => {
     url = req.body.url;
     let website = await findExistingResource(url);
     let { startTimeStamp, endTimeStamp } = req.body;
-
+    console.log("Visited:", url);
     let totalTime =
       new Date(endTimeStamp).getTime() - new Date(startTimeStamp).getTime();
 

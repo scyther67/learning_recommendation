@@ -36,6 +36,25 @@ const RecommendationContent = props => {
     setPredecessorList
   } = props;
 
+  const stayOnSubtopic = async () => {
+    props.setShowButton(false);
+    props.setHelp(false);
+
+    const config1 = {
+      headers: {
+        Authorization: localStorage.getItem("user_token")
+      }
+    };
+    var resp = await axios.post(
+      "http://localhost:5000/api/user/updateSubtopicTimeStamp",
+      {
+        subtopic_no: subtopic_arr[0]
+      },
+      config1
+    );
+    props.setShowButton(true);
+  };
+
   const addPredeccesor = async () => {
     if (predecessorList.length > 0) {
       var copy = subtopic_arr;
@@ -46,6 +65,23 @@ const RecommendationContent = props => {
         copy.unshift(predecessorList[0]);
         setSubArr(copy);
       }
+      try {
+        const config1 = {
+          headers: {
+            Authorization: localStorage.getItem("user_token")
+          }
+        };
+        var resp = await axios.post(
+          "http://localhost:5000/api/user/updateSubtopicTimeStamp",
+          {
+            subtopic_no: copy[0]
+          },
+          config1
+        );
+      } catch (error) {
+        console.log(error);
+      }
+
       if (nr != total) {
         //axios request to get next question
 
@@ -59,11 +95,12 @@ const RecommendationContent = props => {
             }
           };
 
+          localStorage.setItem("last_asked_subtopic", copy[0]);
           const res = await axios.post(
             "http://localhost:5000/api/question/reqQuestion",
             {
               question_no: subtopic_arr[0],
-              subtopic_no: subtopic_arr[0],
+              subtopic_no: copy[0],
               question_response: {
                 question_start_timestamp:
                   startTimeStamp || localStorage.getItem("start_time"),
@@ -137,12 +174,27 @@ const RecommendationContent = props => {
               color="primary"
               onClick={addPredeccesor}
               style={{
-                position: "absolute",
-                left: "50%",
-                transform: "translate(-50%, -50%)"
+                // position: "absolute",
+                // left: "50%",
+                // transform: "translate(-50%, -50%)",
+                marginBottom: "10px"
               }}
             >
               {"Yes, Please Take Me Back!"}
+            </Button>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={stayOnSubtopic}
+              style={
+                {
+                  // position: "absolute",
+                  // left: "50%",
+                  // transform: "translate(-50%, -50%)"
+                }
+              }
+            >
+              {"No, I Want To Stay! "}
             </Button>
           </React.Fragment>
         </ThemeProvider>

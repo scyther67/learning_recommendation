@@ -8,9 +8,11 @@ const { validationResult } = require('express-validator');
 module.exports = async (req, res) => {
   try {
     const errors = validationResult(req);
+    console.log(errors);
     if (!errors.isEmpty()) return res.json({ ...ValidationError, errors: errors.array() });
     
     const { name, email, password, age, field_of_study, recent_education, proficiency } = req.body;
+
     const existing_user = await findUserByEmail(email);
     if (existing_user) return res.json({ ...Conflict, message: "User with given email exists" });
     
