@@ -77,7 +77,7 @@ function Options(props) {
 
         var copy = props.subtopic_arr;
         // API for Subtopic Switch
-        if (copy.length > 1 && copy[1] != copy[0]) {
+        if (copy[1] > copy[0]) {
           console.log("Change ST");
           const config = {
             headers: {
@@ -142,18 +142,15 @@ function Options(props) {
             props.setGoBack(res.data.goBack);
             props.setSelectedDomains(res.data.domainSuggestionsBool);
             if (res.data.domainSuggestionsBool) {
-              var randomSuggestions = res.data.suggestions;
-              var domainSuggestions = res.data.domainSuggestions;
-              var allSuggestions = randomSuggestions.append(domainSuggestions);
-              props.setSuggestions(allSuggestions);
-            } else if (res.data.domainSuggestionsBool == false) {
+              props.setSelectedSuggestions(res.data.domainSuggestions);
+            }
+            if (res.data.suggestions.length > 0) {
               props.setSuggestions(res.data.suggestions);
             }
             if (res.data.predecessor_list) {
               props.setPredecessorList(res.data.predecessor_list);
             }
           } else {
-            // console.log("TIME TAKEN", endTimeStamp - props.startTimeStamp);
             const res = await axios.post(
               "http://localhost:5000/api/suggestions/suggestionBySubTopic",
               {
@@ -164,7 +161,7 @@ function Options(props) {
               },
               config
             );
-            console.log("RES_DATA", res.data);
+
             // Update Violation Levels
             var newVLA = props.violationLevelArray;
             newVLA.push(res.data.violation_level);
@@ -173,6 +170,7 @@ function Options(props) {
             //Check for past violation levels
             if (res.data.violation_level) {
               if (newVLA.length >= 2) {
+                console.log(newVLA);
                 if (
                   newVLA[newVLA.length - 1] >= 2 &&
                   newVLA[newVLA.length - 2] >= 2
@@ -193,8 +191,8 @@ function Options(props) {
             } else if (res.data.domainSuggestionsBool == false) {
               props.setSuggestions(res.data.suggestions);
             }
-            if (res.data.predecessorList) {
-              props.setPredecessorList(res.data.predecessorList);
+            if (res.data.predecessor_list) {
+              props.setPredecessorList(res.data.predecessor_list);
             }
           }
         } catch (error) {

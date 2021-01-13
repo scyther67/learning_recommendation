@@ -15,6 +15,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import RecommendationContent from "../components/RecommendationContent";
 import FlukeMessageComponent from "../components/FlukeMessageComponent";
 import AnnouncementIcon from "@material-ui/icons/Announcement";
+import SelectedDomainsComponent from "../components/SelectedDomainsComponent";
 import "../assets/prism.css";
 
 const Prism = require("prismjs");
@@ -42,7 +43,7 @@ const cardStyles = {
   width: "100%",
   minHeight: "40vh",
   marginTop: "5vh",
-  marginBottom: "1vh",
+  marginBottom: "4vh",
   boxShadow: "0 4px 8px 0 rgba(0,0,0,0.2)",
   display: "flex",
   justifyContent: "center",
@@ -60,10 +61,18 @@ const cardStyles2 = {
   boxShadow: "0 4px 8px 0 rgba(0,0,0,0.2)"
 };
 
-const cornerBtn = {
+const cornerBtn2 = {
   position: "absolute",
-  right: "45px",
-  top: "15vh",
+  right: "40px",
+  top: "50vh",
+  fontSize: "45px",
+  color: "#008080"
+};
+
+const cornerBtn1 = {
+  position: "absolute",
+  right: "40px",
+  top: "5vh",
   fontSize: "45px",
   color: "#008080"
 };
@@ -108,7 +117,7 @@ const ViewQuestion = props => {
   const [goBack, setGoBack] = useState(null);
   const [selectedDomains, setSelectedDomains] = useState(null);
   const [predecessorList, setPredecessorList] = useState([]);
-
+  const [selectedSuggestions, setSelectedSuggestions] = useState([]);
   const [subtopic_arr, setSubArr] = useState([
     0,
     0,
@@ -148,38 +157,9 @@ const ViewQuestion = props => {
     if (!localStorage.getItem("user_token")) {
       history.push("/sign-in");
     }
-
-    if (JSON.parse(localStorage.getItem("subtopic_arr")).length == 0) {
-      history.push("/study-complete");
-    }
-    async function updateSubtopicTimeStamp() {
-      if (
-        JSON.parse(localStorage.getItem("subtopic_arr"))[0] ==
-        JSON.parse(localStorage.getItem("subtopic_arr"))[1]
-      ) {
-        try {
-          const config = {
-            headers: {
-              Authorization: localStorage.getItem("user_token")
-            }
-          };
-          var response = await axios.post(
-            "http://localhost:5000/api/user/updateSubtopicTimeStamp",
-            {
-              subtopic_no: JSON.parse(localStorage.getItem("subtopic_arr"))[0]
-            },
-            config
-          );
-        } catch (error) {
-          console.log(error);
-        }
-      }
-      //
-    }
-    updateSubtopicTimeStamp();
-    Prism.highlightAll();
-
     //request first question
+    // console.log("Here", props);
+    Prism.highlightAll();
     async function fetchData() {
       try {
         const config = {
@@ -191,6 +171,7 @@ const ViewQuestion = props => {
         var stored_subtopic_arr = subtopic_arr;
         if (localStorage.getItem("subtopic_arr")) {
           stored_subtopic_arr = localStorage.getItem("subtopic_arr");
+          console.log("SUB ARRAY", JSON.parse(stored_subtopic_arr));
           subtopic_number = JSON.parse(stored_subtopic_arr)[0];
           setSubArr(JSON.parse(stored_subtopic_arr));
         }
@@ -229,9 +210,6 @@ const ViewQuestion = props => {
   };
 
   const nextQuestion = async e => {
-    if (localStorage.getItem("subtopic_arr").length <= 0) {
-      history.push("/study-complete");
-    }
     if (nr != total) {
       //axios request to get next question
       setFlukeMsg(false);
@@ -358,21 +336,16 @@ const ViewQuestion = props => {
               <Typography variant="h6" style={{ color: "white" }}>
                 {question.question_header}
               </Typography>
-              {question.question_query ? (
-                <pre
-                  style={{
-                    fontSize: "20px",
-                    width: "100%",
-                    height: "20vh",
-                    textAlign: "center"
-                  }}
-                >
-                  <code className="language-sql">
-                    {question.question_query}
-                  </code>
-                </pre>
-              ) : null}
-
+              <pre
+                style={{
+                  fontSize: "20px",
+                  maxWidth: "100%"
+                  // overflowWrap: "break-word",
+                  // whiteSpace: "pre-wrap"
+                }}
+              >
+                <code className="language-sql">{question.question_query}</code>
+              </pre>
               <Typography variant="h6" style={{ color: "white" }}>
                 {question.question_footer}
               </Typography>
@@ -417,6 +390,7 @@ const ViewQuestion = props => {
               setVLA={setVLA}
               subtopics_list={subtopics_list}
               data={data}
+              setSelectedSuggestions={setSelectedSuggestions}
             />
           </Col>
         </Row>
@@ -492,7 +466,7 @@ const ViewQuestion = props => {
           classes={{ tooltip: classes.text }}
           arrow
           title={
-            <React.Fragment>
+            <div style={{ paddingBottom: "2vh" }}>
               <Typography variant="h6" color="inherit">
                 Need Help ?
               </Typography>
@@ -503,11 +477,32 @@ const ViewQuestion = props => {
                 selectedDomains={selectedDomains}
                 suggestions={suggestions}
                 predecessorList={predecessorList}
+                setSubArr={setSubArr}
+                subtopic_arr={subtopic_arr}
+                nr={nr}
+                data={data}
+                student_response_id={student_response_id}
+                responses={responses}
+                changeHelp={changeHelp}
+                setBtn1={setBtn1}
+                setBtn2={setBtn2}
+                setBtn3={setBtn3}
+                setBtn4={setBtn4}
+                setData={setData}
+                setLoader={setLoader}
+                setQA={setQA}
+                pushData={pushData}
+                setShowButton={setShowButton}
+                total={total}
+                startTimeStamp={startTimeStamp}
+                endTimeStamp={endTimeStamp}
+                setStartTimeStamp={setStartTimeStamp}
+                setPredecessorList={setPredecessorList}
               />
-            </React.Fragment>
+            </div>
           }
         >
-          <HelpOutlineIcon style={cornerBtn}>Hint</HelpOutlineIcon>
+          <HelpOutlineIcon style={cornerBtn2}>Hint</HelpOutlineIcon>
         </HtmlTooltip>
       ) : null}
       {showFlukeMessage ? (
@@ -528,6 +523,28 @@ const ViewQuestion = props => {
           }
         >
           <AnnouncementIcon style={FlukeIcon}>Hint</AnnouncementIcon>
+        </HtmlTooltip>
+      ) : null}
+      {selectedDomains ? (
+        <HtmlTooltip
+          interactive
+          leaveDelay={500}
+          placement="bottom-start"
+          classes={{ tooltip: classes.text }}
+          arrow
+          title={
+            <React.Fragment>
+              <Typography variant="h6" color="inherit">
+                Here's Something from Our Side
+              </Typography>
+              <br />
+              <SelectedDomainsComponent
+                selectedSuggestions={selectedSuggestions}
+              />
+            </React.Fragment>
+          }
+        >
+          <AnnouncementIcon style={cornerBtn1}>Hint</AnnouncementIcon>
         </HtmlTooltip>
       ) : null}
     </React.Fragment>

@@ -20,6 +20,10 @@ import Select from "@material-ui/core/Select";
 import axios from "axios";
 import learning from "../images/learning.png";
 import { FormControl } from "@material-ui/core";
+import PdfViewer from "../components/PdfViewer";
+import Checkbox from "@material-ui/core/Checkbox";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormHelperText from "@material-ui/core/FormHelperText";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -78,7 +82,8 @@ export default function SignInSide(props) {
   const [nameHelperText, setNameHelperText] = useState("");
   const [ageError, setAgeError] = useState(false);
   const [ageHelperText, setAgeHelperText] = useState("");
-
+  const [checked, setChecked] = useState(false);
+  const [agreeHelperText, setAgreeHelperText] = useState("");
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -117,56 +122,68 @@ export default function SignInSide(props) {
     setPass(e.target.value);
   };
 
+  const onChangeCheck = e => {
+    setChecked(e.target.checked);
+  };
+
   function valuetext(value) {
     return value;
   }
 
   const onClickSubmit = async () => {
-    console.log(name, email, pass);
-    const form = {
-      name: name,
-      password: pass,
-      email: email
-    };
-    const formData = new FormData();
-    formData.append("email", email);
-    formData.append("name", name);
-    formData.append("password", pass);
-    formData.append("age", age);
-    formData.append("proficiency", SQL);
-    formData.append("field_of_study", field);
-    formData.append("recent_education", year);
+    if (checked) {
+      const form = {
+        name: name,
+        password: pass,
+        email: email
+      };
+      const formData = new FormData();
+      formData.append("email", email);
+      formData.append("name", name);
+      formData.append("password", pass);
+      formData.append("age", age);
+      formData.append("proficiency", SQL);
+      formData.append("field_of_study", field);
+      formData.append("recent_education", year);
 
-    try {
-      const res = await axios.post(
-        "http://localhost:5000/api/auth/register",
-        form
-      );
-      console.log(res);
-      if (res.data.token) {
-        const user = {
-          token: res.data.token,
-          username: name
-        };
-        localStorage.setItem("user_token", user.token);
-        localStorage.setItem("user_name", user.username);
-        setTimeout(() => {
-          history.push("/quiz");
-        }, 2000);
-      } else if (res.data.errors) {
-        for (let index = 0; index < res.data.length; index++) {
-          if (res.data.errors[index].params == "email") {
-            setEmailError(true);
-            setEmailHelperText(res.data.errors[index].message);
-          }
-          if (res.data.errors[index].params == "password") {
-            setPassError(true);
-            setPassHelperText(res.data.errors[index].message);
+      try {
+        const res = await axios.post(
+          "http://localhost:5000/api/auth/register",
+          form
+        );
+        console.log(res);
+        if (res.data.token) {
+          const user = {
+            token: res.data.token,
+            username: name
+          };
+          localStorage.setItem("user_token", user.token);
+          localStorage.setItem("user_name", user.username);
+          setTimeout(() => {
+            history.push("/quiz");
+          }, 2000);
+        } else if (res.data.errors) {
+          console.log(res.data);
+          for (let index = 0; index < res.data.errors.length; index++) {
+            if (res.data.errors[index].param == "email") {
+              setEmailError(true);
+              setEmailHelperText(res.data.errors[index].msg);
+            }
+            if (res.data.errors[index].param == "password") {
+              setPassError(true);
+              setPassHelperText(res.data.errors[index].msg);
+            }
+            if (res.data.errors[index].param == "age") {
+              setAgeError(true);
+              setAgeHelperText(res.data.errors[index].msg);
+            }
           }
         }
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
+    } else {
+      setAgreeHelperText("Please Click on I Agree");
     }
   };
 
@@ -267,7 +284,7 @@ export default function SignInSide(props) {
                 id="demo-simple-select-outlined"
                 value={year}
                 onChange={onChangeYear}
-                label="Latest/Ongoing Educational Qualification"
+                label="Year of Study"
               >
                 <MenuItem value="">
                   <em>None</em>
@@ -335,6 +352,20 @@ export default function SignInSide(props) {
             >
               <b>View Consent Form</b>
             </a>
+
+            <FormControlLabel
+              control={
+                <Checkbox
+                  name="checked"
+                  checked={checked}
+                  onChange={onChangeCheck}
+                />
+              }
+              label="I have read the Consent Form and agree to paticipate in the study"
+            />
+            <FormHelperText style={{ color: "red" }}>
+              {agreeHelperText}
+            </FormHelperText>
             <Dialog
               maxWidth={"md"}
               fullWidth={true}
@@ -343,15 +374,16 @@ export default function SignInSide(props) {
               aria-labelledby="alert-dialog-title"
               aria-describedby="alert-dialog-description"
             >
-              <DialogTitle id="alert-dialog-title">
+              <DialogTitle
+                id="alert-dialog-title"
+                style={{
+                  textAlign: "center"
+                }}
+              >
                 {"Consent Form "}
               </DialogTitle>
               <DialogContent>
-                <DialogContentText id="alert-dialog-description">
-                  {
-                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum"
-                  }
-                </DialogContentText>
+                <PdfViewer />
               </DialogContent>
             </Dialog>
 
