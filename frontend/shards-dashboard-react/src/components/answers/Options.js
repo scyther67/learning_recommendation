@@ -142,18 +142,15 @@ function Options(props) {
             props.setGoBack(res.data.goBack);
             props.setSelectedDomains(res.data.domainSuggestionsBool);
             if (res.data.domainSuggestionsBool) {
-              var randomSuggestions = res.data.suggestions;
-              var domainSuggestions = res.data.domainSuggestions;
-              var allSuggestions = randomSuggestions.append(domainSuggestions);
-              props.setSuggestions(allSuggestions);
-            } else if (res.data.domainSuggestionsBool == false) {
+              props.setSelectedSuggestions(res.data.domainSuggestions);
+            }
+            if (res.data.suggestions.length > 0) {
               props.setSuggestions(res.data.suggestions);
             }
             if (res.data.predecessor_list) {
               props.setPredecessorList(res.data.predecessor_list);
             }
           } else {
-            console.log("TIME TAKEN", endTimeStamp - props.startTimeStamp);
             const res = await axios.post(
               "http://localhost:5000/api/suggestions/suggestionBySubTopic",
               {

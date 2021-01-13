@@ -4,6 +4,7 @@ import Button from "@material-ui/core/Button";
 import theme from "../assets/theme";
 import axios from "axios";
 import { ThemeProvider } from "@material-ui/core/styles";
+import ListItem from "../components/ListItem";
 
 const RecommendationContent = props => {
   const {
@@ -12,9 +13,8 @@ const RecommendationContent = props => {
     selectedDomains,
     suggestions,
     predecessorList,
-    setSubArray,
+    setSubArr,
     nr,
-    timestamps,
     data,
     student_response_id,
     responses,
@@ -29,19 +29,28 @@ const RecommendationContent = props => {
     pushData,
     setShowButton,
     total,
-    subtopic_arr
+    subtopic_arr,
+    startTimeStamp,
+    endTimeStamp,
+    setStartTimeStamp,
+    setPredecessorList
   } = props;
 
   const addPredeccesor = async () => {
     if (predecessorList.length > 0) {
       var copy = subtopic_arr;
-      copy.unshift(predecessorList[0], predecessorList[1]);
-      setSubArray(copy);
+      if (predecessorList.length > 1) {
+        copy.unshift(predecessorList[0], predecessorList[1]);
+        setSubArr(copy);
+      } else {
+        copy.unshift(predecessorList[0]);
+        setSubArr(copy);
+      }
       if (nr != total) {
         //axios request to get next question
 
         changeHelp(false);
-
+        setStartTimeStamp(Date.now());
         setLoader(true);
         try {
           const config = {
@@ -49,25 +58,16 @@ const RecommendationContent = props => {
               Authorization: localStorage.getItem("user_token")
             }
           };
-          //editing timestamps
-          let modified_tp = timestamps[nr - 1];
-          if (nr - 1 == 0) {
-            let start_time = localStorage.getItem("start_time");
-            modified_tp["start_time"] = Number(start_time);
-            modified_tp["end_time"] = modified_tp["tp"];
-          } else {
-            modified_tp["start_time"] = timestamps[nr - 2]["end_time"];
-            modified_tp["end_time"] = timestamps[nr - 1]["tp"];
-          }
-          delete modified_tp.tp;
 
           const res = await axios.post(
             "http://localhost:5000/api/question/reqQuestion",
             {
               question_no: subtopic_arr[0],
-              subtopic_number: subtopic_arr[0],
+              subtopic_no: subtopic_arr[0],
               question_response: {
-                ...modified_tp,
+                question_start_timestamp:
+                  startTimeStamp || localStorage.getItem("start_time"),
+                question_end_timestamp: endTimeStamp,
                 student_response: responses[nr - 1],
                 question_id: data[nr - 1]._id
               },
@@ -87,7 +87,7 @@ const RecommendationContent = props => {
         pushData(nr);
         setShowButton(false);
         setQA(false);
-        props.setPredeccesorList([]);
+        setPredecessorList([]);
         setBtn1("default");
         setBtn2("default");
         setBtn3("default");
@@ -113,88 +113,62 @@ const RecommendationContent = props => {
       return (
         <ThemeProvider theme={theme}>
           <React.Fragment>
-            {/* <Typography>{"Having some trouble ?"}</Typography> */}
             <hr style={{ backgroundColor: "white" }} />
             <Typography>
               {
-                "It seems as if you are having a bit of difficulty in understanding the topic. Well, we went through the same thing ourselves. Answering questions of the previous subtopics helped us get a better grip on this concept."
+                "It seems as if you are having a bit of difficulty in understanding the topic. Well, we went through the same thing ourselves."
               }
             </Typography>
+            <br />
+            <Typography>
+              {
+                "Answering questions of the previous subtopics helped us get a better grip on this concept."
+              }
+            </Typography>
+            <br />
             <Typography>
               {"Would you also like to do the same yourself ?"}
+              <br />
+              <br />
+              <br />
             </Typography>
             <Button
               variant="contained"
               color="primary"
               onClick={addPredeccesor}
+              style={{
+                position: "absolute",
+                left: "50%",
+                transform: "translate(-50%, -50%)"
+              }}
             >
               {"Yes, Please Take Me Back!"}
             </Button>
           </React.Fragment>
         </ThemeProvider>
       );
-    } else {
-      if (selectedDomains && suggestions.length > 0) {
-        return (
-          <React.Fragment>
-            {/* <Typography>{"Having some trouble ?"}</Typography> */}
-            <hr style={{ backgroundColor: "white" }} />
-            <Typography>
-              {
-                "We noticed that you like some websites better than the others. Well, we also do that XD. Here is a curated list of websites(From your favourites) to make you understand the concept better."
-              }
-            </Typography>
-            <ul>
-              <li>
-                <a target="_blank" href={suggestions[0]}>
-                  {suggestions[0]}
-                </a>
-              </li>
-              <li>
-                <a target="_blank" href={suggestions[1]}>
-                  {suggestions[1]}
-                </a>
-              </li>
-              <li>
-                <a target="_blank" href={suggestions[2]}>
-                  {suggestions[2]}
-                </a>
-              </li>
-            </ul>
-          </React.Fragment>
-        );
-      } else if (suggestions.length > 0) {
-        return (
-          <React.Fragment>
-            {/* <Typography>{"Having some trouble ?"}</Typography> */}
-            <hr style={{ backgroundColor: "white" }} />
-            <Typography>
-              {
-                "We have curated a list of web resources that you might want to read before attempting the next question."
-              }
-            </Typography>
+    } else if (suggestions.length > 0) {
+      return (
+        <React.Fragment>
+          <hr style={{ backgroundColor: "white" }} />
+          <Typography>
+            {
+              "We have curated a list of web resources that you might want to read before attempting the next question."
+            }
+          </Typography>
 
-            <hr style={{ backgroundColor: "white" }}></hr>
-            <ul>
-              <li>
-                <a target="_blank" href={props.suggestions[0]}>
-                  {props.suggestions[0]}
-                </a>
-              </li>
-              <li>
-                <a target="_blank" href={props.suggestions[1]}>
-                  {props.suggestions[1]}
-                </a>
-              </li>
-              <li>
-                <a target="_blank" href={props.suggestions[2]}>
-                  {props.suggestions[2]}
-                </a>
-              </li>
-            </ul>
-          </React.Fragment>
-        );
-      }
+          <hr style={{ backgroundColor: "white" }}></hr>
+          <ul>
+            {props.suggestions.map((item, index) => (
+              <ListItem
+                key={props.suggestions[index]}
+                href={props.suggestions[index]}
+                item={props.suggestions[index]}
+              />
+            ))}
+          </ul>
+        </React.Fragment>
+      );
     }
   }
 };
