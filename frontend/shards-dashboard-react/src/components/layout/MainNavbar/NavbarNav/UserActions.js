@@ -29,8 +29,9 @@ export default class UserActions extends React.Component {
 
   onClickLogout = e => {
     console.log("Logout");
-    localStorage.removeItem("user_name");
-    localStorage.removeItem("user_token");
+    // localStorage.removeItem("user_name");
+    // localStorage.removeItem("user_token");
+    localStorage.clear();
   };
 
   render() {
