@@ -18,9 +18,12 @@ router.get("/", (req, res) => {
 router.post("/auth/register", Validators.authRegister(), User.Register);
 router.post("/auth/login", Validators.authLogin(), User.Login);
 // router.post("/auth/registerAdmin", AuthAdmin, User.RegisterAdmin);
-router.post("/auth/convertToAdmin",AuthAdmin,Validators.convertToAdmin(),User.ConvertToAdmin);
-
-router.post("user/updateSubtopicTimeStamp", Auth, User.UpdateSubtopicTimeStamp);
+router.post(
+  "/auth/convertToAdmin",
+  AuthAdmin,
+  Validators.convertToAdmin(),
+  User.ConvertToAdmin
+);
 
 router.post(
   "/user/updateSubtopicTimeStamp",
@@ -35,7 +38,12 @@ router.post("/learning/visitedResource", Auth, Learning.visitedResource);
 router.post("/test/testDetails", Test.testDetails);
 router.post("/test/testLearningDetails", Test.testLearningDetails);
 
-router.post("/question/addQuestion",AuthAdmin,multer1.single("excelfile"),Question.addQuestion);
+router.post(
+  "/question/addQuestion",
+  AuthAdmin,
+  multer1.single("excelfile"),
+  Question.addQuestion
+);
 
 router.post("/question/reqQuestion", Auth, Question.reqQuestion);
 router.post("/question/allTopicQuestions", Question.allTopicQuestions);

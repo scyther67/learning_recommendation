@@ -1,5 +1,5 @@
 const { generatePossibleResources, getDomainTimeDict } = require("../dbFunctions/suggestions");
-const { distribution } = require("./suggestions");
+const { softmax } = require("./suggestions");
 
 module.exports = {
     domainSpecificSuggestions: async (subtopic, user_id)=>{
@@ -18,40 +18,26 @@ module.exports = {
     //   });
 
       visited_domain_dict = await getDomainTimeDict(user_id);
+      visited_domain_dict = visited_domain_dict.map((a) => {
+          a.domain_time_dict;
+      });
 
-      // visited_domain_dict = visited_domain_dict[0].map((a) => {
-      //     a.domain_time_dict;
-      // });
-      
-      visited_domain_dict = visited_domain_dict[0]['domain_time_dict'];
-      
       time_distribution = Object.values(visited_domain_dict);
+      time_distribution_softmax = softmax(time_distribution);
+
       visited_domains = Object.keys(visited_domain_dict);
-
-      let visited_domain_tup = []
-      for(i=0; i < time_distribution.length; i++){
-        visited_domain_tup.push([visited_domains[i], time_distribution[i]]);
-      }
-
-
-      considered_visited_domain_tup = visited_domain_tup.filter(value => possible_domains.includes(value[0]));
-      
-      time_distribution_dist = distribution(considered_visited_domain_tup);
-
       most_visited_domains = [];
 
-
-      for(i = 0; i < time_distribution_dist.length; i++){
-          // SETTING A HARD CODED VALUE HERE (0.35)
-          if(time_distribution_dist[i] > 0.35){
-            most_visited_domains.push((time_distribution_dist[i], considered_visited_domain_tup[i][0]));
+      for(i = 0; i < time_distribution_softmax.length; i++){
+          // SETTING A HARD CODED VALUE HERE (0.3)
+          if(time_distribution_softmax[i] > 0.3){
+            most_visited_domains.push(visited_domains[i]);
           }
       }
 
-      most_visited_domains = most_visited_domains.sort(x => x[0]);
+      final_suggestion_domains = most_visited_domains.filter(value => possible_domains.includes(value));
 
 
-      
     //   common_domains = [...new Set([...visited_domains, ...possible_domains])];
     //   console.log("COMMON DOMS", common_domains);
 
@@ -76,6 +62,6 @@ module.exports = {
     //       }
     //     }
     //   }
-      return most_visited_domains;
+      return final_suggestion_domains;
     }
 }

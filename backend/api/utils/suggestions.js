@@ -7,13 +7,19 @@ module.exports = {
     arr.reduce((a, b) => a + b, 0);
   },
 
-  distribution: (arr) => {
-    let sum = arr.reduce((r, a) => a.map((b, i) => (r[i] || 1) + b), [])[1];
-    let final_dist = []
-    for(i=0; i<arr.length; i++){
-      final_dist.push(arr[i][1] / sum);
-    }
-    return final_dist;
+  softmax: (arr) => {
+    return arr.map(function (value, index) {
+      return (
+        Math.exp(value) /
+        arr
+          .map(function (y) {
+            return Math.exp(y);
+          })
+          .reduce(function (a, b) {
+            return a + b;
+          })
+      );
+    });
   },
   satisfactoryBrowsingCheck: async (learnings, subtopic_start_timestamp) => {
     let learning_after_question_start = learnings.filter((learning) => {

@@ -25,6 +25,7 @@ module.exports = async (req, res) => {
       updation = await UpdateQuestionAnswerTime(question, time_taken);
       res.json({ fluke_message: false, violation_level: 0 });
     }
+
     // if (time_taken < 5000) {
     //   res.json({ fluke_message: true, violation_level: 3 });
     // } else if (time_taken < question.avg_time / 2) {
