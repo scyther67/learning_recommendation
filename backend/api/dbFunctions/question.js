@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Question = require("../models/question");
 
 module.exports = {
-  addQuestion: async (question_header,question_query,question_footer,alternatives,subtopic,correct,questionid) => {
+  addQuestion: async (question_header,question_query,question_footer,alternatives,subtopic,correct,questionid,questionImageUrl) => {
     const newquestion = new Question({
       question_header,
       question_query,
@@ -11,6 +11,7 @@ module.exports = {
       alternatives,
       correct,
       subtopic,
+      questionImageUrl
     });
     return newquestion.save();
   },

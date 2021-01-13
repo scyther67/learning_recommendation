@@ -23,7 +23,7 @@ module.exports = async (req, res) => {
       // console.log("SSTS:"+subtopic_start_timestamp);
       let learning_after_subtopic_start = await satisfactoryBrowsingCheck(learnings, subtopic_start_timestamp);
       // console.log("LASS:"+learning_after_subtopic_start);
-      if (learning_after_subtopic_start.length == 0) {
+      if (learning_after_subtopic_start.length == 0 && testing_flag!=0 ) {
         return res.json({ showBrowseMessage: true, fluke_message, violation_level });
       }
       

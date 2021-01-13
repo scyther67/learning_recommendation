@@ -8,8 +8,8 @@ module.exports = {
             body('name', 'Invalid Name').exists().isAlpha(),
             body('password', 'Invalid Password').exists().isLength({ min: 5 }),
             body('age', 'Invalid Age').exists().isNumeric({no_symbols:true}),
-            body('field_of_study', 'Please Enter this Field').exists(),
-            body('recent_education', 'Please Enter this Field').exists(),
+            body('field_of_study', 'Please Enter this Field').exists().isLength({ min: 1 }),
+            body('recent_education', 'Please Enter this Field').exists().isLength({ min: 1 }),
             body('proficiency', 'Invalid Proficiency').exists().isNumeric()
         ]
     },
