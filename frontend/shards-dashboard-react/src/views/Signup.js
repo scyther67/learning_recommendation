@@ -239,7 +239,7 @@ export default function SignInSide(props) {
                 id="demo-simple-select-outlined"
                 value={year}
                 onChange={onChangeYear}
-                label="Year of Study"
+                label="Latest/Ongoing Educational Qualification"
               >
                 <MenuItem value="">
                   <em>None</em>

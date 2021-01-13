@@ -4,7 +4,6 @@ import { Redirect } from "react-router-dom";
 // Layout Types
 import { DefaultLayout, NoLayout } from "./layouts";
 
-
 // Route Views
 import BlogOverview from "./views/BlogOverview";
 import UserProfileLite from "./views/UserProfileLite";
@@ -15,13 +14,14 @@ import Signup from "./views/Signup";
 import Signin from "./views/Signin";
 import QuestionUpload from "./views/QuestionUpload";
 import ResultSubmission from "./views/ResultSubmission";
+import EndTestView from "./views/EndTestView";
 
 export default [
   {
     path: "/",
     exact: true,
     layout: DefaultLayout,
-    component: () => < Redirect to="/sign-in" />
+    component: () => <Redirect to="/sign-in" />
   },
   {
     path: "/dashboard",
@@ -84,7 +84,14 @@ export default [
   {
     path: "/finish-quiz",
     layout: DefaultLayout,
-    component: ResultSubmission,
+    component: EndTestView,
+    noNavbar: false,
+    noFooter: true
+  },
+  {
+    path: "/study-complete",
+    layout: NoLayout,
+    component: EndTestView,
     noNavbar: false,
     noFooter: true
   }

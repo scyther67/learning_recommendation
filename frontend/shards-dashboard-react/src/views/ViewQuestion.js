@@ -107,7 +107,7 @@ const ViewQuestion = props => {
   const [suggestions, setSuggestions] = useState([]);
   const [goBack, setGoBack] = useState(null);
   const [selectedDomains, setSelectedDomains] = useState(null);
-  const [predeccesorList, setPredeccesorList] = useState([]);
+  const [predecessorList, setPredecessorList] = useState([]);
 
   const [subtopic_arr, setSubArr] = useState([
     0,
@@ -148,9 +148,38 @@ const ViewQuestion = props => {
     if (!localStorage.getItem("user_token")) {
       history.push("/sign-in");
     }
-    //request first question
-    // console.log("Here", props);
+
+    if (JSON.parse(localStorage.getItem("subtopic_arr")).length == 0) {
+      history.push("/study-complete");
+    }
+    async function updateSubtopicTimeStamp() {
+      if (
+        JSON.parse(localStorage.getItem("subtopic_arr"))[0] ==
+        JSON.parse(localStorage.getItem("subtopic_arr"))[1]
+      ) {
+        try {
+          const config = {
+            headers: {
+              Authorization: localStorage.getItem("user_token")
+            }
+          };
+          var response = await axios.post(
+            "http://localhost:5000/api/user/updateSubtopicTimeStamp",
+            {
+              subtopic_no: JSON.parse(localStorage.getItem("subtopic_arr"))[0]
+            },
+            config
+          );
+        } catch (error) {
+          console.log(error);
+        }
+      }
+      //
+    }
+    updateSubtopicTimeStamp();
     Prism.highlightAll();
+
+    //request first question
     async function fetchData() {
       try {
         const config = {
@@ -162,7 +191,6 @@ const ViewQuestion = props => {
         var stored_subtopic_arr = subtopic_arr;
         if (localStorage.getItem("subtopic_arr")) {
           stored_subtopic_arr = localStorage.getItem("subtopic_arr");
-          console.log("SUB ARRAY", JSON.parse(stored_subtopic_arr));
           subtopic_number = JSON.parse(stored_subtopic_arr)[0];
           setSubArr(JSON.parse(stored_subtopic_arr));
         }
@@ -201,6 +229,9 @@ const ViewQuestion = props => {
   };
 
   const nextQuestion = async e => {
+    if (localStorage.getItem("subtopic_arr").length <= 0) {
+      history.push("/study-complete");
+    }
     if (nr != total) {
       //axios request to get next question
       setFlukeMsg(false);
@@ -239,7 +270,7 @@ const ViewQuestion = props => {
       } catch (error) {
         console.log(error);
       }
-      setPredeccesorList([]);
+      setPredecessorList([]);
       pushData(nr);
       setShowButton(false);
       setQA(false);
@@ -327,16 +358,21 @@ const ViewQuestion = props => {
               <Typography variant="h6" style={{ color: "white" }}>
                 {question.question_header}
               </Typography>
-              <pre
-                style={{
-                  fontSize: "20px",
-                  maxWidth: "100%"
-                  // overflowWrap: "break-word",
-                  // whiteSpace: "pre-wrap"
-                }}
-              >
-                <code className="language-sql">{question.question_query}</code>
-              </pre>
+              {question.question_query ? (
+                <pre
+                  style={{
+                    fontSize: "20px",
+                    width: "100%",
+                    height: "20vh",
+                    textAlign: "center"
+                  }}
+                >
+                  <code className="language-sql">
+                    {question.question_query}
+                  </code>
+                </pre>
+              ) : null}
+
               <Typography variant="h6" style={{ color: "white" }}>
                 {question.question_footer}
               </Typography>
@@ -372,7 +408,7 @@ const ViewQuestion = props => {
               setGoBack={setGoBack}
               setSuggestions={setSuggestions}
               setSelectedDomains={setSelectedDomains}
-              setPredeccesorList={setPredeccesorList}
+              setPredecessorList={setPredecessorList}
               subtopic_arr={subtopic_arr}
               setSubArr={setSubArr}
               setFlukeMsg={setFlukeMsg}
@@ -466,7 +502,7 @@ const ViewQuestion = props => {
                 goBack={goBack}
                 selectedDomains={selectedDomains}
                 suggestions={suggestions}
-                predeccesorList={predeccesorList}
+                predecessorList={predecessorList}
               />
             </React.Fragment>
           }
