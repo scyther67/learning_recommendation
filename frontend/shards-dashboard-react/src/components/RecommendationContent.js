@@ -4,6 +4,7 @@ import Button from "@material-ui/core/Button";
 import theme from "../assets/theme";
 import axios from "axios";
 import { ThemeProvider } from "@material-ui/core/styles";
+import ListItem from "../components/ListItem";
 
 const RecommendationContent = props => {
   const {
@@ -35,8 +36,13 @@ const RecommendationContent = props => {
   const addPredeccesor = async () => {
     if (predecessorList.length > 0) {
       var copy = subtopic_arr;
-      copy.unshift(predecessorList[0], predecessorList[1]);
-      setSubArray(copy);
+      if (predecessorList.length > 1) {
+        copy.unshift(predecessorList[0], predecessorList[1]);
+        setSubArray(copy);
+      } else {
+        copy.unshift(predecessorList[0]);
+        setSubArray(copy);
+      }
       if (nr != total) {
         //axios request to get next question
 
@@ -113,7 +119,6 @@ const RecommendationContent = props => {
       return (
         <ThemeProvider theme={theme}>
           <React.Fragment>
-            {/* <Typography>{"Having some trouble ?"}</Typography> */}
             <hr style={{ backgroundColor: "white" }} />
             <Typography>
               {
@@ -137,7 +142,6 @@ const RecommendationContent = props => {
       if (selectedDomains && suggestions.length > 0) {
         return (
           <React.Fragment>
-            {/* <Typography>{"Having some trouble ?"}</Typography> */}
             <hr style={{ backgroundColor: "white" }} />
             <Typography>
               {
@@ -145,28 +149,19 @@ const RecommendationContent = props => {
               }
             </Typography>
             <ul>
-              <li>
-                <a target="_blank" href={suggestions[0]}>
-                  {suggestions[0]}
-                </a>
-              </li>
-              <li>
-                <a target="_blank" href={suggestions[1]}>
-                  {suggestions[1]}
-                </a>
-              </li>
-              <li>
-                <a target="_blank" href={suggestions[2]}>
-                  {suggestions[2]}
-                </a>
-              </li>
+              {props.suggestions.map((item, index) => (
+                <ListItem
+                  key={props.suggestions[index]}
+                  href={props.suggestions[index]}
+                  item={props.suggestions[index]}
+                />
+              ))}
             </ul>
           </React.Fragment>
         );
       } else if (suggestions.length > 0) {
         return (
           <React.Fragment>
-            {/* <Typography>{"Having some trouble ?"}</Typography> */}
             <hr style={{ backgroundColor: "white" }} />
             <Typography>
               {
@@ -176,21 +171,13 @@ const RecommendationContent = props => {
 
             <hr style={{ backgroundColor: "white" }}></hr>
             <ul>
-              <li>
-                <a target="_blank" href={props.suggestions[0]}>
-                  {props.suggestions[0]}
-                </a>
-              </li>
-              <li>
-                <a target="_blank" href={props.suggestions[1]}>
-                  {props.suggestions[1]}
-                </a>
-              </li>
-              <li>
-                <a target="_blank" href={props.suggestions[2]}>
-                  {props.suggestions[2]}
-                </a>
-              </li>
+              {props.suggestions.map((item, index) => (
+                <ListItem
+                  key={props.suggestions[index]}
+                  href={props.suggestions[index]}
+                  item={props.suggestions[index]}
+                />
+              ))}
             </ul>
           </React.Fragment>
         );

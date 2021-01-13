@@ -193,8 +193,8 @@ function Options(props) {
             } else if (res.data.domainSuggestionsBool == false) {
               props.setSuggestions(res.data.suggestions);
             }
-            if (res.data.predecessor_list) {
-              props.setPredecessorList(res.data.predecessor_list);
+            if (res.data.predecessorList) {
+              props.setPredecessorList(res.data.predecessorList);
             }
           }
         } catch (error) {

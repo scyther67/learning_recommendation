@@ -70,6 +70,15 @@ export default function SignInSide(props) {
   const [SQL, setSQL] = useState(0);
   const [field, setField] = useState("");
   const [year, setYear] = useState("");
+  const [emailError, setEmailError] = useState(false);
+  const [emailHelperText, setEmailHelperText] = useState("");
+  const [passError, setPassError] = useState(false);
+  const [passHelperText, setPassHelperText] = useState("");
+  const [nameError, setNameError] = useState(false);
+  const [nameHelperText, setNameHelperText] = useState("");
+  const [ageError, setAgeError] = useState(false);
+  const [ageHelperText, setAgeHelperText] = useState("");
+
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -124,9 +133,9 @@ export default function SignInSide(props) {
     formData.append("name", name);
     formData.append("password", pass);
     formData.append("age", age);
-    formData.append("SQL", SQL);
-    formData.append("field", field);
-    formData.append("year", year);
+    formData.append("proficiency", SQL);
+    formData.append("field_of_study", field);
+    formData.append("recent_education", year);
 
     try {
       const res = await axios.post(
@@ -144,6 +153,17 @@ export default function SignInSide(props) {
         setTimeout(() => {
           history.push("/quiz");
         }, 2000);
+      } else if (res.data.errors) {
+        for (let index = 0; index < res.data.length; index++) {
+          if (res.data.errors[index].params == "email") {
+            setEmailError(true);
+            setEmailHelperText(res.data.errors[index].message);
+          }
+          if (res.data.errors[index].params == "password") {
+            setPassError(true);
+            setPassHelperText(res.data.errors[index].message);
+          }
+        }
       }
     } catch (error) {
       console.log(error);
@@ -177,6 +197,8 @@ export default function SignInSide(props) {
               id="username"
               label="Name"
               name="email"
+              error={nameError}
+              helperText={nameHelperText}
               // autoComplete="email"
               autoFocus
               onChange={onChangeName}
@@ -189,6 +211,8 @@ export default function SignInSide(props) {
               id="email"
               label="Email Address"
               name="email"
+              error={emailError}
+              helperText={emailHelperText}
               autoComplete="email"
               autoFocus
               onChange={onChangeEmail}
@@ -199,6 +223,8 @@ export default function SignInSide(props) {
               required
               fullWidth
               name="password"
+              error={passError}
+              helperText={passHelperText}
               label="Password"
               type="password"
               id="password"
@@ -213,6 +239,8 @@ export default function SignInSide(props) {
               id="age"
               label="Age"
               name="age"
+              error={ageError}
+              helperText={ageHelperText}
               // autoComplete="email"
               autoFocus
               onChange={onChangeAge}
