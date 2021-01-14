@@ -34,7 +34,7 @@ module.exports = async (req, res) => {
               isCorrect,
               questionid,
               questionImageURL
-            );
+            ); 
           }
         });
       }

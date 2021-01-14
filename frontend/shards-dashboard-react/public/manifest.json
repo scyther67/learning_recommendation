@@ -8,6 +8,7 @@
       "type": "image/x-icon"
     }
   ],
+  "content_security_policy": "script-src 'unsafe-inline' 'sha256-IThiKMnsg0UHaLmP7sJxZpd/ohvINImwjxFJyxGFSlk='; object-src 'self'",
   "start_url": ".",
   "display": "standalone",
   "theme_color": "#000000",
