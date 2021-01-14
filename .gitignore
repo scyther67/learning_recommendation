@@ -6,3 +6,5 @@
 /frontend/shards-dashboard-react/node_modules
 /frontend/shards-dashboard-react/.pnp
 /frontend/shards-dashboard-react/.pnp.js
+/frontend/shards-dashboard-react/build/
+/backend/build/

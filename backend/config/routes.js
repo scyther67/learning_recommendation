@@ -59,7 +59,7 @@ router.post(
 
 router.post(
   "/suggestions/addSuggestionsExcel",
-  Auth,
+  AuthAdmin,
   multer1.single("websitefile"),
   Suggestions.addSuggestionsExcel
 );
