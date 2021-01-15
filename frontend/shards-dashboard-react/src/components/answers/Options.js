@@ -88,7 +88,7 @@ function Options(props) {
             }
           };
           var resp = await axios.post(
-            "http://localhost:5000/api/user/updateSubtopicTimeStamp",
+            "https://sqlrecommender.southeastasia.cloudapp.azure.com/api/user/updateSubtopicTimeStamp",
             {
               subtopic_no: copy[1]
             },
@@ -129,7 +129,7 @@ function Options(props) {
             );
 
             const res = await axios.post(
-              "http://localhost:5000/api/suggestions/suggestionBySubTopic",
+              "https://sqlrecommender.southeastasia.cloudapp.azure.com/api/suggestions/suggestionBySubTopic",
               {
                 subtopic: props.subtopic_arr[0],
                 question_start_timestamp: Number(
@@ -158,9 +158,9 @@ function Options(props) {
               props.setPredecessorList(res.data.predecessor_list);
             }
           } else {
-            console.log("TIME TAKEN", endTimeStamp - props.startTimeStamp);
+            // console.log("TIME TAKEN", endTimeStamp - props.startTimeStamp);
             const res = await axios.post(
-              "http://localhost:5000/api/suggestions/suggestionBySubTopic",
+              "https://sqlrecommender.southeastasia.cloudapp.azure.com/api/suggestions/suggestionBySubTopic",
               {
                 subtopic: props.subtopic_arr[0],
                 question_start_timestamp: props.startTimeStamp,

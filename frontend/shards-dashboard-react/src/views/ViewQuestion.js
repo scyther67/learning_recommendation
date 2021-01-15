@@ -139,7 +139,8 @@ const ViewQuestion = props => {
     8,
     8,
     9,
-    9
+    9,
+    10
   ]);
   const subtopics_list = [
     "SELECT",
@@ -185,7 +186,7 @@ const ViewQuestion = props => {
               }
             };
             var resp = await axios.post(
-              "http://localhost:5000/api/user/updateSubtopicTimeStamp",
+              "https://sqlrecommender.southeastasia.cloudapp.azure.com/api/user/updateSubtopicTimeStamp",
               {
                 subtopic_no: stored_subtopic_arr[0]
               },
@@ -201,7 +202,7 @@ const ViewQuestion = props => {
             }
           };
           var resp = await axios.post(
-            "http://localhost:5000/api/user/updateSubtopicTimeStamp",
+            "https://sqlrecommender.southeastasia.cloudapp.azure.com/api/user/updateSubtopicTimeStamp",
             {
               subtopic_no: stored_subtopic_arr[0]
             },
@@ -214,7 +215,7 @@ const ViewQuestion = props => {
         }
         localStorage.setItem("last_asked_subtopic", stored_subtopic_arr[0]);
         const res = await axios.post(
-          "http://localhost:5000/api/question/reqQuestion",
+          "https://sqlrecommender.southeastasia.cloudapp.azure.com/api/question/reqQuestion",
           { subtopic_no: subtopic_number },
           config
         );
@@ -262,7 +263,7 @@ const ViewQuestion = props => {
         console.log("Asking Question for ", subtopic_arr[0]);
         localStorage.setItem("last_asked_subtopic", subtopic_arr[0]);
         const res = await axios.post(
-          "http://localhost:5000/api/question/reqQuestion",
+          "https://sqlrecommender.southeastasia.cloudapp.azure.com/api/question/reqQuestion",
           {
             question_no: subtopic_arr[0],
             subtopic_no: subtopic_arr[0],
@@ -305,7 +306,7 @@ const ViewQuestion = props => {
         };
 
         const res = await axios.post(
-          "http://localhost:5000/api/question/reqQuestion",
+          "https://sqlrecommender.southeastasia.cloudapp.azure.com/api/question/reqQuestion",
           {
             question_response: {
               question_start_timestamp: props.startTimeStamp,

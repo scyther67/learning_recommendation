@@ -77,7 +77,7 @@ export default function SignInSide() {
 
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/auth/login",
+        "https://sqlrecommender.southeastasia.cloudapp.azure.com/api/auth/login",
         form
       );
       if (res.data.message) {

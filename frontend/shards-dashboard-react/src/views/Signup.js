@@ -181,7 +181,7 @@ export default function SignInSide(props) {
       console.log(email, name, pass, age, SQL, field, year);
       try {
         const res = await axios.post(
-          "http://localhost:5000/api/auth/register",
+          "https://sqlrecommender.southeastasia.cloudapp.azure.com/api/auth/register",
           form
         );
         console.log(res);

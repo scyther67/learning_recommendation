@@ -46,7 +46,7 @@ const RecommendationContent = props => {
       }
     };
     var resp = await axios.post(
-      "http://localhost:5000/api/user/updateSubtopicTimeStamp",
+      "https://sqlrecommender.southeastasia.cloudapp.azure.com/api/user/updateSubtopicTimeStamp",
       {
         subtopic_no: subtopic_arr[0]
       },
@@ -72,7 +72,7 @@ const RecommendationContent = props => {
           }
         };
         var resp = await axios.post(
-          "http://localhost:5000/api/user/updateSubtopicTimeStamp",
+          "https://sqlrecommender.southeastasia.cloudapp.azure.com/api/user/updateSubtopicTimeStamp",
           {
             subtopic_no: copy[0]
           },
@@ -97,7 +97,7 @@ const RecommendationContent = props => {
 
           localStorage.setItem("last_asked_subtopic", copy[0]);
           const res = await axios.post(
-            "http://localhost:5000/api/question/reqQuestion",
+            "https://sqlrecommender.southeastasia.cloudapp.azure.com/api/question/reqQuestion",
             {
               question_no: subtopic_arr[0],
               subtopic_no: copy[0],
