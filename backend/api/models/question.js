@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { subtopic_list } = require("../utils/subtopic_list");
+const { subtopic_list, extra_subtopics } = require("../utils/subtopic_list");
 const Question = new mongoose.Schema({
   question_header: { type: String },
   question_query: { type: String },
@@ -20,12 +20,13 @@ const Question = new mongoose.Schema({
   correct: {
     type: Number,
     enum: [0, 1, 2, 3],
-    required: true,
+    required: true, 
   },
   subtopic: {
     type: String,
     enum: [
-      ...subtopic_list
+      ...subtopic_list,
+      ...extra_subtopics
     ],
   },
   correct: {

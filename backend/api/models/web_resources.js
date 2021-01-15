@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const { subtopic_list, extra_subtopics } = require("../utils/subtopic_list");
+
 
 const WebResource = new mongoose.Schema({
     webresouceid:{
@@ -20,18 +22,10 @@ const WebResource = new mongoose.Schema({
     },
     subtopic: {
         type: String, enum: [
-                            "SELECT", 
-                            "UPDATE", 
-                            "GROUP BY", 
-                            "CREATE", 
-                            "INSERT",
-                            "DELETE", 
-                            "JOINS",
-                            "PREDICATE", 
-                            "SET OPERATORS", 
-                            "AGGREGATION",
-                            "N/A",
-                        ]
+            ...subtopic_list,
+            ...extra_subtopics
+
+        ]
     }
 })
 

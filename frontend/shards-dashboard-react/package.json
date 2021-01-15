@@ -2,7 +2,7 @@
   "name": "shards-dashboard-lite-react",
   "version": "1.0.0",
   "private": true,
-  "homepage":"http://sqlrecommender.southeastasia.cloudapp.azure.com",
+  "homepage":"https://sqlrecommender.southeastasia.cloudapp.azure.com",
   "dependencies": {
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
