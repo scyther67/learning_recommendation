@@ -219,7 +219,7 @@ const ViewQuestion = props => {
           { subtopic_no: subtopic_number },
           config
         );
-        console.log(res.data);
+        // console.log(res.data);
         //add question to data array
         let newData = data;
         setSRId(res.data.student_response_id);

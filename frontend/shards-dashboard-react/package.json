@@ -1,8 +1,8 @@
 {
-  "name": "shards-dashboard-lite-react",
+  "name": "sql_recommender",
   "version": "1.0.0",
   "private": true,
-  "homepage":"http://sqlrecommender.southeastasia.cloudapp.azure.com",
+  "homepage": "https://sqlrecommender.southeastasia.cloudapp.azure.com",
   "dependencies": {
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
@@ -29,11 +29,10 @@
     "shards-react": "^1.0.0",
     "shortid": "^2.2.14"
   },
-  
   "scripts": {
     "start": "react-scripts start",
-    "build:prod": "cross-env REACT_APP_BASENAME=/demo/shards-dashboard-lite-react REACT_APP_GAID=UA-115105611-1 npm run build",
-    "build": "cross-env REACT_APP_BASENAME=/demo/shards-dashboard-lite-react react-scripts build",
+    "build:prod": "cross-env REACT_APP_GAID=UA-115105611-1 npm run build",
+    "build": "cross-env react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

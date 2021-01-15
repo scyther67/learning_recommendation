@@ -178,7 +178,7 @@ export default function SignInSide(props) {
       // formData.append("proficiency", SQL);
       // formData.append("field_of_study", field);
       // formData.append("recent_education", year);
-      console.log(email, name, pass, age, SQL, field, year);
+      // console.log(email, name, pass, age, SQL, field, year);
       try {
         const res = await axios.post(
           "https://sqlrecommender.southeastasia.cloudapp.azure.com/api/auth/register",
