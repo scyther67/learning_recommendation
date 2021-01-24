@@ -16,7 +16,10 @@ import RecommendationContent from "../components/RecommendationContent";
 import FlukeMessageComponent from "../components/FlukeMessageComponent";
 import AnnouncementIcon from "@material-ui/icons/Announcement";
 import SelectedDomainsComponent from "../components/SelectedDomainsComponent";
+import LinearProgressBar from "../components/LinearProgressBar";
 import "../assets/prism.css";
+import "../assets/scroll-bar.css";
+import LinearProgressWithLabel from "../components/LinearProgressBar";
 
 const Prism = require("prismjs");
 
@@ -119,6 +122,7 @@ const ViewQuestion = props => {
   const [predecessorList, setPredecessorList] = useState([]);
   const [selectedSuggestions, setSelectedSuggestions] = useState([]);
   const [lastAskedSubtopic, setLastAskedSubtopic] = useState(-1);
+  const [progressValue, setProgressValue] = useState(0);
   const [subtopic_arr, setSubArr] = useState([
     0,
     0,
@@ -140,6 +144,7 @@ const ViewQuestion = props => {
     8,
     9,
     9,
+    10,
     10
   ]);
   const subtopics_list = [
@@ -226,6 +231,7 @@ const ViewQuestion = props => {
         newData.push(res.data.random_question);
         // console.log(newData);
         setData(newData);
+        setProgressValue(getProgressValue);
       } catch (error) {
         console.log(error);
       }
@@ -251,7 +257,7 @@ const ViewQuestion = props => {
     if (nr != total) {
       //axios request to get next question
       setFlukeMsg(false);
-      changeHelp(false);
+      // changeHelp(false);
       setStartTimeStamp(Date.now());
       setLoader(true);
       try {
@@ -287,7 +293,7 @@ const ViewQuestion = props => {
       } catch (error) {
         console.log(error);
       }
-      setPredecessorList([]);
+      // setPredecessorList([]);
       pushData(nr);
       setShowButton(false);
       setQA(false);
@@ -295,6 +301,7 @@ const ViewQuestion = props => {
       setBtn2("default");
       setBtn3("default");
       setBtn4("default");
+      setProgressValue(getProgressValue);
     } else {
       //if all questions are answered
       setLoader(true);
@@ -363,19 +370,34 @@ const ViewQuestion = props => {
     // console.log(question);
   };
 
+  const getProgressValue = () => {
+    var ogLength = 22;
+    var currLength = JSON.parse(localStorage.getItem("subtopic_arr")).length;
+    console.log("VL=", ogLength, currLength);
+    var retVal = ((ogLength - currLength) / ogLength) * 100;
+    return ((ogLength - currLength) / ogLength) * 100;
+  };
+
   return (
     <React.Fragment>
       <Container>
         <Row>
           <Col sm={{ size: 10, order: 2, offset: 1 }}>
             <div style={cardStyles}>
-              <h4 style={{ color: "white", marginTop: "2vh" }}>
+              <div style={{ width: "100%" }}>
+                <LinearProgressWithLabel value={progressValue} />
+                <br />
+                <br />
+              </div>
+              {/* <h4 style={{ color: "white", marginTop: "2vh" }}>
                 Question {nr}/{total}
-              </h4>
+              </h4> */}
               <Typography variant="h6" style={{ color: "white" }}>
                 {question.question_header}
               </Typography>
+
               <pre
+                id="scroll-bar"
                 style={{
                   fontSize: "20px",
                   maxWidth: "100%"
@@ -385,6 +407,7 @@ const ViewQuestion = props => {
               >
                 <code className="language-sql">{question.question_query}</code>
               </pre>
+
               <Typography variant="h6" style={{ color: "white" }}>
                 {question.question_footer}
               </Typography>
@@ -431,6 +454,8 @@ const ViewQuestion = props => {
               data={data}
               setSelectedSuggestions={setSelectedSuggestions}
               setLastAskedSubtopic={setLastAskedSubtopic}
+              setProgressValue={setProgressValue}
+              getProgressValue={getProgressValue}
             />
           </Col>
         </Row>
@@ -544,6 +569,8 @@ const ViewQuestion = props => {
                 setPredecessorList={setPredecessorList}
                 setShowButton={setShowButton}
                 setHelp={setHelp}
+                getProgressValue={getProgressValue}
+                setProgressValue={setProgressValue}
               />
             </div>
           }

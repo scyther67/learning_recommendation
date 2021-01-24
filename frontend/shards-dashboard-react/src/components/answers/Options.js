@@ -170,6 +170,7 @@ function Options(props) {
               },
               config
             );
+            console.log("RES_DATA", res.data);
 
             // Update Violation Levels
             var newVLA = props.violationLevelArray;
@@ -191,13 +192,14 @@ function Options(props) {
 
             props.setShowMessage(res.data.showBrowseMessage);
             props.setGoBack(res.data.goBack);
+            if (res.data.goBack) {
+              props.showButton(false);
+            }
             props.setSelectedDomains(res.data.domainSuggestionsBool);
             if (res.data.domainSuggestionsBool) {
-              var randomSuggestions = res.data.suggestions;
-              var domainSuggestions = res.data.domainSuggestions;
-              var allSuggestions = randomSuggestions.append(domainSuggestions);
-              props.setSuggestions(allSuggestions);
-            } else if (res.data.domainSuggestionsBool == false) {
+              props.setSelectedSuggestions(res.data.domainSuggestions);
+            }
+            if (res.data.suggestions.length > 0) {
               props.setSuggestions(res.data.suggestions);
             }
             if (res.data.predecessor_list) {

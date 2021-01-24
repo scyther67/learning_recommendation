@@ -1,0 +1,7 @@
+pre#scroll-bar::-webkit-scrollbar-thumb {
+  background-color: aquamarine;
+}
+
+pre#scroll-bar::-webkit-scrollbar-button {
+  background-color: aquamarine;
+}

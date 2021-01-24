@@ -33,7 +33,9 @@ const RecommendationContent = props => {
     startTimeStamp,
     endTimeStamp,
     setStartTimeStamp,
-    setPredecessorList
+    setPredecessorList,
+    getProgressValue,
+    setProgressValue
   } = props;
 
   const stayOnSubtopic = async () => {
@@ -85,7 +87,7 @@ const RecommendationContent = props => {
       if (nr != total) {
         //axios request to get next question
 
-        changeHelp(false);
+        // changeHelp(false);
         setStartTimeStamp(Date.now());
         setLoader(true);
         try {
@@ -124,11 +126,12 @@ const RecommendationContent = props => {
         pushData(nr);
         setShowButton(false);
         setQA(false);
-        setPredecessorList([]);
+        // setPredecessorList([]);
         setBtn1("default");
         setBtn2("default");
         setBtn3("default");
         setBtn4("default");
+        setProgressValue(getProgressValue);
       }
     }
   };
