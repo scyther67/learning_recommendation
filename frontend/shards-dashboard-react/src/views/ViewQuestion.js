@@ -16,7 +16,6 @@ import RecommendationContent from "../components/RecommendationContent";
 import FlukeMessageComponent from "../components/FlukeMessageComponent";
 import AnnouncementIcon from "@material-ui/icons/Announcement";
 import SelectedDomainsComponent from "../components/SelectedDomainsComponent";
-import LinearProgressBar from "../components/LinearProgressBar";
 import "../assets/prism.css";
 import "../assets/scroll-bar.css";
 import LinearProgressWithLabel from "../components/LinearProgressBar";
@@ -254,7 +253,10 @@ const ViewQuestion = props => {
   };
 
   const nextQuestion = async e => {
-    if (nr != total) {
+    if (
+      nr != total &&
+      JSON.parse(localStorage.getItem("subtopic_arr")).length > 0
+    ) {
       //axios request to get next question
       setFlukeMsg(false);
       // changeHelp(false);
@@ -285,6 +287,7 @@ const ViewQuestion = props => {
           config
         );
         console.log(res.data);
+
         //add question to data array
         let newData = data;
         newData.push(res.data.random_question);
@@ -327,7 +330,18 @@ const ViewQuestion = props => {
         //Saving Last Subtopic asked
         localStorage.setItem("subtopic_index", subtopic_index);
         setLoader(false);
-        history.push("/");
+        console.log(
+          "FIN ARR",
+          JSON.parse(localStorage.getItem("subtopic_arr"))
+        );
+        if (JSON.parse(localStorage.getItem("subtopic_arr")).length == 0) {
+          localStorage.removeItem("subtopic_arr");
+          localStorage.removeItem("last_asked_subtopic");
+          history.push("/test-end");
+        } else {
+          history.push("/");
+        }
+
         // console.log(res.data);
       } catch (error) {
         console.log(error);
