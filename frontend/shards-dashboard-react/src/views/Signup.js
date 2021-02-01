@@ -447,7 +447,9 @@ export default function SignInSide(props) {
                 marginTop: "10px",
                 textDecoration: "underline"
               }}
-              onClick={handleClickOpen}
+              // onClick={handleClickOpen}
+              target="_blank"
+              href="https://drive.google.com/file/d/1B5Iv1bnqVNKjckw5eTGWhvg9EMHfLdnN/view?usp=sharing"
             >
               <b>View Consent Form</b>
             </a>
@@ -465,7 +467,8 @@ export default function SignInSide(props) {
             <FormHelperText style={{ color: "red" }}>
               {agreeHelperText}
             </FormHelperText>
-            <Dialog
+
+            {/* <Dialog
               maxWidth={"md"}
               fullWidth={true}
               open={open}
@@ -484,7 +487,7 @@ export default function SignInSide(props) {
               <DialogContent>
                 <PdfViewer />
               </DialogContent>
-            </Dialog>
+            </Dialog> */}
 
             <Button
               // type="submit"
