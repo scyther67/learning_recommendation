@@ -146,8 +146,10 @@ function Options(props) {
             if (res.data.domainSuggestionsBool) {
               props.setSelectedSuggestions(res.data.domainSuggestions);
             }
-            if (res.data.suggestions.length > 0) {
-              props.setSuggestions(res.data.suggestions);
+            if (res.data.suggestions) {
+              if (res.data.suggestions.length > 0) {
+                props.setSuggestions(res.data.suggestions);
+              }
             }
             if (res.data.predecessor_list) {
               props.setPredecessorList(res.data.predecessor_list);
