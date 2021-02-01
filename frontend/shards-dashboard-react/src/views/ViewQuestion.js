@@ -166,9 +166,12 @@ const ViewQuestion = props => {
     }
     //request first question
     // console.log("Here", props);
-    if (JSON.parse(localStorage.getItem("subtopic_arr")).length <= 0) {
-      history.push("/test-end");
+    if (JSON.parse(localStorage.getItem("subtopic_arr"))) {
+      if (JSON.parse(localStorage.getItem("subtopic_arr")).length <= 0) {
+        history.push("/test-end");
+      }
     }
+
     Prism.highlightAll();
     async function fetchData() {
       try {
