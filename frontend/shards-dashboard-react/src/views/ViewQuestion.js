@@ -260,6 +260,20 @@ const ViewQuestion = props => {
   };
 
   const nextQuestion = async e => {
+    if (goBack) {
+      const config1 = {
+        headers: {
+          Authorization: localStorage.getItem("user_token")
+        }
+      };
+      var resp = await axios.post(
+        "https://sqlrecommender.southeastasia.cloudapp.azure.com/api/user/updateSubtopicTimeStamp",
+        {
+          subtopic_no: subtopic_arr[0]
+        },
+        config1
+      );
+    }
     if (JSON.parse(localStorage.getItem("subtopic_arr")).length > 0) {
       if (carry_forward + 1 >= 2) {
         changeHelp(false);
