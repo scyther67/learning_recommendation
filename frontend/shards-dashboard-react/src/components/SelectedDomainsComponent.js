@@ -22,7 +22,7 @@ function SelectedDomainsComponent(props) {
           <ListItem
             key={props.selectedSuggestions[index]}
             href={props.selectedSuggestions[index]}
-            item={props.selectedSuggestions[index]}
+            item={props.selectedSuggestions[index].url}
           />
         ))}
       </ul>

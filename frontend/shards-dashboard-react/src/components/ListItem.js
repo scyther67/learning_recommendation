@@ -7,7 +7,7 @@ function ListItem(props) {
     <div>
       <li>
         <a target="_blank" href={item.url}>
-          <Typography>{item.url}</Typography>
+          <Typography>{item}</Typography>
         </a>
       </li>
     </div>
