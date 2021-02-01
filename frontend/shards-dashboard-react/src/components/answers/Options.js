@@ -81,7 +81,7 @@ function Options(props) {
 
         // API for Subtopic Switch
         if (copy[1] > copy[0]) {
-          console.log("Change ST", Date.now());
+          // console.log("Change ST", Date.now());
           const config = {
             headers: {
               Authorization: localStorage.getItem("user_token")
@@ -135,7 +135,7 @@ function Options(props) {
               },
               config
             );
-            console.log("RES_DATA", res.data);
+            // console.log("RES_DATA", res.data);
             props.setCarryForward(0);
             props.setShowMessage(res.data.showBrowseMessage);
             props.setGoBack(res.data.goBack);
@@ -155,12 +155,12 @@ function Options(props) {
               props.setPredecessorList(res.data.predecessor_list);
             }
           } else {
-            console.log(
-              "TIME TAKEN",
-              endTimeStamp - props.startTimeStamp,
-              "SUBTOPIC",
-              props.subtopic_arr[0]
-            );
+            // console.log(
+            //   "TIME TAKEN",
+            //   endTimeStamp - props.startTimeStamp,
+            //   "SUBTOPIC",
+            //   props.subtopic_arr[0]
+            // );
             const res = await axios.post(
               "https://sqlrecommender.southeastasia.cloudapp.azure.com/api/suggestions/suggestionBySubTopic",
               {
@@ -171,7 +171,7 @@ function Options(props) {
               },
               config
             );
-            console.log("RES_DATA", res.data);
+            // console.log("RES_DATA", res.data);
             props.setCarryForward(0);
 
             // Update Violation Levels
@@ -182,7 +182,7 @@ function Options(props) {
             //Check for past violation levels
             if (res.data.violation_level) {
               if (newVLA.length >= 2) {
-                console.log(newVLA);
+                // console.log(newVLA);
                 if (
                   newVLA[newVLA.length - 1] >= 2 &&
                   newVLA[newVLA.length - 2] >= 2
@@ -213,7 +213,7 @@ function Options(props) {
             }
           }
         } catch (error) {
-          console.log("ERROR", error);
+          // console.log("ERROR", error);
         }
 
         props.changeHelp(true);

@@ -88,7 +88,7 @@ export default function SignInSide() {
           const user = {
             token: res.data.token
           };
-          console.log("Here", res.data.name);
+          // console.log("Here", res.data.name);
           localStorage.setItem("user_token", user.token);
           localStorage.setItem("user_name", res.data.name);
 
@@ -100,12 +100,12 @@ export default function SignInSide() {
             }, 1000);
           }
         } else {
-          console.log("Error");
+          // console.log("Error");
           setError(true);
         }
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   };
 

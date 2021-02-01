@@ -16,9 +16,9 @@ const App = () => {
   useEffect(() => {
     var eid = localStorage.getItem("user_name");
     if (eid) {
-      console.log("Logged In");
+      // console.log("Logged In");
     } else {
-      console.log("User Not Logged In ");
+      // console.log("User Not Logged In ");
     }
   }, []);
 

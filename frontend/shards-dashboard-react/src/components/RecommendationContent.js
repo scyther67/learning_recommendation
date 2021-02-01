@@ -91,7 +91,7 @@ const RecommendationContent = props => {
           config1
         );
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
 
       if (nr != 1000) {
@@ -124,14 +124,14 @@ const RecommendationContent = props => {
             },
             config
           );
-          console.log(res.data);
+          // console.log(res.data);
           //add question to data array
           let newData = data;
           newData.push(res.data.random_question);
           setData(newData);
           setLoader(false);
         } catch (error) {
-          console.log(error);
+          // console.log(error);
         }
         pushData(nr);
         setShowButton(false);

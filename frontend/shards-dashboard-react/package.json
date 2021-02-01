@@ -2,7 +2,7 @@
   "name": "sql_recommender",
   "version": "1.0.0",
   "private": true,
-  "homepage":"https://sqlrecommender.southeastasia.cloudapp.azure.com",
+  "homepage": "https://sqlrecommender.southeastasia.cloudapp.azure.com",
   "dependencies": {
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
@@ -30,9 +30,9 @@
     "shortid": "^2.2.14"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "react-app-rewired start",
     "build:prod": "cross-env REACT_APP_GAID=UA-115105611-1 npm run build",
-    "build": "cross-env react-scripts build",
+    "build": "cross-env react-app-rewired build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -44,5 +44,10 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "devDependencies": {
+    "csp-html-webpack-plugin": "^5.1.0",
+    "customize-cra": "^1.0.0",
+    "react-app-rewired": "^2.1.8"
+  }
 }

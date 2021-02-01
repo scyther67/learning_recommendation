@@ -190,7 +190,7 @@ const ViewQuestion = props => {
             Number(localStorage.getItem("last_asked_subtopic")) !=
             stored_subtopic_arr[0]
           ) {
-            console.log("Change ST", Date.now());
+            // console.log("Change ST", Date.now());
             const config = {
               headers: {
                 Authorization: localStorage.getItem("user_token")
@@ -239,7 +239,7 @@ const ViewQuestion = props => {
         setData(newData);
         setProgressValue(getProgressValue);
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
       pushData(nr);
     }
@@ -277,7 +277,7 @@ const ViewQuestion = props => {
             Authorization: localStorage.getItem("user_token")
           }
         };
-        console.log("Asking Question for ", subtopic_arr[0]);
+        // console.log("Asking Question for ", subtopic_arr[0]);
         localStorage.setItem("last_asked_subtopic", subtopic_arr[0]);
         const res = await axios.post(
           "https://sqlrecommender.southeastasia.cloudapp.azure.com/api/question/reqQuestion",
@@ -295,7 +295,7 @@ const ViewQuestion = props => {
           },
           config
         );
-        console.log(res.data);
+        // console.log(res.data);
 
         //add question to data array
         let newData = data;
@@ -303,7 +303,7 @@ const ViewQuestion = props => {
         setData(newData);
         setLoader(false);
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
       // setPredecessorList([]);
       pushData(nr);
@@ -339,10 +339,10 @@ const ViewQuestion = props => {
         //Saving Last Subtopic asked
         localStorage.setItem("subtopic_index", subtopic_index);
         setLoader(false);
-        console.log(
-          "FIN ARR",
-          JSON.parse(localStorage.getItem("subtopic_arr"))
-        );
+        // console.log(
+        //   "FIN ARR",
+        //   JSON.parse(localStorage.getItem("subtopic_arr"))
+        // );
         if (JSON.parse(localStorage.getItem("subtopic_arr")).length == 0) {
           localStorage.removeItem("subtopic_arr");
           localStorage.removeItem("last_asked_subtopic");
@@ -353,7 +353,7 @@ const ViewQuestion = props => {
 
         // console.log(res.data);
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
     }
   };
@@ -396,7 +396,7 @@ const ViewQuestion = props => {
   const getProgressValue = () => {
     var ogLength = 22;
     var currLength = JSON.parse(localStorage.getItem("subtopic_arr")).length;
-    console.log("VL=", ogLength, currLength);
+    // console.log("VL=", ogLength, currLength);
     var retVal = ((ogLength - currLength) / ogLength) * 100;
     return ((ogLength - currLength) / ogLength) * 100;
   };

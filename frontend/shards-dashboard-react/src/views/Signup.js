@@ -184,7 +184,7 @@ export default function SignInSide(props) {
           "https://sqlrecommender.southeastasia.cloudapp.azure.com/api/auth/register",
           form
         );
-        console.log(res);
+        // console.log(res);
         setAgeError(false);
         setAgeHelperText("");
         setNameError(false);
@@ -211,7 +211,7 @@ export default function SignInSide(props) {
             history.push("/quiz");
           }, 2000);
         } else if (res.data.errors) {
-          console.log(res.data);
+          // console.log(res.data);
 
           for (let index = 0; index < res.data.errors.length; index++) {
             if (res.data.errors[index].param == "email") {
@@ -246,7 +246,7 @@ export default function SignInSide(props) {
           }
         }
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
     } else {
       if (!checked) {
@@ -266,7 +266,7 @@ export default function SignInSide(props) {
   const classes = useStyles();
 
   useEffect(() => {
-    console.log("On this page");
+    // console.log("On this page");
   }, []);
 
   return (
