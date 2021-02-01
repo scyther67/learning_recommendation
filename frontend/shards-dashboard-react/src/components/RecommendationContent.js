@@ -59,12 +59,22 @@ const RecommendationContent = props => {
 
   const addPredeccesor = async () => {
     if (predecessorList.length > 0) {
+      changeHelp(false);
       var copy = subtopic_arr;
       if (predecessorList.length > 1) {
         copy.unshift(predecessorList[0], predecessorList[1]);
+        JSON.parse(localStorage.getItem("subtopic_arr")).unshift(
+          predecessorList[0]
+        );
+        JSON.parse(localStorage.getItem("subtopic_arr")).unshift(
+          predecessorList[1]
+        );
         setSubArr(copy);
       } else {
         copy.unshift(predecessorList[0]);
+        JSON.parse(localStorage.getItem("subtopic_arr")).unshift(
+          predecessorList[0]
+        );
         setSubArr(copy);
       }
       try {
@@ -84,7 +94,7 @@ const RecommendationContent = props => {
         console.log(error);
       }
 
-      if (nr != total) {
+      if (nr != 1000) {
         //axios request to get next question
 
         // changeHelp(false);

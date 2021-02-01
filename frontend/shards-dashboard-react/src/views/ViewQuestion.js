@@ -122,6 +122,7 @@ const ViewQuestion = props => {
   const [selectedSuggestions, setSelectedSuggestions] = useState([]);
   const [lastAskedSubtopic, setLastAskedSubtopic] = useState(-1);
   const [progressValue, setProgressValue] = useState(0);
+  const [carry_forward, setCarryForward] = useState(0);
   const [subtopic_arr, setSubArr] = useState([
     0,
     0,
@@ -165,6 +166,9 @@ const ViewQuestion = props => {
     }
     //request first question
     // console.log("Here", props);
+    if (JSON.parse(localStorage.getItem("subtopic_arr")).length <= 0) {
+      history.push("/test-end");
+    }
     Prism.highlightAll();
     async function fetchData() {
       try {
@@ -253,10 +257,12 @@ const ViewQuestion = props => {
   };
 
   const nextQuestion = async e => {
-    if (
-      nr != total &&
-      JSON.parse(localStorage.getItem("subtopic_arr")).length > 0
-    ) {
+    if (JSON.parse(localStorage.getItem("subtopic_arr")).length > 0) {
+      if (carry_forward + 1 >= 2) {
+        changeHelp(false);
+        setSelectedDomains(false);
+      }
+      setCarryForward(carry_forward + 1);
       //axios request to get next question
       setFlukeMsg(false);
       // changeHelp(false);
@@ -470,6 +476,8 @@ const ViewQuestion = props => {
               setLastAskedSubtopic={setLastAskedSubtopic}
               setProgressValue={setProgressValue}
               getProgressValue={getProgressValue}
+              carry_forward={carry_forward}
+              setCarryForward={setCarryForward}
             />
           </Col>
         </Row>

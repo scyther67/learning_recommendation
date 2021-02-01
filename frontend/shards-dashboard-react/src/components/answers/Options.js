@@ -123,11 +123,6 @@ function Options(props) {
         };
         try {
           if (props.NR - 1 == 0) {
-            console.log(
-              "TIME TAKEN",
-              endTimeStamp - Number(localStorage.getItem("start_time"))
-            );
-
             const res = await axios.post(
               "https://sqlrecommender.southeastasia.cloudapp.azure.com/api/suggestions/suggestionBySubTopic",
               {
@@ -136,12 +131,12 @@ function Options(props) {
                   localStorage.getItem("start_time")
                 ),
                 question_end_timestamp: endTimeStamp,
-                question_id: props.data[props.NR - 1]._id,
-                testing_flag: 0
+                question_id: props.data[props.NR - 1]._id
               },
               config
             );
             console.log("RES_DATA", res.data);
+            props.setCarryForward(0);
             props.setShowMessage(res.data.showBrowseMessage);
             props.setGoBack(res.data.goBack);
             if (res.data.goBack) {
@@ -158,19 +153,24 @@ function Options(props) {
               props.setPredecessorList(res.data.predecessor_list);
             }
           } else {
-            // console.log("TIME TAKEN", endTimeStamp - props.startTimeStamp);
+            console.log(
+              "TIME TAKEN",
+              endTimeStamp - props.startTimeStamp,
+              "SUBTOPIC",
+              props.subtopic_arr[0]
+            );
             const res = await axios.post(
               "https://sqlrecommender.southeastasia.cloudapp.azure.com/api/suggestions/suggestionBySubTopic",
               {
                 subtopic: props.subtopic_arr[0],
                 question_start_timestamp: props.startTimeStamp,
                 question_end_timestamp: props.endTimeStamp,
-                question_id: props.data[props.NR - 1]._id,
-                testing_flag: 0
+                question_id: props.data[props.NR - 1]._id
               },
               config
             );
             console.log("RES_DATA", res.data);
+            props.setCarryForward(0);
 
             // Update Violation Levels
             var newVLA = props.violationLevelArray;
@@ -195,13 +195,17 @@ function Options(props) {
             if (res.data.goBack) {
               props.showButton(false);
             }
-            props.setSelectedDomains(res.data.domainSuggestionsBool);
+
             if (res.data.domainSuggestionsBool) {
               props.setSelectedSuggestions(res.data.domainSuggestions);
             }
-            if (res.data.suggestions.length > 0) {
-              props.setSuggestions(res.data.suggestions);
+            props.setSelectedDomains(res.data.domainSuggestionsBool);
+            if (res.data.suggestions) {
+              if (res.data.suggestions.length > 0) {
+                props.setSuggestions(res.data.suggestions);
+              }
             }
+
             if (res.data.predecessor_list) {
               props.setPredecessorList(res.data.predecessor_list);
             }
