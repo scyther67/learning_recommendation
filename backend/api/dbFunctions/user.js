@@ -49,8 +49,8 @@ module.exports = {
   },
   updateSuggestionToUserCollection: async (userId, general, domainSpecific) =>{
     const user = await User.findById(userId);
-    if(user.recommend == null){
-      user.recommend = [];
+    if(user.recommendation == null){
+      user.recommendation = [];
     }
     user.recommendation.push({
       timeStamp: Date.now(),
@@ -58,7 +58,7 @@ module.exports = {
       domainSpecific
     });
     console.log("User:", user);
-    user.markModified("recommend");
+    user.markModified("recommendation");
     return user.save();
   }
 };

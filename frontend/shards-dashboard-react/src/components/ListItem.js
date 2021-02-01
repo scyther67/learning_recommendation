@@ -6,8 +6,8 @@ function ListItem(props) {
   return (
     <div>
       <li>
-        <a target="_blank" href={href}>
-          <Typography>{item}</Typography>
+        <a target="_blank" href={item.url}>
+          <Typography>{item.url}</Typography>
         </a>
       </li>
     </div>

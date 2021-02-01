@@ -1,9 +1,10 @@
 const { generateSuggestionsFromCommonDomains } = require("../../dbFunctions/suggestions");
-const { satisfactoryBrowsingCheck, getGeneralSuggestions, randomizeSuggestions, getAverageAnswerTime } = require("../../utils/suggestions");
+const { satisfactoryBrowsingCheck, getGeneralSuggestions, randomizeSuggestions, getAverageAnswerTime, getUnusedDomainSpecificSuggestions } = require("../../utils/suggestions");
 const { domainSpecificSuggestions } = require("../../utils/domain_specific_suggestions");
 const { getPredecessorList } = require("../../utils/predecessor_suggestion");
 const { findTraceLearningById } = require("../../dbFunctions/learningresource");
 const { getSubtopicTimeStamp, updateSuggestionToUserCollection } = require("../../dbFunctions/user");
+const { subtopic_list } = require("../../utils/subtopic_list");
 const { ServerError } = require("../../responses");
 
 module.exports = async (req, res) => {
@@ -15,7 +16,7 @@ module.exports = async (req, res) => {
         question_end_timestamp, 
         question_id);
       // subtopic_start_timestamp = new Date(timestamp);
-      let domainSuggestionsBool = false, goBack = false, domainSuggestions, predecessor_list;
+      let domainSuggestionsBool = false, goBack = false, domainSuggestions=[], predecessor_list;
 
       const subtopic_start_timestamp = await getSubtopicTimeStamp(subtopic, userId);
       let learnings = await findTraceLearningById(userId);
@@ -32,10 +33,10 @@ module.exports = async (req, res) => {
       final_suggestion_domains = await domainSpecificSuggestions(subtopic, userId);
       
       //if liked Domain exists then make flag true
-      if (final_suggestion_domains > 0) {
+      if (final_suggestion_domains.length > 0) {
         domainSuggestionsBool = true;
-        domainSuggestions = generateSuggestionsFromCommonDomains(final_suggestion_domains,subtopic);
-        domainSuggestions = getUnusedDomainSpecificSuggestions(domainSpecificSuggestions, learning_after_subtopic_start);
+        domainSuggestions = await generateSuggestionsFromCommonDomains(final_suggestion_domains,subtopic_list[subtopic]);
+        domainSuggestions = await getUnusedDomainSpecificSuggestions(domainSuggestions, learning_after_subtopic_start);
       } 
 
 
