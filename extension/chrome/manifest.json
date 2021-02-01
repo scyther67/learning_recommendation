@@ -1,6 +1,6 @@
 {
-    "name": "Recommender System",
-    "version": "1.0",
+    "name": "SQL Recommender System",
+    "version": "1.0.0",
     "description": "Personalized recommender system to learn SQL",
     "browser_action": {
       "default_title": "Recommender System",
@@ -14,18 +14,18 @@
     },
     "content_scripts":[{
         "js": ["js/content.js"],
-        "matches": ["<all_urls>","*://stackoverflow.com/*","*://*.stackoverflow.com/*","https://www.w3schools.com/sql/*"]
-      },
-      {
-        "js":["js/fintest.js"],
-        "matches": ["http://localhost:3000/quiz"]
+        "matches": ["<all_urls>"]
       }
     ],
     "manifest_version": 2,
     "permissions":[
-        "history",
-        "tabs",
-        "*://stackoverflow.com/*",
         "storage"
-    ]
+    ],
+    "icons":{
+      "16": "favicon16.png",
+      "32": "favicon32.png",
+      "48": "favicon48.png",
+      "64": "favicon64.png",
+      "128": "favicon128.png"
+    }
   }

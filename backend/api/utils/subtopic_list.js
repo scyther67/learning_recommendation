@@ -10,7 +10,8 @@ module.exports = {
         "AGGREGATION",
         "GROUP BY",
         "HAVING",
-        "ORDER BY"
+        "ORDER BY",
+        "N/A"
     ],
     extra_subtopics: [
         "UPDATE",
