@@ -1,11 +1,12 @@
 const { generatePossibleResources, getDomainTimeDict } = require("../dbFunctions/suggestions");
 const { distribution } = require("./suggestions");
+const { subtopic_list } = require("../utils/subtopic_list");
 
 module.exports = {
     domainSpecificSuggestions: async (subtopic, user_id)=>{
       
         //Finding websites that can be suggested
-      let possible_websites = await generatePossibleResources(subtopic);
+      let possible_websites = await generatePossibleResources(subtopic_list[subtopic]);
       possible_domains = possible_websites.map((a) => a.domain_name);
 
       //Find Websites that he has already visited
