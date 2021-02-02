@@ -21,7 +21,7 @@ function FlukeMessageComponent(props) {
       <div>
         <Typography>
           {
-            "Ohh! It seems as of you've been spending a lot of time on questions."
+            "Ohh! It seems as if you've been spending a lot of time on questions."
           }
         </Typography>
         <br />
