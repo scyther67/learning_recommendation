@@ -113,6 +113,7 @@ const ViewQuestion = props => {
   const [updateContent, setUpdate] = useState(0);
   const [subtopic_index, setIndex] = useState(0);
   const [showFlukeMessage, setFlukeMsg] = useState(false);
+  const [showSlowMessage, setSlowMsg] = useState(false);
   const [violationLevelArray, setVLA] = useState([]);
   const [showMessage, setShowMessage] = useState(null);
   const [suggestions, setSuggestions] = useState([]);
@@ -282,6 +283,7 @@ const ViewQuestion = props => {
       setCarryForward(carry_forward + 1);
       //axios request to get next question
       setFlukeMsg(false);
+      setSlowMsg(false);
       // changeHelp(false);
       setStartTimeStamp(Date.now());
       setLoader(true);
@@ -485,6 +487,8 @@ const ViewQuestion = props => {
               setSubArr={setSubArr}
               setFlukeMsg={setFlukeMsg}
               showFlukeMessage={showFlukeMessage}
+              setSlowMsg={setSlowMsg}
+              showSlowMessage={setSlowMsg}
               violationLevelArray={violationLevelArray}
               setVLA={setVLA}
               subtopics_list={subtopics_list}
@@ -617,7 +621,7 @@ const ViewQuestion = props => {
           <HelpOutlineIcon style={cornerBtn2}>Hint</HelpOutlineIcon>
         </HtmlTooltip>
       ) : null}
-      {showFlukeMessage ? (
+      {showFlukeMessage || showSlowMessage ? (
         <HtmlTooltip
           interactive
           leaveDelay={500}
@@ -630,7 +634,10 @@ const ViewQuestion = props => {
                 We noticed something odd!
               </Typography>
               <br />
-              <FlukeMessageComponent />
+              <FlukeMessageComponent
+                showSlowMessage={showSlowMessage}
+                showFlukeMessage={showFlukeMessage}
+              />
             </React.Fragment>
           }
         >

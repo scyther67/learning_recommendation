@@ -189,6 +189,13 @@ function Options(props) {
                 ) {
                   props.setFlukeMsg(true);
                 }
+
+                if (
+                  newVLA[newVLA.length - 1] == 1 &&
+                  newVLA[newVLA.length - 2] == 1
+                ) {
+                  props.setSlowMsg(true);
+                }
               }
             }
 
