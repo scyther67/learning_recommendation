@@ -3,6 +3,7 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import theme from "../assets/theme";
 import axios from "axios";
+import axiosConfig from "../config/axiosConfig";
 import { ThemeProvider } from "@material-ui/core/styles";
 import ListItem from "../components/ListItem";
 
@@ -47,8 +48,8 @@ const RecommendationContent = props => {
         Authorization: localStorage.getItem("user_token")
       }
     };
-    var resp = await axios.post(
-      "https://sqlrecommender.southeastasia.cloudapp.azure.com/api/user/updateSubtopicTimeStamp",
+    var resp = await axiosConfig.post(
+      "/api/user/updateSubtopicTimeStamp",
       {
         subtopic_no: subtopic_arr[0]
       },
@@ -83,8 +84,8 @@ const RecommendationContent = props => {
             Authorization: localStorage.getItem("user_token")
           }
         };
-        var resp = await axios.post(
-          "https://sqlrecommender.southeastasia.cloudapp.azure.com/api/user/updateSubtopicTimeStamp",
+        var resp = await axiosConfig.post(
+          "/api/user/updateSubtopicTimeStamp",
           {
             subtopic_no: copy[0]
           },
@@ -108,12 +109,12 @@ const RecommendationContent = props => {
           };
 
           localStorage.setItem("last_asked_subtopic", copy[0]);
-          const res = await axios.post(
-            "https://sqlrecommender.southeastasia.cloudapp.azure.com/api/question/reqQuestion",
+          const res = await axiosConfig.post(
+            "/api/question/reqQuestion",
             {
               question_no: subtopic_arr[0],
               subtopic_no: copy[0],
-              question_response: {
+              user_response: {
                 question_start_timestamp:
                   startTimeStamp || localStorage.getItem("start_time"),
                 question_end_timestamp: endTimeStamp,

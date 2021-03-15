@@ -3,6 +3,7 @@ import { Container, Row, Col, Button, func } from "shards-react";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Options from "../components/answers/Options";
 import axios from "axios";
+import axiosConfig from "../config/axiosConfig";
 import { useHistory } from "react-router-dom";
 import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -197,8 +198,8 @@ const ViewQuestion = props => {
                 Authorization: localStorage.getItem("user_token")
               }
             };
-            var resp = await axios.post(
-              "https://sqlrecommender.southeastasia.cloudapp.azure.com/api/user/updateSubtopicTimeStamp",
+            var resp = await axiosConfig.post(
+              "/api/user/updateSubtopicTimeStamp",
               {
                 subtopic_no: stored_subtopic_arr[0]
               },
@@ -213,8 +214,8 @@ const ViewQuestion = props => {
               Authorization: localStorage.getItem("user_token")
             }
           };
-          var resp = await axios.post(
-            "https://sqlrecommender.southeastasia.cloudapp.azure.com/api/user/updateSubtopicTimeStamp",
+          var resp = await axiosConfig.post(
+            "/api/user/updateSubtopicTimeStamp",
             {
               subtopic_no: stored_subtopic_arr[0]
             },
@@ -226,8 +227,8 @@ const ViewQuestion = props => {
           );
         }
         localStorage.setItem("last_asked_subtopic", stored_subtopic_arr[0]);
-        const res = await axios.post(
-          "https://sqlrecommender.southeastasia.cloudapp.azure.com/api/question/reqQuestion",
+        const res = await axiosConfig.post(
+          "/api/question/reqQuestion",
           { subtopic_no: subtopic_number },
           config
         );
@@ -267,8 +268,8 @@ const ViewQuestion = props => {
           Authorization: localStorage.getItem("user_token")
         }
       };
-      var resp = await axios.post(
-        "https://sqlrecommender.southeastasia.cloudapp.azure.com/api/user/updateSubtopicTimeStamp",
+      var resp = await axiosConfig.post(
+        "/api/user/updateSubtopicTimeStamp",
         {
           subtopic_no: subtopic_arr[0]
         },
@@ -295,12 +296,12 @@ const ViewQuestion = props => {
         };
         // console.log("Asking Question for ", subtopic_arr[0]);
         localStorage.setItem("last_asked_subtopic", subtopic_arr[0]);
-        const res = await axios.post(
-          "https://sqlrecommender.southeastasia.cloudapp.azure.com/api/question/reqQuestion",
+        const res = await axiosConfig.post(
+          "/api/question/reqQuestion",
           {
             question_no: subtopic_arr[0],
             subtopic_no: subtopic_arr[0],
-            question_response: {
+            user_response: {
               question_start_timestamp:
                 props.startTimeStamp || localStorage.getItem("start_time"),
               question_end_timestamp: props.endTimeStamp,
@@ -340,10 +341,10 @@ const ViewQuestion = props => {
           }
         };
 
-        const res = await axios.post(
-          "https://sqlrecommender.southeastasia.cloudapp.azure.com/api/question/reqQuestion",
+        const res = await axiosConfig.post(
+          "/api/question/reqQuestion",
           {
-            question_response: {
+            user_response: {
               question_start_timestamp: props.startTimeStamp,
               question_end_timestamp: props.endTimeStamp,
               student_response: responses[nr - 1]

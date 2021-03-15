@@ -12,6 +12,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { NavLink as RouteNavLink, useHistory } from "react-router-dom";
 import { NavItem, NavLink } from "shards-react";
 import axios from "axios";
+import axiosConfig from "../config/axiosConfig";
 import coding from "../images/coding.png";
 
 const useStyles = makeStyles(theme => ({
@@ -76,10 +77,7 @@ export default function SignInSide() {
     formData.append("password", pass);
 
     try {
-      const res = await axios.post(
-        "https://sqlrecommender.southeastasia.cloudapp.azure.com/api/auth/login",
-        form
-      );
+      const res = await axiosConfig.post("/api/auth/login", form);
       if (res.data.message) {
         setError(true);
         setHelperText("Incorrect Credentials");

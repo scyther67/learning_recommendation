@@ -18,6 +18,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import axios from "axios";
+import axiosConfig from "../config/axiosConfig";
 import learning from "../images/learning.png";
 import { FormControl } from "@material-ui/core";
 import PdfViewer from "../components/PdfViewer";
@@ -180,10 +181,7 @@ export default function SignInSide(props) {
       // formData.append("recent_education", year);
       // console.log(email, name, pass, age, SQL, field, year);
       try {
-        const res = await axios.post(
-          "https://sqlrecommender.southeastasia.cloudapp.azure.com/api/auth/register",
-          form
-        );
+        const res = await axiosConfig.post("/api/auth/register", form);
         // console.log(res);
         setAgeError(false);
         setAgeHelperText("");

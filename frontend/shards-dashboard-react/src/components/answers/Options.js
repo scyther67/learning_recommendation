@@ -6,6 +6,7 @@ import "../../assets/prism.css";
 import theme from "../../assets/theme";
 import Prism from "prismjs";
 import axios from "axios";
+import axiosConfig from "../../config/axiosConfig";
 import "prismjs/components/prism-sql";
 
 const cardStyles = {
@@ -87,8 +88,8 @@ function Options(props) {
               Authorization: localStorage.getItem("user_token")
             }
           };
-          var resp = await axios.post(
-            "https://sqlrecommender.southeastasia.cloudapp.azure.com/api/user/updateSubtopicTimeStamp",
+          var resp = await axiosConfig.post(
+            "/api/user/updateSubtopicTimeStamp",
             {
               subtopic_no: copy[1]
             },
@@ -123,8 +124,8 @@ function Options(props) {
         };
         try {
           if (props.NR - 1 == 0) {
-            const res = await axios.post(
-              "https://sqlrecommender.southeastasia.cloudapp.azure.com/api/suggestions/suggestionBySubTopic",
+            const res = await axiosConfig.post(
+              "/api/suggestions/suggestionBySubTopic",
               {
                 subtopic: props.subtopic_arr[0],
                 question_start_timestamp: Number(
@@ -161,8 +162,8 @@ function Options(props) {
             //   "SUBTOPIC",
             //   props.subtopic_arr[0]
             // );
-            const res = await axios.post(
-              "https://sqlrecommender.southeastasia.cloudapp.azure.com/api/suggestions/suggestionBySubTopic",
+            const res = await axiosConfig.post(
+              "/api/suggestions/suggestionBySubTopic",
               {
                 subtopic: props.subtopic_arr[0],
                 question_start_timestamp: props.startTimeStamp,
